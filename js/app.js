@@ -5,7 +5,8 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3 2026-10-10';
+const APP_VERSION='v3.1'; // must match version.json and VERSION in sw.js
+const APP_DATE='2026-10-10';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -124,9 +125,37 @@ $('confirm').addEventListener('click',()=>{if(!current)return;const sel=current.
   if(!sel.length)f.appendChild(el('li',{text:'No tests selected'}));show('done');});
 // warm up engines in the background (still fully local)
 window.addEventListener('load',()=>{waitCv().then(()=>{$('engine').textContent='Engine: image engine ready (on-device).';});
-  $('ver').textContent='App '+APP_VERSION;
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(reg=>{reg.update().catch(()=>{});}).catch(()=>{});
-    // a newer version took over: reload once, but only when idle on the start screen (never during a scan/review)
-    let reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloaded)return;
-      if(!current&&!$('start').classList.contains('hidden')){reloaded=true;location.reload();}else $('engine').textContent='A new version is ready – it will load next time you open the app.';});}});
+  $('ver').textContent='App '+APP_VERSION+' ('+APP_DATE+')';
+  setupUpdates();});
+
+/* ---- Reliable updates ----
+   sw.js is never served from the HTTP cache (updateViaCache:'none'); we ask for an update on load and whenever the app comes
+   back to the foreground (iOS home-screen apps are often resumed, not relaunched). The SW is network-first for the app shell,
+   so a reload always gets the latest deploy. version.json is compared with the running code to offer a manual reload. */
+function idle(){return !current&&!$('start').classList.contains('hidden');}
+function showUpdateBanner(){
+  if($('updBanner'))return;const b=document.createElement('button');b.id='updBanner';b.className='upd-banner';b.type='button';
+  b.textContent='Update available - tap to reload';
+  b.addEventListener('click',()=>{if(!idle()&&!confirm('Reload now? The current scan will be cleared.'))return;
+    b.textContent='Updating…';const go=()=>location.reload();
+    (swReg?swReg.update().catch(()=>{}):Promise.resolve()).then(go,go);setTimeout(go,4000);});
+  document.body.appendChild(b);}
+async function checkVersion(){
+  try{const r=await fetch('version.json',{cache:'no-store'});if(!r.ok)return;const j=await r.json();
+    if(j&&j.version&&j.version!==APP_VERSION)showUpdateBanner();}catch(e){/* offline: nothing to do */}}
+let swReg=null,lastCheck=0;
+function checkForUpdates(){const now=Date.now();if(now-lastCheck<15000)return;lastCheck=now;
+  if(swReg)swReg.update().catch(()=>{});checkVersion();}
+function setupUpdates(){
+  if(!('serviceWorker' in navigator)){checkVersion();return;}
+  const sw=navigator.serviceWorker;let hadController=!!sw.controller,reloading=false;
+  sw.register('sw.js',{updateViaCache:'none'}).then(reg=>{swReg=reg;lastCheck=0;checkForUpdates();}).catch(()=>{checkVersion();});
+  // a newer version took over: reload once (guarded), but only when idle on the start screen (never during a scan/review)
+  sw.addEventListener('controllerchange',()=>{
+    if(!hadController){hadController=true;return;} // first install claiming this page: nothing new to load
+    if(reloading)return;
+    if(idle()){reloading=true;location.reload();}else showUpdateBanner();});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkForUpdates();});
+  window.addEventListener('pageshow',ev=>{if(ev.persisted)checkForUpdates();});
+}
 })();
