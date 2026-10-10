@@ -104,14 +104,32 @@ function sideCov(bin,b,side,t){const d=bin.data,c=bin.cols;let hit=0,tot=0;
   if(side==='top'||side==='bottom'){const ys=side==='top'?b.y:b.y+b.h-t;for(let x=b.x+t;x<b.x+b.w-t;x++){tot++;let h=0;for(let y=ys;y<ys+t;y++)if(y>=0&&y<bin.rows&&d[y*c+x]){h=1;break;}hit+=h;}}
   else{const xs=side==='left'?b.x:b.x+b.w-t;for(let y=b.y+t;y<b.y+b.h-t;y++){tot++;let h=0;for(let x=xs;x<xs+t;x++)if(x>=0&&x<c&&d[y*c+x]){h=1;break;}hit+=h;}}
   return tot?hit/tot:0;}
+/* Refit a box-candidate bounding rect to its frame: outermost columns/rows that are mostly ink along the box
+   (straight frame edges), ignoring tick strokes that stick out. Returns refined {x,y,w,h} or null. */
+function refineFrame(bin,r){const d=bin.data,c=bin.cols;const x0=Math.max(0,r.x),y0=Math.max(0,r.y),x1=Math.min(c,r.x+r.w),y1=Math.min(bin.rows,r.y+r.h);
+  const W=x1-x0,H=y1-y0;if(W<6||H<6)return null;const col=new Array(W).fill(0),row=new Array(H).fill(0);
+  for(let y=y0;y<y1;y++){const o=y*c;for(let x=x0;x<x1;x++)if(d[o+x]){col[x-x0]++;row[y-y0]++;}}
+  const win=a=>a.map((v,i)=>Math.max(v,(a[i-1]||0)+v,v+(a[i+1]||0)));// allow a 1-px lean of tilted frame edges
+  const cw=win(col),rw=win(row);
+  const strongC=[],strongR=[];
+  // a column is a vertical frame edge if it is inked along most of the shorter dimension (box side ~ min(W,H))
+  const side=Math.min(W,H);for(let i=0;i<W;i++)if(cw[i]>=0.62*side)strongC.push(i);for(let i=0;i<H;i++)if(rw[i]>=0.62*side)strongR.push(i);
+  if(strongC.length<2||strongR.length<2)return null;
+  const l=strongC[0],rr=strongC[strongC.length-1],t=strongR[0],bb=strongR[strongR.length-1];
+  if(rr-l<0.6*side||bb-t<0.6*side)return null;
+  return {x:x0+l,y:y0+t,w:rr-l+1,h:bb-t+1};}
 /* Find checkbox squares in a binary ink image. Returns [{x,y,w,h,fill}] */
 function findBoxes(cv,bin,opts){opts=opts||{};const L=Math.max(bin.cols,bin.rows);
   const sMin=opts.sMin||Math.max(6,L*0.004),sMax=opts.sMax||L*0.05;
   const cs=new cv.MatVector(),hi=new cv.Mat();cv.findContours(bin,cs,hi,cv.RETR_CCOMP,cv.CHAIN_APPROX_SIMPLE);
   let c=[];
   for(let i=0;i<cs.size();i++){if(hi.data32S[i*4+3]!==-1)continue;/* outer boundaries only, skip holes */const ct=cs.get(i);const r=cv.boundingRect(ct);const cpts=ct.data32S.slice();ct.delete();
-    if(r.width<sMin||r.height<sMin||r.width>sMax||r.height>sMax)continue;const ar=r.width/r.height;if(ar<0.72||ar>1.38)continue;
-    const b={x:r.x,y:r.y,w:r.width,h:r.height};const dbg=opts.debugAt&&Math.abs(r.x-opts.debugAt[0])<15&&Math.abs(r.y-opts.debugAt[1])<15;const t=Math.max(2,Math.round(0.14*Math.min(b.w,b.h)));
+    if(r.width<sMin||r.height<sMin||r.width>sMax*1.6||r.height>sMax*1.6)continue;let ar=r.width/r.height;
+    let b={x:r.x,y:r.y,w:r.width,h:r.height};
+    // a tick that overshoots the frame (common on EMR prints: the check mark pokes out of the top-right corner) widens the
+    // bounding box; refit the box to its straight frame edges before the shape tests
+    if(ar<0.72||ar>1.38||r.width>sMax||r.height>sMax){const fb=refineFrame(bin,b);if(!fb)continue;b=fb;ar=b.w/b.h;
+      if(b.w<sMin||b.h<sMin||b.w>sMax||b.h>sMax||ar<0.72||ar>1.38)continue;b.refined=true;}const dbg=opts.debugAt&&Math.abs(r.x-opts.debugAt[0])<15&&Math.abs(r.y-opts.debugAt[1])<15;const t=Math.max(2,Math.round(0.14*Math.min(b.w,b.h)));
     const sc=['top','bottom','left','right'].map(sd=>{let best=0;const span=Math.round(0.3*((sd==='top'||sd==='bottom')?b.h:b.w));
       for(let o=0;o<=span;o+=Math.max(1,Math.round(t/2))){const bb={x:b.x,y:b.y,w:b.w,h:b.h};
         if(sd==='top'){bb.y+=o;bb.h-=o;}else if(sd==='bottom'){bb.h-=o;}else if(sd==='left'){bb.x+=o;bb.w-=o;}else{bb.w-=o;}
@@ -119,7 +137,9 @@ function findBoxes(cv,bin,opts){opts=opts||{};const L=Math.max(bin.cols,bin.rows
     if(dbg)console.log('dbg sides',sc);if(Math.min(...sc)<0.75)continue;
     // contour must reach close to the bbox corners (square, not round)
     {const s0=(b.w+b.h)/2;const cd=[[b.x,b.y],[b.x+b.w-1,b.y],[b.x,b.y+b.h-1],[b.x+b.w-1,b.y+b.h-1]].map(([cx,cy])=>{let m=1e9;for(let k=0;k<cpts.length;k+=2){const d=Math.hypot(cpts[k]-cx,cpts[k+1]-cy);if(d<m)m=d;}return m/s0;}).sort((a,b)=>a-b);
-     if(dbg)console.log('dbg cornerdist',cd);if(cd[2]>0.13||cd[3]>0.3)continue;}
+     if(dbg)console.log('dbg cornerdist',cd);
+     // a tick crossing a corner pulls the outer contour away from it; tolerate that when all four sides are clearly straight and inked
+     const strong=Math.min(...sc)>=0.95;if(cd[2]>(strong?0.2:0.13)||cd[3]>(strong?0.36:0.3))continue;}
     // corners must contain ink (rules out round glyphs like o, e, c, 0)
     const ct2=Math.max(2,Math.round(0.2*Math.min(b.w,b.h)));
     const corners=[[b.x,b.y],[b.x+b.w-ct2,b.y],[b.x,b.y+b.h-ct2],[b.x+b.w-ct2,b.y+b.h-ct2]].map(([x,y])=>inkFrac(bin,x,y,x+ct2,y+ct2));
@@ -141,7 +161,8 @@ function findBoxes(cv,bin,opts){opts=opts||{};const L=Math.max(bin.cols,bin.rows
     b.okN=b.gapL<0.02&&b.farL<0.01&&b.textRight>0.03;   // upright: nothing just left, text on right
     b.okF=b.farR<0.01&&b.textLeft>0.03; // 180-flipped page
   }
-  const nN=keep.filter(b=>b.okN).length,nF=keep.filter(b=>b.okF).length;const flip=opts.allowFlip!==false&&nF>nN*1.5&&nF>=1;
+  // refitted (tick-overshoot) boxes count half in the orientation vote: a lone refit blob must not flip the page
+  const wt=b=>b.refined?0.5:1;const nN=keep.filter(b=>b.okN).reduce((a,b)=>a+wt(b),0),nF=keep.filter(b=>b.okF).reduce((a,b)=>a+wt(b),0);const flip=opts.allowFlip!==false&&nF>nN*1.5&&nF>=1;
   let cand=keep.filter(b=>flip?b.okF:b.okN);
   const sides=cand.map(b=>b.s).sort((a,b)=>a-b);
   if(!sides.length){const e=[];e.med=0;e.flip=false;e.nN=nN;e.nF=nF;return e;}
@@ -154,6 +175,6 @@ function findBoxes(cv,bin,opts){opts=opts||{};const L=Math.max(bin.cols,bin.rows
   out.nN=nN;out.nF=nF;out.flip=flip;
   out.med=med;return out;}
 
-const api={binarize,removeRules,inkFrac,findBoxes,toGray,resize,normalizeIllum,findPageQuad,warpQuad,rotateExpand,estimateRotation,preprocess,rotate180};
+const api={refineFrame,binarize,removeRules,inkFrac,findBoxes,toGray,resize,normalizeIllum,findPageQuad,warpQuad,rotateExpand,estimateRotation,preprocess,rotate180};
 if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ReqPre=api;
 })(typeof self!=='undefined'?self:this);

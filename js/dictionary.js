@@ -107,10 +107,43 @@ function match(text,restrictIds){
   if(!best)return null;
   return Object.assign({},BYID[best.id],{score:+best.score.toFixed(3),matched:best.matched,runnerUp:second?{id:second.id,score:+second.score.toFixed(3)}:null});}
 
+/* ---- standing orders: '[Repeat N month(s), From DD Mon YYYY to DD Mon YYYY]' (EMR suffix) ----
+   OCR-tolerant: finds the segment, parses it strictly after fixing common OCR confusions, and returns a normalised text
+   or null (caller then shows 'Standing order noted - check paper' instead of garbage). */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SO_PLACEHOLDER='Standing order noted - check paper';
+function fixDigits(t){return t.replace(/[Oo°Q]/g,'0').replace(/[Il|!\]\[i]/g,'1').replace(/[Ss\$]/g,'5').replace(/[Zz]/g,'2').replace(/B/g,'8').replace(/[Gb]/g,'6');}
+function monthOf(tok){const t=(tok||'').toLowerCase().replace(/[^a-z]/g,'');if(t.length<3)return null;let best=null,bs=0,second=0;
+  for(const m of MONTHS){const ml=m.toLowerCase();const cand=t.length<=4?ml.slice(0,3):ml;let sc=sim(t.length<=4?t.slice(0,3):t,cand);if(t.length===4&&(ml==='june'||ml==='july'))sc=Math.max(sc,sim(t,ml));
+    if(sc>bs){second=bs;bs=sc;best=m;}else if(sc>second)second=sc;}
+  return bs>=0.99||(bs>=0.66&&bs-second>0.3)?best:null;}
+// locate a standing-order segment in raw text -> {index,length} or null
+function findStandingOrder(s){
+  // anchor 1: a 'Repeat'-like token (OCR variants: RePeat, Repeal, REPEStL, Rapeat ...) near '[' or followed by a number/period word
+  const re=/[\[\({|]?\s*\b(R[a-z]{3,6}[A-Za-z]{0,2})\b/gi;let m;
+  while((m=re.exec(s))){const w=m[1].toLowerCase().replace(/[^a-z]/g,'');const sc=Math.max(sim(w.slice(0,6),'repeat'),sim(w,'repeat'));
+    const after=s.slice(m.index+m[0].length,m.index+m[0].length+30);
+    if(sc>=0.66&&(/^[\s,]*[0-9lI|]{1,2}\b|^\s*\S{0,3}\s*(?:day|week|mon|year|annual)/i.test(after)||/[\[\({|]/.test(m[0])||sc>=0.83))return {index:m.index,length:s.length-m.index};}
+  // anchor 2: '[... From DD Mon YYYY' without a readable 'Repeat'
+  const f=s.match(/\[[^\]]{0,25}\b[Ff]r[o0]m\s+\S{1,3}\s+[A-Za-z]{2,9}/);if(f)return {index:f.index,length:s.length-f.index};
+  return null;}
+function parseStandingOrder(seg){
+  let t=(seg||'').replace(/[\[\]{}()|]/g,' ').replace(/\s+/g,' ').trim();
+  const m=t.match(/^\S*?\s*(\S{1,2})\s+([A-Za-z]{3,7})\s*[,.;]?\s*[Ff][rn][o0]m\s+(\S{1,2})\s+([A-Za-z]{3,9})\.?\s+(\S{4})\s*,?\s*t[o0]\s+(\S{1,2})\s+([A-Za-z]{3,9})\.?\s+(\S{4})/);
+  if(!m)return null;
+  const n=+fixDigits(m[1]);const unitW=m[2].toLowerCase();let unit=null;for(const u of ['day','week','month','year']){if(sim(unitW.replace(/s$/,''),u)>=0.66){unit=u;break;}}
+  const d1=+fixDigits(m[3]),d2=+fixDigits(m[6]),y1=+fixDigits(m[5]),y2=+fixDigits(m[8]);const mo1=monthOf(m[4]),mo2=monthOf(m[7]);
+  if(!n||n>24||!unit||!mo1||!mo2||!(d1>=1&&d1<=31)||!(d2>=1&&d2<=31)||!(y1>=2020&&y1<=2040)||!(y2>=y1&&y2<=2045))return null;
+  const a=new Date(y1,MONTHS.indexOf(mo1),d1),b=new Date(y2,MONTHS.indexOf(mo2),d2);if(b<=a)return null;
+  return 'Repeat '+n+' '+unit+(n>1?'s':'')+', from '+d1+' '+mo1+' '+y1+' to '+d2+' '+mo2+' '+y2;}
+
 /* Split raw line text into test-name part and notes (patient instructions, lab notes, standing orders). */
 function splitNotes(raw){
   let s=(raw||'').replace(/\s+/g,' ').trim();const notes=[];
-  const so=s.match(/\[?\s*Repeat\b[^\]]*\]?/i);if(so){notes.push({type:'standing order',text:so[0].replace(/^\[|\]$/g,'').trim()});s=s.replace(so[0],' ');}
+  const so=findStandingOrder(s);
+  if(so){let seg=s.substr(so.index,so.length);const close=seg.indexOf(']');if(close>0)seg=seg.slice(0,close+1);
+    const norm=parseStandingOrder(seg);notes.push(norm?{type:'standing order',text:norm,parsed:true}:{type:'standing order',text:SO_PLACEHOLDER,parsed:false,rawText:seg.replace(/^[\[\s]+|[\]\s]+$/g,'')});
+    s=(s.slice(0,so.index)+' '+s.slice(so.index+seg.length)).trim();}
   const markers=[[/\*?\s*PATIENT\s+INSTRUCTIONS?\s*[-:]?/i,'patient instructions'],[/NOTE\s+TO\s+PATIENT\s*\*?/i,'note to patient'],[/NOTE\s+TO\s+LAB\s*[;:]?/i,'note to lab'],[/Standing\s+Order/i,'standing order']];
   let cut=s.length;const found=[];
   for(const [re,type] of markers){const m=s.match(re);if(m){found.push({i:m.index,len:m[0].length,type});}}
@@ -126,7 +159,14 @@ function headerOf(text){const t=norm(text);if(!t||t.length<5)return null;
   // section headers are printed in capitals; require mostly upper-case letters
   const L=(text.match(/[A-Za-z]/g)||[]);const up=(text.match(/[A-Z]/g)||[]).length;if(L.length<5||up/L.length<0.75)return null;
   let best=null;for(const h of HEADERS){const s=sim(t,norm(h));if(s>=0.75&&(!best||s>best.s))best={h,s};}return best?best.h:null;}
+// looser header test for text read from the band BETWEEN two traced test lines (only headers live there): ignore case,
+// accept a header's distinctive first word alone (e.g. 'OTHER' when 'TESTS' is cut off)
+function headerLoose(text){const toks=(text||'').toLowerCase().replace(/[^a-z ]/g,' ').split(/\s+/).filter(t=>t.length>=5);let best=null;
+  for(const h of HEADERS){const hw=norm(h).split(' ');const full=norm(h).replace(/ /g,'');
+    for(let i=0;i<toks.length;i++){const cands=[[toks[i],full]];if(hw[0]==='other')cands.push([toks[i],hw[0]]);/* only 'OTHER' is distinctive alone ('URINE', 'HEPATITIS' are test words) */if(toks[i+1])cands.push([toks[i]+toks[i+1],full]);
+      for(const [a,b] of cands){if(b.length<5)continue;const sc=sim(a,b);if(sc>=0.78&&(!best||sc>best.s))best={h,s:sc};}}}
+  return best?best.h:null;}
 function isStop(text){const t=norm(text);return STOP.some(s=>t.includes(s)||sim(t.slice(0,s.length),s)>0.8);}
-const api={TESTS:T,BYID,HEADERS,norm,sim,match,splitNotes,headerOf,isStop};
+const api={TESTS:T,BYID,HEADERS,norm,sim,match,splitNotes,headerOf,headerLoose,isStop,parseStandingOrder,findStandingOrder,SO_PLACEHOLDER};
 if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ReqDict=api;
 })(typeof self!=='undefined'?self:this);

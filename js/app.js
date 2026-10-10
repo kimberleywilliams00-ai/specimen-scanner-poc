@@ -5,6 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
+const APP_VERSION='v3 2026-10-10';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -47,7 +48,7 @@ async function handleFile(file){
     stage('Loading text engine…');const ocr=await getOcr();
     stage('Straightening page and finding checkboxes…');await new Promise(r=>setTimeout(r,30));
     const wrapped=async(m,o)=>{stage('Reading printed text…');return ocr(m,o);};
-    const res=await ReqPipeline.scan(cv,src,wrapped,{keepImage:$('dbg').checked});
+    const res=await ReqPipeline.scan(cv,src,wrapped,{keepImage:$('dbg').checked,crops:true});
     src.delete();src=null;res.ms=Math.round(performance.now()-t0);res.lowRes=lowRes;current=res;render(res);show('result');
   }catch(e){console.error(e);if(src)src.delete();alert('Could not process this photo: '+e.message);reset();}
   finally{$('cam').value='';$('pick').value='';}}
@@ -61,29 +62,37 @@ function render(r){
   else{L.appendChild(el('div',{class:'layout-bad',text:'⚠ Layout not recognised – please confirm tests manually'}));if(r.reason)L.appendChild(el('div',{class:'small',text:r.reason}));}
   if(r.warning)L.appendChild(el('div',{class:'small',text:'⚠ '+r.warning}));
   if(r.lowRes)L.appendChild(el('div',{class:'small',text:'⚠ Low-resolution photo: results are less reliable. Use the full camera resolution and fill the frame.'}));
-  const nv=r.items.filter(i=>i.status!=='ok'&&i.checked!==false).length;
-  if(r.items.length)L.appendChild(el('div',{class:'small',text:`${r.items.filter(i=>i.checked!==false).length} ticked line(s) found${nv?`, ${nv} need checking (amber/red)`:''}. Compare with the paper before confirming.`}));
+  const warn=r.items.filter(i=>i.warn);const tests=r.items.filter(i=>!i.warn);
+  if(warn.length)L.appendChild(el('div',{class:'alert-bad',text:`⚠ ${warn.length} possible missed line${warn.length>1?'s':''}: a checkbox was seen but its test could not be read. Check the paper (see red card${warn.length>1?'s':''} below).`}));
+  const nv=tests.filter(i=>i.status!=='ok'&&i.checked!==false).length;
+  if(r.items.length)L.appendChild(el('div',{class:'small',text:`${tests.filter(i=>i.checked!==false).length} ticked line(s) read${nv?`, ${nv} need checking (amber/red)`:''}. Compare with the paper before confirming.`}));
+  if(r.standingOrder){const so=r.standingOrder;L.appendChild(el('div',{class:'note so so-banner',text:'🔁 Standing order ('+(so.all?'all tests':so.count+' of '+so.total+' tests')+'): '+so.text}));}
   const list=$('list');list.innerHTML='';
   const groups={};const order=[];
-  for(const [i,it] of r.items.entries()){it._i=i;const g=it.checked===false?'Unticked on form (not ordered)':(it.id?(it.category||'Other'):'Needs review');if(!groups[g]){groups[g]=[];order.push(g);}groups[g].push(it);}
-  order.sort((a,b)=>(a==='Needs review'?-1:0)-(b==='Needs review'?-1:0)||(a.startsWith('Unticked')?1:0)-(b.startsWith('Unticked')?1:0));
-  for(const g of order){const box=el('div',{class:'grp'},el('h3',{text:g}));for(const it of groups[g])box.appendChild(itemEl(it));list.appendChild(box);}
+  const MISSED='⚠ Possible missed lines – check paper';
+  for(const [i,it] of r.items.entries()){it._i=i;const g=it.warn?MISSED:it.checked===false?'Unticked on form (not ordered)':(it.id?(it.category||'Other'):'Needs review');if(!groups[g]){groups[g]=[];order.push(g);}groups[g].push(it);}
+  const rank=g=>g===MISSED?-2:g==='Needs review'?-1:g.startsWith('Unticked')?1:0;order.sort((a,b)=>rank(a)-rank(b));
+  for(const g of order){const box=el('div',{class:'grp'+(g===MISSED?' missed':'')},el('h3',{text:g}));for(const it of groups[g])box.appendChild(itemEl(it,r));list.appendChild(box);}
   const dl=$('dict');dl.innerHTML='';for(const t of D.TESTS)dl.appendChild(el('option',{value:t[1]}));
-  $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${r.info.boxesFound} checkbox(es) seen`;
+  const nb=(r.info.columnBoxes!=null?r.info.columnBoxes:(r.info.boxesFound||0))+(r.info.looseMarks||0);
+  $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
   const ov=$('overlay');if(r.image){drawOverlay(r);ov.classList.remove('hidden');}else ov.classList.add('hidden');}
 
-function itemEl(it){
-  const cls='item '+(it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});cb.checked=it.checked!==false&&it.status!=='unrecognized';
+function itemEl(it,r){
+  const cls='item '+(it.warn?'missed':it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});cb.checked=it.checked!==false&&it.status!=='unrecognized'&&!it.warn;
   cb.addEventListener('change',()=>{it.selected=cb.checked;});it.selected=cb.checked;
   const body=el('div',{class:'body'});
-  const title=el('div',{class:'name',text:it.id?(it.testName):(it.name||it.raw||'(unreadable line)')});
+  const title=el('div',{class:'name',text:it.warn?'Possible missed line – check paper':it.id?(it.testName):(it.name||it.raw||'(unreadable line)')});
   if(it.status==='verify')title.appendChild(el('span',{class:'badge',text:it.boxDetected===false?'check box?':'check'}));
   if(it.status==='unrecognized')title.appendChild(el('span',{class:'badge bad',text:'not recognised'}));
   if(it.checked===false)title.appendChild(el('span',{class:'badge grey',text:'unticked'}));
   body.appendChild(title);
+  if(it.warn){body.appendChild(el('div',{class:'raw',text:'A ticked checkbox was found here but the test name could not be read. Find this line on the paper and choose the test below (or add it manually).'}));
+    if(it.crop){const c=el('canvas',{class:'crop'});c.width=it.crop.width;c.height=it.crop.height;c.getContext('2d').putImageData(new ImageData(it.crop.data,it.crop.width,it.crop.height),0,0);body.appendChild(c);}}
   if(it.raw&&(!it.id||it.status!=='ok'||D.norm(it.name)!==D.norm(it.testName)))body.appendChild(el('div',{class:'raw',text:'Read on form: “'+(it.name||it.raw)+'”'+(it.section?' · under '+it.section:'')}));
   else if(it.section)body.appendChild(el('div',{class:'raw',text:'Under '+it.section}));
-  for(const n of it.notes||[])body.appendChild(el('div',{class:'note'+(n.type==='standing order'?' so':''),text:(n.type==='standing order'?'🔁 Standing order: ':n.type==='frequency'?'🔁 ':'📝 '+n.type.replace(/^./,c=>c.toUpperCase())+': ')+n.text}));
+  const soAll=r&&r.standingOrder&&r.standingOrder.all;
+  for(const n of it.notes||[]){if(n.common&&soAll)continue;if(n.common){body.appendChild(el('div',{class:'note so',text:'🔁 Standing order (as above)'}));continue;}body.appendChild(el('div',{class:'note'+(n.type==='standing order'?' so':''),text:(n.type==='standing order'?'🔁 Standing order: ':n.type==='frequency'?'🔁 ':'📝 '+n.type.replace(/^./,c=>c.toUpperCase())+': ')+n.text}));}
   if(!it.id||it.status==='verify'){const sel=el('select');sel.appendChild(el('option',{value:'',text:it.id?'Change test…':'Choose matching test…'}));
     for(const t of D.TESTS.slice().sort((a,b)=>a[1].localeCompare(b[1])))sel.appendChild(el('option',{value:t[0],text:t[1]}));
     sel.addEventListener('change',()=>{if(!sel.value)return;const e=D.BYID[sel.value];it.id=e.id;it.testName=e.name;it.category=e.category;it.status='ok';it.manual=true;cb.checked=true;it.selected=true;title.firstChild.textContent=e.name;});
@@ -97,8 +106,9 @@ function drawOverlay(r){const cv=window.cv;const c=$('overlay');const m=r.image;
   const s=Math.min(1,1400/Math.max(rgba.cols,rgba.rows));const d=new cv.Mat();cv.resize(rgba,d,new cv.Size(Math.round(rgba.cols*s),Math.round(rgba.rows*s)),0,0,cv.INTER_AREA);
   cv.imshow(c,d);rgba.delete();d.delete();m.delete();r.image=null;}
 
-function reset(){ // wipe everything from memory and screen
-  if(current&&current.image){try{current.image.delete();}catch(e){}}current=null;
+function reset(){ // wipe everything from memory and screen (incl. in-memory line crops)
+  if(current&&current.image){try{current.image.delete();}catch(e){}}if(current)for(const it of current.items||[])it.crop=null;current=null;
+  for(const c of document.querySelectorAll('canvas.crop')){c.width=c.height=0;}
   $('list').innerHTML='';$('layout').innerHTML='';$('final').innerHTML='';$('timing').textContent='';$('addTest').value='';
   const c=$('overlay');c.width=c.height=0;c.classList.add('hidden');$('cam').value='';$('pick').value='';show('start');}
 
@@ -114,5 +124,9 @@ $('confirm').addEventListener('click',()=>{if(!current)return;const sel=current.
   if(!sel.length)f.appendChild(el('li',{text:'No tests selected'}));show('done');});
 // warm up engines in the background (still fully local)
 window.addEventListener('load',()=>{waitCv().then(()=>{$('engine').textContent='Engine: image engine ready (on-device).';});
-  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});});
+  $('ver').textContent='App '+APP_VERSION;
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(reg=>{reg.update().catch(()=>{});}).catch(()=>{});
+    // a newer version took over: reload once, but only when idle on the start screen (never during a scan/review)
+    let reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloaded)return;
+      if(!current&&!$('start').classList.contains('hidden')){reloaded=true;location.reload();}else $('engine').textContent='A new version is ready – it will load next time you open the app.';});}});
 })();

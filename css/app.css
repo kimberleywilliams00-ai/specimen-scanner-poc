@@ -23,3 +23,9 @@ main{padding:12px;max-width:720px;margin:auto}
 .row{display:flex;gap:8px;margin-top:6px}.row input{flex:1;font-size:16px;padding:10px;border:1px solid #bbb;border-radius:8px}.row .btn{flex:none;min-width:80px;padding:10px}
 #overlay{width:100%;border-radius:8px;margin-bottom:12px;background:#fff}
 footer{text-align:center;padding:10px 10px 30px}
+
+.item.missed{border-left-color:var(--bad);background:#fdecea}
+.grp.missed h3{color:var(--bad)}
+.alert-bad{background:var(--bad);color:#fff;font-weight:700;border-radius:8px;padding:8px 10px;margin:6px 0}
+.so-banner{margin-top:8px;font-weight:600}
+canvas.crop{display:block;max-width:100%;height:auto;margin-top:6px;border:1px solid #c00;border-radius:4px;background:#fff}
