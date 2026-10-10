@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5394">
+<!-- Strict CSP: only this origin may be contacted (for the app's own static files). No CDNs, no analytics, no uploads. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' blob:; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Lab Requisition Scanner (PoC)</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Req Scanner">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header>
+  <h1>Lab Requisition Scanner <span class="poc">proof of concept</span></h1>
+  <div class="privacy" role="note">🔒 <b>Privacy: processed on this device, nothing stored or sent</b></div>
+</header>
+<main>
+  <section id="start" class="card">
+    <p class="hint">Photograph the <b>test list</b> of a de-identified requisition. Sideways or angled photos are OK; fill the frame and avoid glare.</p>
+    <div class="btns">
+      <label class="btn primary">📷 Take photo<input id="cam" type="file" accept="image/*" capture="environment" hidden></label>
+      <label class="btn">🖼️ Choose photo<input id="pick" type="file" accept="image/*" hidden></label>
+    </div>
+    <label class="opt"><input type="checkbox" id="dbg"> Show debug overlay</label>
+    <p id="engine" class="small">Engine: not loaded yet (loads from this site only, works offline after first visit).</p>
+  </section>
+
+  <section id="busy" class="card hidden"><div class="spinner"></div><p id="stage">Working…</p></section>
+
+  <section id="result" class="hidden">
+    <div id="layout" class="card"></div>
+    <div id="list"></div>
+    <div class="card">
+      <label for="addTest"><b>Add a test manually</b></label>
+      <div class="row"><input id="addTest" list="dict" placeholder="Start typing a test name…" autocomplete="off"><button id="addBtn" class="btn">Add</button></div>
+      <datalist id="dict"></datalist>
+    </div>
+    <canvas id="overlay" class="hidden"></canvas>
+    <div class="btns sticky">
+      <button id="confirm" class="btn primary">✔ Confirm tests</button>
+      <button id="discard" class="btn">✖ Discard &amp; clear</button>
+    </div>
+    <p id="timing" class="small"></p>
+  </section>
+
+  <section id="done" class="card hidden">
+    <h2>Confirmed tests</h2>
+    <ol id="final"></ol>
+    <p class="small">In the full app this list would pre-fill the specimen-collection checklist. This PoC keeps it on screen only.</p>
+    <button id="finish" class="btn primary">Finish &amp; clear</button>
+  </section>
+</main>
+<footer class="small">PoC for VCH community nursing. Not for clinical use. Always check the paper requisition.</footer>
+<script src="vendor/opencv.js" async id="cvjs"></script>
+<script src="vendor/tesseract/tesseract.min.js"></script>
+<script src="js/dictionary.js"></script>
+<script src="js/template_d2350.js"></script>
+<script src="js/preprocess.js"></script>
+<script src="js/pipeline.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

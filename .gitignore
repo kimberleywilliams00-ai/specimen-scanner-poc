@@ -1,0 +1,23 @@
+# Privacy guard: never commit photos (real requisitions are patient forms).
+*.jpg
+*.jpeg
+*.JPG
+*.JPEG
+*.heic
+*.HEIC
+*.heif
+*.HEIF
+*.pdf
+*.PDF
+*.png
+*.PNG
+# Explicitly allowed app icons only
+!icons/icon-192.png
+!icons/icon-512.png
+!icons/apple-touch-icon.png
+# Never publish data/eval folders
+real-samples/
+eval/
+synthetic/
+reference/
+*.truth.json
