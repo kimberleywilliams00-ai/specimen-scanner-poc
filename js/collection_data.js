@@ -4,7 +4,7 @@
 const DATA={
 "source": "LifeLabs Lab Test Information (Lower Mainland)",
 "directoryUrl": "https://tests.lifelabs.com/",
-"lastChecked": "2026-10-10",
+"lastChecked": "2026-10-11",
 "entries": [
 {
 "id": "creatinine",
@@ -226,6 +226,352 @@ const DATA={
 ],
 "includesDictIds": [],
 "requisitionNotes": []
+},
+{
+"id": "electrolytes_cl_co2",
+"title": "ELECTROLYTES SERUM (CL &CO2)",
+"name": "Electrolytes Serum - Cl & CO2",
+"region": "Lower Mainland",
+"aka": [
+"CHLORIDE AND BICARBONATE",
+"CLCO"
+],
+"dictIds": [
+"chloride",
+"bicarbonate"
+],
+"discipline": "Chemistry",
+"methodology": "CL: Ion Selective Electrode;CO2: Colormetric",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Request Chloride and Bicarbonate as individual tests.",
+"3. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Note: cannot be performed if hemolysis is present.",
+"7. Do NOT expose to air.",
+"8. Do NOT pour off.",
+"9. Place specimen in specimen transport bag.",
+"10. Seal bag.",
+"11. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"1. Test cannot be performed if hemolysis is present.",
+"2. Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [
+{
+"text": "Test cannot be performed if hemolysis is present.",
+"critical": false
+}
+],
+"orderNotes": [],
+"ambiguities": [
+"Specimen stability times are not stated.",
+"Performing laboratory and destination are not named on the page."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-01-23",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Note: cannot be performed if hemolysis is present.",
+"Do NOT expose to air.",
+"Do NOT pour off."
+],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"2. Request Chloride and Bicarbonate as individual tests."
+],
+"includesDictIds": [],
+"relatedEntries": [
+"electrolytes_extended"
+]
+},
+{
+"id": "electrolytes_extended",
+"title": "ELECTROLYTES EXTENDED PANEL",
+"name": "Electrolytes Extended Panel",
+"region": "Lower Mainland",
+"aka": [
+"LYTES EXTENDED PANEL"
+],
+"dictIds": [],
+"discipline": "Chemistry",
+"methodology": "",
+"specimenType": "",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"Electrolytes or LYTES Extended Panel is a request for NA, K, CL and CO.",
+"Due to MSC regulations, panel testing is not available; therefore, unless the medical practitioner specifically requests CLCO in addition to Electrolytes, only the Sodium and Potassium can be entered."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Page has no collection, container or handling details (ordering rule only)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [],
+"includesDictIds": [],
+"requisitionNotes": [],
+"infoOnly": true
+},
+{
+"id": "electrolytes_na_k",
+"title": "ELECTROLYTES SERUM (Na & K)",
+"name": "Electrolytes Serum - Na & K",
+"region": "Lower Mainland",
+"aka": [
+"LYTES",
+"SODIUM AND POTASSIUM"
+],
+"dictIds": [
+"electrolytes"
+],
+"discipline": "Chemistry",
+"methodology": "Ion Selective Electrode",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Request Sodium and Potassium as individual tests.",
+"3. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Specimen stability is not stated.",
+"Performing laboratory and destination are not named on the page.",
+"The scanner's \"Electrolytes\" line is mapped to this Na & K page; Chloride/CO2 appear only when ticked separately (see ELECTROLYTES EXTENDED PANEL)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Request Sodium and Potassium as individual tests.",
+"3. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"scopeNote": "Per the LifeLabs ELECTROLYTES EXTENDED PANEL page (quoted on the Electrolytes test card), only Sodium and Potassium are entered for \"Electrolytes\" unless Chloride/CO2 (CLCO) is specifically requested. Chloride and CO2 are not assumed included - check the requisition for a separate Chloride / Bicarbonate (CO2) request.",
+"relatedEntries": [
+"electrolytes_extended"
+],
+"scopeSatisfiedBy": [
+"chloride",
+"bicarbonate"
+]
+},
+{
+"id": "free_t4",
+"title": "FREE T4",
+"name": "Free T4",
+"region": "Lower Mainland",
+"aka": [
+"EFFECTIVE THYROID RATIO",
+"ETR",
+"FREE THYROXINE INDEX",
+"FT4",
+"FTI",
+"T3 RESIN UPTAKE (T3U)",
+"T3 UPTAKE",
+"T3RU",
+"T3U",
+"T3UT"
+],
+"dictIds": [
+"free_t4",
+"tsh_hypo"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"1. Complete the LifeLabs Laboratory Requisition.",
+"2. Ensure applicable Thyroid Function box is marked and when required, a written justification/diagnosis is noted.",
+"3. See BC Guidelines for Thyroid Function testing for more information."
+],
+"includes": [],
+"handling": [
+"1. Collect one 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Package specimen in a specimen transport bag.",
+"7. Seal bag.",
+"8. Fold completed requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet specimen collection and processing criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Specimen stability is not stated.",
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; LifeLabs chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-01-20",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete the LifeLabs Laboratory Requisition.",
+"2. Ensure applicable Thyroid Function box is marked and when required, a written justification/diagnosis is noted."
+],
+"includesDictIds": []
 },
 {
 "id": "hematology_panel",
@@ -1288,6 +1634,112 @@ const DATA={
 "requisitionNotes": []
 },
 {
+"id": "hiv_serology",
+"title": "HIV SEROLOGY",
+"name": "HIV Serology",
+"region": "Lower Mainland",
+"aka": [
+"ANTI HIV 1 & 2",
+"ANTI-HIV 1 & 2",
+"ANTI-HIV 1/2",
+"HIV AB",
+"HIV AB AG",
+"HIV AB/AG",
+"HIV ANTIBODY",
+"HIV 1 & 2",
+"HIV 1 & 2 ANTIBODY",
+"HIV 1 & HIV 2",
+"HIV 1",
+"HIV 4TH GENERATION",
+"HIV BY EIA",
+"HIV NOMINAL",
+"HIV POOLED NAT",
+"HIV POOLED NAAT",
+"HIV POOLED NUCLEIC ACID TESTING (NAAT)",
+"HUMAN IMMUNODEFICIENCY VIRUS"
+],
+"dictIds": [
+"hiv_serology"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Blood (Clotted Blood)",
+"frequency": "5x per/wk",
+"specimenStability": "",
+"turnaroundTime": "3 days",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Complete the PHSA Serology Requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect a 5 mL SST Gold top tube.",
+"2. Gently invert tube 5 - 6 times.",
+"3. Label the tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number).",
+"4. Test name.",
+"5. Do NOT centrifuge.",
+"6. Place specimen in specimen transport bag & seal bag",
+"7. Fold the requisition and place in sleeve of specimen transport bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number).",
+"Test name."
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "PHL - Serology Screening Requisition",
+"performingLab": "",
+"additionalInfo": [
+"If the patient requests non-nominal reporting see: HIV CONFIDENTIAL"
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Collection volume is not stated.",
+"Handling step \"4. Test name.\" is numbered as its own step but appears to belong to the \"Label the tube with:\" list - shown as a label item.",
+"Non-nominal reporting: the page only says \"If the patient requests non-nominal reporting see: HIV CONFIDENTIAL\" (that entry was not exported).",
+"Pre-test preparation says \"Complete the PHSA Serology Requisition.\"; the Form field says \"PHL - Serology Screening Requisition\" (read as the same BCCDC PHL Serology Screening Requisition).",
+"The page does not name the performing laboratory; BCCDC is inferred from the PHL requisition form named."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-11-06",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": false,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"destinationInferred": true,
+"form": "PHL - Serology Screening Requisition",
+"tests": "",
+"notes": [
+"Do NOT centrifuge."
+],
+"noShare": false,
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "PHL"
+}
+],
+"requisitionNotes": [
+"If the patient requests non-nominal reporting see: HIV CONFIDENTIAL"
+],
+"includesDictIds": []
+},
+{
 "id": "lipid_profile_full",
 "title": "LIPID PROFILE FULL",
 "name": "Lipid Profile Full",
@@ -1505,6 +1957,204 @@ const DATA={
 ],
 "requisitionNotes": [
 "Indicate on requisition what anticoagulant, if any, patient is taking."
+],
+"includesDictIds": []
+},
+{
+"id": "syphilis_screen",
+"title": "SYPHILIS SCREEN (BLOOD)",
+"name": "Syphilis Screen (Blood)",
+"region": "Lower Mainland",
+"aka": [
+"ART",
+"FLUORESCENT TREPONEMAL ANTIBODY ABSORPTION",
+"FTA ANTIBODIES",
+"MHA-TP",
+"MICROHEMAGGLUTINATION TREPONEMA PALLIDUM",
+"RPR",
+"RPR BY EIA",
+"STS",
+"SYPHILIS (BCCDC) BY EIA",
+"SYPHILIS CONFIRMATORY",
+"SYPHILIS SEROLOGY (IgG and/or IgM)",
+"TPPA",
+"TREPONEMAL AB",
+"TREPONEMA PALLIDUM SEROLOGY",
+"VDRL"
+],
+"dictIds": [
+"syphilis"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Blood (Clotted Blood)",
+"frequency": "5x per/wk",
+"specimenStability": "",
+"turnaroundTime": "3 days",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "3 mL",
+"preTestPrep": [
+"Medical Practitioner:",
+"1. Complete the PHSA Serology Screening requisition.",
+"2. For Prenatal testing see: RPR PRENATAL"
+],
+"includes": [],
+"handling": [
+"1. Collect a 5 mL SST Gold top tube.",
+"2. Gently invert tube 5 - 6 times.",
+"3. Label the tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number).",
+"4. Test name.",
+"5. Do NOT centrifuge.",
+"6. Place specimen in BCCDC Biohazard specimen transport bag & seal bag",
+"7. Fold the requisition and place in sleeve of specimen transport bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number).",
+"Test name."
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page has no \"Form\" field; pre-test preparation says \"Complete the PHSA Serology Screening requisition.\" (read as the BCCDC PHL Serology Screening Requisition).",
+"Handling step \"4. Test name.\" is numbered as its own step but appears to belong to the \"Label the tube with:\" list - shown as a label item.",
+"Prenatal testing has a separate entry \"RPR PRENATAL\" (not exported).",
+"The page does not name the performing laboratory; BCCDC is inferred from the PHSA requisition and the \"BCCDC Biohazard specimen transport bag\"."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": false,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "3 mL",
+"volumeMl": 3,
+"destination": "",
+"destinationInferred": true,
+"form": "PHSA Serology Screening requisition",
+"tests": "",
+"notes": [
+"Do NOT centrifuge."
+],
+"noShare": false,
+"bag": "BCCDC Biohazard specimen transport bag",
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "PHL"
+}
+],
+"requisitionNotes": [
+"2. For Prenatal testing see: RPR PRENATAL"
+],
+"includesDictIds": []
+},
+{
+"id": "tsh",
+"title": "TSH",
+"name": "TSH",
+"region": "Lower Mainland",
+"aka": [
+"THYROID FUNCTION TEST",
+"THYROID STIMULATING HORMONE",
+"THYROID STUDIES",
+"THYROTROPIN"
+],
+"dictIds": [
+"tsh_monitor",
+"tsh_hypo"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "8 days room temperature; 8 days refrigerated; 8 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"1. Complete the LifeLabs Laboratory Requisition.",
+"2. Ensure applicable Thyroid Function box is marked and when required, a written justification/diagnosis is noted.",
+"3. See BC Guidelines for Thyroid Function testing for more information."
+],
+"includes": [],
+"handling": [
+"1. Collect one 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Package specimen in a specimen transport bag.",
+"7. Seal bag.",
+"8. Fold completed requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet specimen collection and processing criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [
+{
+"text": "8 days room temperature; 8 days refrigerated; 8 days frozen",
+"critical": false
+}
+],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; LifeLabs chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete the LifeLabs Laboratory Requisition.",
+"2. Ensure applicable Thyroid Function box is marked and when required, a written justification/diagnosis is noted."
 ],
 "includesDictIds": []
 },

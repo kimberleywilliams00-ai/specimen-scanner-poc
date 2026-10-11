@@ -32,7 +32,7 @@ const R={
   map:{albumin:['Albumin'],calcium:['Calcium'],calcium_albumin:['Calcium','Albumin'],alp:['Alk Phos'],alt:['ALT'],ast:['AST'],ggt:['GGT'],alt_ast_ggt:['ALT','AST','GGT'],
        apob:['Apo B'],bilirubin:['Bilirubin'],sodium:['Sodium'],potassium:['Potassium'],chloride:['Chloride'],bicarbonate:['CO2'],electrolytes:['Sodium','Potassium','Chloride','CO2'],
        lipids:['Cholesterol','HDL','Triglycerides'],lipids_followup:['Cholesterol','HDL','Triglycerides'],ck:['CK'],creatinine:['Creatinine'],crp:['CRP'],ferritin:['Ferritin'],
-       tsh_monitor:['TSH'],tsh_hypo:['TSH','Free T4'],tsh_hyper:['TSH','Free T4','Free T3'],glucose_random:['Glucose'],glucose_fasting:['Glucose'],iron_tibc:['Iron'],
+       tsh_monitor:['TSH'],free_t4:['Free T4'],tsh_hypo:['TSH','Free T4'],tsh_hyper:['TSH','Free T4','Free T3'],glucose_random:['Glucose'],glucose_fasting:['Glucose'],iron_tibc:['Iron'],
        magnesium:['Magnesium'],phosphorus:['Phosphorus'],total_protein:['Total Protein'],urea:['Urea'],uric_acid:['Uric Acid'],b12:['Vit B12']},
   partial:{iron_tibc:'chart lists Iron only; TIBC is not on the chart'},
   coverageNote:{lipids:'Lipid Profile = chart Cholesterol, HDL, Triglycerides (LDL is calculated, not listed)',lipids_followup:'Follow-up Lipid Profile = chart Cholesterol, HDL, Triglycerides (LDL is calculated, not listed)',
