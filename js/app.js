@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.1'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.2'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-10';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -110,7 +110,7 @@ function drawOverlay(r){const cv=window.cv;const c=$('overlay');const m=r.image;
 function reset(){ // wipe everything from memory and screen (incl. in-memory line crops)
   if(current&&current.image){try{current.image.delete();}catch(e){}}if(current)for(const it of current.items||[])it.crop=null;current=null;
   for(const c of document.querySelectorAll('canvas.crop')){c.width=c.height=0;}
-  $('list').innerHTML='';$('layout').innerHTML='';$('final').innerHTML='';$('timing').textContent='';$('addTest').value='';
+  $('list').innerHTML='';$('layout').innerHTML='';$('summary').innerHTML='';$('timing').textContent='';$('addTest').value='';
   const c=$('overlay');c.width=c.height=0;c.classList.add('hidden');$('cam').value='';$('pick').value='';show('start');}
 
 $('cam').addEventListener('change',e=>handleFile(e.target.files[0]));
@@ -120,9 +120,11 @@ $('addBtn').addEventListener('click',()=>{const v=$('addTest').value.trim();if(!
   const exact=D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
   const it={id:e?e.id:null,testName:e?e.name:v,name:v,raw:'',category:e?e.category:'Other',status:e?'ok':'unrecognized',checked:true,notes:[],manual:true};
   current.items.push(it);const box=el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it));$('list').appendChild(box);$('addTest').value='';});
-$('confirm').addEventListener('click',()=>{if(!current)return;const sel=current.items.filter(i=>i.selected);const f=$('final');f.innerHTML='';
-  for(const it of sel){const li=el('li',{text:(it.testName||it.name||it.raw)+(it.id?'':' (unmatched)')});for(const n of it.notes||[])li.appendChild(el('div',{class:'small',text:n.type+': '+n.text}));f.appendChild(li);}
-  if(!sel.length)f.appendChild(el('li',{text:'No tests selected'}));show('done');});
+$('confirm').addEventListener('click',()=>{if(!current)return;const sel=current.items.filter(i=>i.selected);
+  // v3.2: Collection Summary from the on-device LifeLabs data file (js/collection_data.js); in memory only
+  const items=sel.map(it=>({id:it.id||null,name:it.testName||it.name||it.raw,notes:(it.notes||[]).filter(n=>n.text).map(n=>({type:n.type,text:n.text}))}));
+  window.CollectionSummary.render($('summary'),items);show('done');window.scrollTo(0,0);});
+$('print').addEventListener('click',()=>window.print());
 // warm up engines in the background (still fully local)
 window.addEventListener('load',()=>{waitCv().then(()=>{$('engine').textContent='Engine: image engine ready (on-device).';});
   $('ver').textContent='App '+APP_VERSION+' ('+APP_DATE+')';
