@@ -42,9 +42,11 @@ const L={rules:[
      clot first, then spin. Clot time / centrifuge settings (derived in summary.js, never hard-coded here): BCCDC eLab Handbook entry
      (js/elab_data.js) when a test in the tube has one (BCCDC-bound tube), otherwise the LifeLabs SST settings in js/collection_data.js;
      differences are shown. Replaces the v3.4 amber 'LifeLabs pages differ on centrifuging' note and the red 'Do NOT centrifuge' banner for
-     this tube; each test's LifeLabs page wording stays visible in its test details, labelled as LifeLabs page text. */
+     this tube; each test's LifeLabs page wording stays visible in its test details, labelled as LifeLabs page text.
+     v3.6 (VCH community practice, K. Williams, 2026-10-11): community nurses NEVER transfer serum to a separate tube - the SST is sent as
+     is after centrifuging. The verbatim eLab text (incl. its serum-transfer option) stays in the Hep C test details, labelled as eLab text. */
   handling:{centrifuge:true, source:'VCH community practice (K. Williams)', date:'2026-10-11',
-   text:'Clot, then centrifuge (VCH community practice).'}},
+   text:'Clot, then centrifuge. Send in the original SST; do not transfer serum (VCH community practice).'}},
  /* constraint: communicable disease tests never share a tube with non-communicable tests (enforced in summary.js plan()). */
  {id:'communicable_separate', kind:'constraint', source:'VCH community practice (K. Williams)', date:'2026-10-11',
   ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbeag','hbv_serology','hbv_dna','hep_acute','hep_chronic'],

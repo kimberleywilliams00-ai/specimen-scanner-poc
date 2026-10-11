@@ -221,7 +221,7 @@ function elabBlock(eb,e,u){const b=el('div',{class:'elab-block'},el('div',{class
   // differences vs the LifeLabs entry
   const c=(e&&e.collect.find(x=>x.kind==='blood'&&x.destGroup==='PHL'))||(e&&e.collect.find(x=>x.kind==='blood'));const diff=[];
   if(c){const cl=eb.specimens.find(x=>x.preferred),sv=eb.specimens.find(x=>x.centrifuge);
-    if(c.centrifuge===false&&sv)diff.push('Centrifuging: LifeLabs page “'+((c.notes||[]).find(n=>/centrifug/i.test(n))||'Do NOT centrifuge')+'”; BCCDC eLab: '+cl.specimen+' (Preferred, no centrifuge step) or '+sv.specimen+' (centrifuge '+sv.spinMinutes+' min at '+sv.rcf+' rcf, transfer to a '+sv.container.toLowerCase()+'). Local practice for the BCCDC serology SST: clot, then centrifuge.');
+    if(c.centrifuge===false&&sv)diff.push('Centrifuging: LifeLabs page “'+((c.notes||[]).find(n=>/centrifug/i.test(n))||'Do NOT centrifuge')+'”; BCCDC eLab: '+cl.specimen+' (Preferred, no centrifuge step) or '+sv.specimen+' (centrifuge '+sv.spinMinutes+' min at '+sv.rcf+' rcf, transfer to a '+sv.container.toLowerCase()+'). Local practice for the BCCDC serology SST: clot, then centrifuge; send in the original SST, do not transfer serum.');
     if(!c.clotMinutes&&cl.clot)diff.push('Clotting: LifeLabs page has no clot step; BCCDC eLab: “'+cl.collection.find(x=>/clot/i.test(x))+'”');
     if(!c.volume)diff.push('Volume: LifeLabs page states none ('+c.container+'); BCCDC eLab: “'+eb.patientPrep+'” '+cl.specimen+' min '+cl.min+'.');
     if(c.temp)diff.push('Storage/transport: LifeLabs page '+c.temp+'; BCCDC eLab “'+eb.shipping+'”.');}
@@ -299,7 +299,6 @@ function render(host,items,opts){
             cl.specimen+' (Preferred), '+cl.container+': “'+cl.collection.find(x=>/clot/i.test(x))+'” '+sp.specimen+', '+sp.container+': “'+sp.collection.find(x=>/centrifuge/i.test(x))+'” “'+sp.collection.find(x=>/transfer/i.test(x))+'”'));
           const ll=t.llSettings;
           box.appendChild(el('div',{class:'fact small',text:'Clot time and centrifuge settings: BCCDC eLab Handbook ('+eb.title+'; BCCDC-bound tube).'+(ll?' LifeLabs SST pages differ: clot ≥ '+ll.clotMinutes+' min, centrifuge '+ll.spinMinutes+' min at '+ll.rcf+' RCF ('+t.handlingFrom.join(', ')+').':'')}));
-          box.appendChild(el('div',{class:'fact caveat amberline',text:'⚠ BCCDC eLab: clotted blood in the SST is “(Preferred)”; its centrifuged option is serum transferred to a sterile tube (min '+sp.min+'). The eLab page does not say whether a centrifuged SST sent without transfer is accepted - confirm with BCCDC.'}));
           const oth=t.members.filter(m=>!elabOf(m.unit)).map(m=>m.unit.name);if(oth.length)box.appendChild(el('div',{class:'fact small',text:'No BCCDC eLab Handbook entry in the app yet for: '+oth.join(', ')+'.'}));}
         else box.appendChild(el('div',{class:'fact small',text:t.handlingSettingsOk?'Clot time and centrifuge settings: LifeLabs Lab Test Information SST page for '+t.handlingFrom.join(', ')+'. No BCCDC eLab Handbook entry in the app yet for the tests in this tube.':'⚠ LifeLabs SST clot/centrifuge settings differ between pages - confirm settings with LifeLabs.'}));
         if(t.spinInfo&&t.llSpin)box.appendChild(el('div',{class:'fact small',text:'LifeLabs page text per test (see each test below): '+t.spinInfo+'.'}));}}
