@@ -13,6 +13,7 @@ const F={forms:[
   specimens:{
    serum:{tube:'serum separator tube', css:'gold', texts:['HIV Testing -Please provide 1 serum separator tube.','Hepatitis Serology Testing -Please provide 1 serum separator tube.'],
           combine:'Combinations of Syphilis, HIV, Hepatitis Serology and Other Serology -Please provide 1 serum separator tube.'},
+   prenatal:{tube:'serum separator tube', css:'gold', texts:['Prenatal Testing -Please provide 2 serum separator tubes.'], combine:'Prenatal Testing -Please provide 2 serum separator tubes.'},
    edta:{tube:'EDTA plasma (lavender-top) tube', css:'lav', texts:['For HCV RNA and HCV genotyping requests, please provide 1 EDTA plasma (lavender-top) tube.'],
          combine:'For HCV RNA and HCV genotyping requests, please provide 1 EDTA plasma (lavender-top) tube.'}},
   tests:[

@@ -82,6 +82,7 @@ const R={
   heading:'Each of the following tests must be collected in one 6.0mL EDTA lavender top tube',
   tests:['Hep B DNA','Hep C Viral Load','HIV Viral Load'], map:{hbv_dna:['Hep B DNA'],hcv_rna_quant:['Hep C Viral Load'],hiv_vl:['HIV Viral Load']},
   interpretation:'"Each ... in one 6.0mL EDTA" with "Each" highlighted like the "separate" sections (combinable sections say "can be combined in one"): read as one 6.0 mL EDTA tube PER test.',
+  confirmWhenMulti:true,
   confirm:'Chart wording "Each of the following tests must be collected in one 6.0mL EDTA" is read as one tube per test; whether one tube can serve several of these is not stated.'}
  ]};
 R.byId={};for(const g of R.groups)for(const id in g.map)if(!R.byId[id])R.byId[id]={group:g,chartNames:g.map[id],partial:(g.partial||{})[id]||null,coverageNote:(g.coverageNote||{})[id]||null};

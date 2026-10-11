@@ -29,6 +29,12 @@ Local practice rules (`js/local_rules.js`) are kept separate from LifeLabs data 
 
 Source documents (chart, form, per-test PDFs) are not part of this repository; the data files are checked against their text by build scripts.
 
+## Local practice tube rules (v3.4)
+Three further local practice rules (`js/local_rules.js`, source *VCH community practice (K. Williams), 2026-10-11*) take priority over the LifeLabs chart and per-test entries where they conflict:
+1. **HCV RNA** (Hep C viral load / PCR; HCV genotyping shares that tube per the BCCDC form) and **HIV Viral Load** each get their **own 6.0 mL EDTA** lavender tube (the chart's *confirm with lab* flag for this is removed).
+2. **BCCDC serology tube:** any combination of syphilis, HIV, hepatitis A/B/C serology (incl. Hep A IgM, Hep B core/surface Ab/Ag, HBeAg, Hep B screen/carrier, acute/chronic hepatitis profiles) and other serology goes in **one SST** for BCCDC, following the BCCDC PHL Serology Screening Requisition (PHRQ_HVS_0001F); prenatal panel = 2 SSTs. This replaces the chart's separate Hep A IgM/Hep B tube and two tubes per profile. Per-test LifeLabs centrifuge instructions are kept; when they differ within the tube, one amber note says *LifeLabs pages differ on centrifuging for some of these tests - confirm with BCCDC/LifeLabs* (the tube is not split).
+3. Communicable disease tests (HIV, hepatitis, syphilis) go to BCCDC and **never share a tube** with non-communicable tests (lipids, chemistry, etc.) - enforced in the tube planner.
+
 ## Using it on an iPhone
 1. Open the link above in Safari (first load downloads ~25 MB of engine files, then works offline).
 2. Optional: Share → *Add to Home Screen*.
