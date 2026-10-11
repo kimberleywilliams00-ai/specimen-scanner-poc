@@ -5,6 +5,7 @@
                    'as' maps an answer onto another (e.g. Unsure behaves like Yes). Answers live in memory only for the current summary.
    standing rule: {id, kind:'standing', source, date, scope:'bloodTube', text, detail} - shown on every matching tube card.
    tube rule (v3.4): {id, kind:'tube', appliesTo, tube, mix, shareSets, destination, text} - assigns tubes, overriding the LifeLabs chart.
+   handling (v3.5): tube rule field {centrifuge, settingsFrom, source, date, text, reference} - tube-level processing set by local practice.
    constraint (v3.4): {id, kind:'constraint', ids, text} - communicable disease tests never share a tube with other tests. */
 (function(root){'use strict';
 const L={rules:[
@@ -37,7 +38,13 @@ const L={rules:[
   text:'BCCDC serology tube: any combination of syphilis, HIV, hepatitis A/B/C serology and other serology goes in ONE SST, following the BCCDC PHL Serology Screening Requisition guidance (LifeLabs sends all of these to BCCDC). Overrides the LifeLabs chart’s separate Hep A IgM / Hep B tube and two tubes per hepatitis profile.',
   prenatal:'Prenatal panel: 2 SSTs (BCCDC PHL Serology Screening Requisition: “Prenatal Testing -Please provide 2 serum separator tubes.”) - no prenatal panel test in the scanner dictionary yet.',
   pcr:'HCV RNA / genotyping: EDTA, see the viral-load rule.',
-  centrifugeConflict:'LifeLabs pages differ on centrifuging for some of these tests - confirm with BCCDC/LifeLabs'},
+  /* v3.5 handling rule (VCH community practice, K. Williams, 2026-10-11): the BCCDC serology SST is CENTRIFUGED in community - allow to
+     clot first, then spin. Clot time / centrifuge settings (derived in summary.js, never hard-coded here): BCCDC eLab Handbook entry
+     (js/elab_data.js) when a test in the tube has one (BCCDC-bound tube), otherwise the LifeLabs SST settings in js/collection_data.js;
+     differences are shown. Replaces the v3.4 amber 'LifeLabs pages differ on centrifuging' note and the red 'Do NOT centrifuge' banner for
+     this tube; each test's LifeLabs page wording stays visible in its test details, labelled as LifeLabs page text. */
+  handling:{centrifuge:true, source:'VCH community practice (K. Williams)', date:'2026-10-11',
+   text:'Clot, then centrifuge (VCH community practice).'}},
  /* constraint: communicable disease tests never share a tube with non-communicable tests (enforced in summary.js plan()). */
  {id:'communicable_separate', kind:'constraint', source:'VCH community practice (K. Williams)', date:'2026-10-11',
   ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbeag','hbv_serology','hbv_dna','hep_acute','hep_chronic'],

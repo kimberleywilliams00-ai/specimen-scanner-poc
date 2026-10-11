@@ -88,3 +88,6 @@ ul.verbatim{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#333}
 .reqform{border:1px solid #9cc3ea;background:#f4f9fe;border-radius:8px;padding:6px 9px;margin:6px 0 8px}.reqform-h{font-weight:700;color:#174a7c}
 .fact.amberline{font-weight:700;border:1px solid #e0a800}
 .local-tag .nw{white-space:nowrap}
+.fact.elab{background:#eaf2fb;border-left:3px solid #2d6cb5;border-radius:4px;padding:3px 6px;color:#16385f}
+.elab-block{margin:6px 0;padding:6px 8px;border:1px solid #9fc0e6;border-radius:8px;background:#f4f8fd}
+.elab-block>.tname{color:#16385f;font-size:14px}

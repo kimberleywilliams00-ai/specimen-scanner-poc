@@ -35,6 +35,15 @@ Three further local practice rules (`js/local_rules.js`, source *VCH community p
 2. **BCCDC serology tube:** any combination of syphilis, HIV, hepatitis A/B/C serology (incl. Hep A IgM, Hep B core/surface Ab/Ag, HBeAg, Hep B screen/carrier, acute/chronic hepatitis profiles) and other serology goes in **one SST** for BCCDC, following the BCCDC PHL Serology Screening Requisition (PHRQ_HVS_0001F); prenatal panel = 2 SSTs. This replaces the chart's separate Hep A IgM/Hep B tube and two tubes per profile. Per-test LifeLabs centrifuge instructions are kept; when they differ within the tube, one amber note says *LifeLabs pages differ on centrifuging for some of these tests - confirm with BCCDC/LifeLabs* (the tube is not split).
 3. Communicable disease tests (HIV, hepatitis, syphilis) go to BCCDC and **never share a tube** with non-communicable tests (lipids, chemistry, etc.) - enforced in the tube planner.
 
+## Serology SST handling and BCCDC eLab Handbook (v3.5)
+- **Local practice** (`js/local_rules.js`, *VCH community practice (K. Williams), 2026-10-11*): the BCCDC serology SST is **clotted, then centrifuged** in community. This replaces the v3.4 amber *LifeLabs pages differ on centrifuging* note and the red *Do NOT centrifuge* banner for that tube. Each test's LifeLabs wording stays visible in its test details, labelled *LifeLabs page text*.
+- **Clot and centrifuge settings:** when a test in the tube has a BCCDC eLab Handbook entry, the app uses that entry, because the tube goes to BCCDC. Otherwise it uses the LifeLabs SST settings already in `js/collection_data.js` (clot ≥ 30 min, then 10 min at 1300 RCF). Any difference is shown.
+- **BCCDC eLab Handbook entries** (`js/elab_data.js`, verbatim; checked against the page text by `tools/check_elab.js`; the source page is not in this repository). So far there is one entry: *Hepatitis C Serology* (Last Changed Thursday, May 22, 2025). Its page lists two specimens:
+  - Clotted blood (Preferred), SST (gold top) blood tube, Min 3 mL: allow blood to clot upright at room temperature for about one hour.
+  - Serum, Sterile tube, Min 1 mL: centrifuge 10 minutes at 1200 rcf, then transfer the serum fraction to a sterile tube.
+  
+  Shipping: refrigerate where appropriate. Requisition: PHRQ_HVS_0001F (Version 1.0 August 2026). Each test card shows its own eLab block, labelled with that source, next to the LifeLabs entry. Where the two differ, BCCDC applies for BCCDC-bound tests and the difference is listed. An amber note says that the eLab page does not state whether a centrifuged SST sent without transferring the serum is accepted (confirm with BCCDC). Printed URL: www.elabhandbook.info/phsa.
+
 ## Using it on an iPhone
 1. Open the link above in Safari (first load downloads ~25 MB of engine files, then works offline).
 2. Optional: Share → *Add to Home Screen*.
