@@ -1,4 +1,4 @@
-# Req Scanner ui2 draft (v3.8-ui2) - not deployed
+# Labbie (v3.8.1)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
