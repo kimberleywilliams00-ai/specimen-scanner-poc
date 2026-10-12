@@ -78,7 +78,7 @@ const DATA={
 "orderNotes": [],
 "ambiguities": [
 "Performing laboratory not named; no collection volume printed (\"Collect specimen in a labeled 100 mL sterile container.\"; \"Do not over fill.\").",
-"Separate container: no source says ACR may share a cup with urinalysis, urine culture or CT/GC urine."
+"Shared container: no LifeLabs source covers whether ACR may share a cup with urinalysis. ACR shares the urinalysis cup by K. Williams' local practice rule ua_acr_share_cup (2026-10-12); CT/GC urine stays separate."
 ],
 "source": "LifeLabs Lab Test Information (Lower Mainland)",
 "lastPublished": "2026-06-30",

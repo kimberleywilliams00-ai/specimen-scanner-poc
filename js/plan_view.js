@@ -96,6 +96,49 @@ function prepShort(p){const s=p.replace(/^“|”$/g,'').replace(/^\d+\.\s+/,'')
   if(/not collect specimen during menses/i.test(s))return 'Not during menses';
   if(/must not have voided within the last hour|not have urinated for at least 1 hour/i.test(s))return 'No peeing for 1 hour before the sample';
   return s;}
+/* ui2 (2026-10-12): condensed 'Before you start' prep (display wording only; every source sentence stays verbatim in Details).
+   Each source sentence is split into fragments and each fragment mapped to a fact; a test shows each fact once (the most complete
+   wording wins, e.g. a requisition note adding the first-catch volume). Tests whose instructions are identical share one line; a test
+   whose instructions are those of another line plus one extra fact joins that line with the extra fact named. Unrecognised wording
+   is shown as written (not reworded). No time limits are added here (time limits come only from the sources, shown above). */
+function prepLabel(u){return shortName(u).replace(/^Chlamydia\/GC\b/,'CT/GC').replace(/\s+if indicated$/,'').replace(/\s*\([^)]*\)\s*$/,'')
+  .replace(/^HIV serology$/,'HIV').replace(/^Hep C antibody$/,'Hep C');}
+const PREP_FACTS=[ // [key, test, phrase, personal phrase (n = test name) or null]
+  ['meal',/at least (?:one|1) hours? after a meal/i,'At least 1 hour after a meal.'],
+  ['novoid',/not have voided within the last hour|not have urinated for at least (?:1|one) hour|(?:do not|don't|no) (?:void|urinat|pee)\w* for (?:at least )?(?:1|one) h/i,'No voiding for 1 hour.'],
+  ['firstvol',/first\s+(\d+)\s*[-–]\s*(\d+)\s*ml/i,m=>'Collect the first '+m[1]+'–'+m[2]+' mL.'],
+  ['midstream',/mid-?stream/i,'Mid-stream collection.'],
+  ['menses',/during menses/i,'Not during menses.'],
+  ['morning_rand',/first morning (?:specimen|sample) is preferr?ed,? but random (?:specimen |sample )?is acceptable/i,'First morning sample preferred; random is acceptable.',n=>n+' prefers a first morning sample (random is acceptable).'],
+  ['morning',/first morning (?:specimen|sample) is preferr?ed/i,'First morning sample preferred.',n=>n+' prefers a first morning sample.']];
+const SUPERSEDES={morning_rand:['morning']};
+function prepFacts(text){const out=[];const s=text.replace(/^“|”$/g,'').replace(/^\d+\.\s+/,'');
+  if(/\bnot (?:required|needed|necessary)\b|\bno fasting\b/i.test(s))return out; // K. Williams 2026-10-11: action-only; 'not required' stays in Details
+  const frags=s.split(/;\s*|\.\s+(?=[A-Z0-9])|\.\.\.\s*/).map(x=>x.trim()).filter(Boolean);
+  for(const f of frags){let hit=false;for(const [k,re,ph,pp] of PREP_FACTS){const m=f.match(re);if(!m)continue;
+      if(k==='morning'&&PREP_FACTS[5][1].test(f))continue;hit=true;out.push({k,ph:typeof ph==='function'?ph(m):ph,pp:pp||null});}
+    if(!hit&&!/^\s*\(?(?:see|refer)\b/i.test(f))out.push({k:'raw:'+f.toLowerCase().replace(/[.\s]+$/,''),ph:f.replace(/\.?$/,'.'),pp:null,raw:true});}
+  return out;}
+function prepVolRules(){const LR=root.LocalRules||{rules:[]},GD=root.GuideData||{entries:[]};
+  return LR.rules.filter(r=>r.kind==='prepVolume'&&(()=>{const g=GD.entries.find(g=>g.id===r.quoteFrom.guide);return g&&JSON.stringify(g).includes(r.quoteFrom.match);})());}
+function prepLines(U){const tests=new Map();const unitByName=n=>U.units.find(x=>x.name===n)||U.units.find(x=>(x.items||[]).some(it=>it.name===n));
+  for(const [w,p] of U.prep){const isReq=/\(requisition\)$/.test(w);const who=w.replace(/ \(BCCDC eLab Handbook\)$/,'').replace(/ \(requisition\)$/,'');
+    const us=isReq?[unitByName(who)]:who.split(', ').map(unitByName);const fs=prepFacts(p);if(!fs.length)continue;
+    us.forEach((u,i)=>{const lab=u?prepLabel(u):(isReq?who:who.split(', ')[i]);if(!tests.has(lab))tests.set(lab,new Map());const m=tests.get(lab);
+      for(const f of fs){if(!m.has(f.k)||f.ph.length>m.get(f.k).ph.length)m.set(f.k,f);}});}
+  // turn 21: prepVolume local rule (K. Williams, LifeLabs Doc#31847) - the first-catch volume always comes from the quoted source
+  for(const r of prepVolRules()){for(const [lab,m] of tests){const u=U.units.find(x=>prepLabel(x)===lab);if(u&&u.ids.some(i=>r.appliesTo.includes(i))&&m.has('novoid'))
+      m.set('firstvol',{k:'firstvol',ph:'Collect the first '+r.volume+'.',pp:null});}}
+  for(const m of tests.values())for(const [k,sub] of Object.entries(SUPERSEDES))if(m.has(k))for(const x of sub)m.delete(x);
+  const ORDER=PREP_FACTS.map(f=>f[0]);const sig=m=>[...m.keys()].sort().join('|');
+  const groups=[];for(const [lab,m] of tests){const g=groups.find(g=>sig(g.m)===sig(m));if(g)g.labels.push(lab);else groups.push({labels:[lab],m,extra:[]});}
+  // a single-test group = another group's facts + extra personal facts -> join that group
+  for(const g of [...groups]){if(g.labels.length!==1||g.extra.length)continue;
+    const host=groups.find(h=>h!==g&&!h.extra.length&&h.m.size&&[...h.m.keys()].every(k=>g.m.has(k))&&g.m.size>h.m.size&&[...g.m.keys()].filter(k=>!h.m.has(k)).every(k=>g.m.get(k).pp));
+    if(host){host.labels.push(g.labels[0]);host.extra.push(...[...g.m.keys()].filter(k=>!host.m.has(k)).map(k=>g.m.get(k).pp(g.labels[0].replace(/^Urine\s+/,''))));groups.splice(groups.indexOf(g),1);}}
+  const ord=k=>{const i=ORDER.indexOf(k);return i<0?99:i;};
+  return groups.map(g=>({label:g.labels.join(', '),text:[...[...g.m.entries()].sort((a,b)=>ord(a[0])-ord(b[0])).map(e=>e[1].ph),...g.extra].join(' '),
+    raw:[...g.m.values()].some(f=>f.raw)}));}
 /* short wording for red local-practice stoppers (display only; the full rule text is shown in Details) */
 /* ui2 (2026-10-11): every test name links to its own source page (summary.js srcOf); opens in a new tab */
 const nameLink=(u,text)=>H.srcLink(u,text||shortName(u),'tn');
@@ -150,15 +193,15 @@ function render(host,items,opts){
         el('div',{class:'ask-t'},...linkLead(names+' is left out of the plan until you answer.',us)),seg(st,rerender,opts),qdet(q,st)));}
     else bys.appendChild(el('div',{class:'okq'},el('div',{class:'qline',text:st.rule.question}),seg(st,rerender,opts),el('div',{class:'ask-t',text:ef.text}),qdet(q,st)));}
   const tl=[];for(const {u,s} of U.crit)tl.push(el('li',{},el('b',{class:'red'},nameLink(u),' - time limit: '),s.text+(s.when?' (when '+s.when+')':'')));
-  const pg=new Map();for(const [w,p] of U.prep){const isReq=/\(requisition\)$/.test(w);const k=isReq?p:prepShort(p);if(k==null)continue;
-    const who=w.replace(/ \(BCCDC eLab Handbook\)$/,'').replace(/ \(requisition\)$/,'');
-    const nm=who.split(', ').map(n=>{const u=U.units.find(x=>x.name===n);return u?shortName(u):n;}).join(', ');
-    if(!pg.has(k))pg.set(k,[]);pg.get(k).push(nm+(isReq?' (on form)':''));}
-  for(const [k,ws] of pg)tl.push(el('li',{},el('b',{text:uniq(ws).join(', ')+': '}),k));
+  // ui2 (2026-10-12): condensed prep - one fact per meaning per test, tests with the same instruction merged; verbatim text stays in Details
+  { const lines=prepLines(U);for(const l of lines)tl.push(el('li',{},el('b',{text:l.label+': '}),l.text)); }
   { const p1=nonBlood.find(t=>t.pairNo===1),p2=nonBlood.find(t=>t.pairNo===2); // ui2: both LifeLabs urine pages number the two containers
-    if(p1&&p2)tl.push(el('li',{},el('b',{text:'Two urine cups: '}),'mark the Chlamydia/GC cup #1 (line at 30 mL, first void) and the culture cup #2 (midstream). Wording in Details.'));}
-  for(const d of U.pdocs||[])tl.push(el('li',{},el('b',{},...d.units.flatMap((u,i)=>i?[', ',nameLink(u)]:[nameLink(u)]),': '),
-    'Patient instructions: '+(d.g.issuer||'LifeLabs')+' sheet '+(d.g.docNumber?d.g.docNumber+' ':'')+'(“'+d.g.title+'”). Key steps in Details.'));
+    if(p1&&p2)tl.push(el('li',{},el('b',{text:'Two urine cups: '}),'Mark the CT/GC cup #1 (first void, to the 30 mL line) and the culture cup #2 (midstream).'));}
+  for(const r of prepVolRules())if(U.units.some(u=>u.ids.some(i=>r.appliesTo.includes(i)))){const g=(root.GuideData.entries.find(g=>g.id===r.quoteFrom.guide));
+    bysDet.push(el('div',{class:'fact small'},el('b',{text:'Local decision ('+r.source+', '+r.date+'): '}),r.text+' Source: '+g.issuer+' '+g.docNumber+' (“'+g.title+'”): “'+r.quoteFrom.match+'”.'));}
+  // patient instruction sheet references -> Details & sources (sheet text itself is in part('pinstr'))
+  if((U.pdocs||[]).length)bysDet.push(el('ul',{class:'pdoc-refs small'},...U.pdocs.map(d=>el('li',{},el('b',{},...d.units.flatMap((u,i)=>i?[', ',nameLink(u)]:[nameLink(u)]),': '),
+    'Patient instructions: '+(d.g.issuer||'LifeLabs')+' sheet '+(d.g.docNumber?d.g.docNumber+' ':'')+'(“'+d.g.title+'”).'))));
   if(tl.length){need=true;bys.appendChild(el('ul',{class:'prep'},...tl));}
   // (HIV viral load spin/separation 'check with BCCDC' box removed 2026-10-11: it came from the eLab HIV-1 NAT page, a different test)
   bysDet.push(...[part('crit'),part('prep'),part('pinstr')].filter(Boolean));

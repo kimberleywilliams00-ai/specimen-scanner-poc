@@ -104,6 +104,20 @@ const L={rules:[
  {id:'idp_cdiff_one_swab', kind:'shareSpecimen', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['infectious_diarrhea_panel','c_diff'],
   guide:'bc_gpac_infectious_diarrhea', short:'One swab for both tests.',
   text:'One Copan FecalSwab covers both C. difficile and the Infectious Diarrhea Panel.'},
+ /* ui2 (2026-10-12, turn 21): prepVolume - K. Williams' decision: the CT/GC urine prep line always shows the first-catch volume from
+    LifeLabs Doc#31847 (quoteFrom, looked up verbatim in js/guide_data.js; the line shows no volume if the sentence is missing), even when a
+    requisition note says 15-20 mL or LifeLabs Doc.#38123 says 30 mL. All source wordings stay verbatim in Details. */
+ {id:'ctgc_urine_volume', kind:'prepVolume', source:'K. Williams decision, per LifeLabs Doc#31847', date:'2026-10-12', appliesTo:['ct_ng_urine'],
+  volume:'20–30 mL', quoteFrom:{guide:'ll_doc31847', match:'Collect the first 20-30 mL of voided urine (NOT midstream)'},
+  text:'CT/GC urine volume: the plan shows "first 20–30 mL" (LifeLabs Doc#31847) even when the requisition or another source states a different volume.'},
+ /* ui2 (2026-10-12, turn 22): shareCup - K. Williams local practice: urinalysis (macroscopic/dipstick, microscopic, micro-if-indicated) and
+    Urine ACR share ONE urine cup when both are ordered (overrides the per-page noShare default for this pairing only; no LifeLabs page
+    states this either way). If urine culture already shares the UA cup (LifeLabs C&S page), ACR joins that cup. CT/GC urine stays separate.
+    groups: every group must be present for the rule to apply. */
+ {id:'ua_acr_share_cup', kind:'shareCup', source:'K. Williams local practice', date:'2026-10-12',
+  groups:[['urine_macroscopic','urine_microscopic','urine_micro_if_indicated'],['acr_urine']], hostFirst:['cs_urine','cs_urine_if_indicated','urine_macroscopic','urine_micro_if_indicated','urine_microscopic'],
+  short:'One cup for urinalysis and ACR: mid-stream, first morning preferred – put all the labels on it.',
+  text:'Urinalysis and Urine ACR share one urine cup (mid-stream collection, first morning sample preferred, refrigerated, all labels on the cup). If urine culture shares the urinalysis cup (LifeLabs C&S page), ACR goes in that cup too. CT/GC urine stays in its own first-catch cup.'},
  /* ui2 (turn 14): drawLast - tubes whose container matches are drawn last (local practice). */
  {id:'acd_draw_last', kind:'drawLast', source:'VCH community practice (K. Williams)', date:'2026-10-11', match:'ACD', text:'ACD yellow tube: draw last (local practice).'},
  /* ui2 (2026-10-11, turn 16): chartJoin - AFP tube (K. Williams): when other chemistry is ordered AFP shares the chemistry 5 mL SST

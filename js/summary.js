@@ -281,6 +281,12 @@ function plan(units){
   for(const o of others.slice()){const sw=o.c&&o.c.shareWith;if(!sw||!others.includes(o))continue;
     for(const p of others.slice()){const pe=p.members[0].unit.entry;if(p===o||!pe||!sw.entries.includes(pe.id))continue;
       o.members.push(...p.members);(o.sharedWith=o.sharedWith||[]).push({unit:p.members[0].unit,c:p.c,quote:sw.quote,from:o.members[0].unit});others.splice(others.indexOf(p),1);}}
+  // ui2 (2026-10-12, turn 22): local practice shareCup (K. Williams) - runs after the LifeLabs shareWith merge so ACR joins a UA+culture cup
+  for(const r of LR.rules.filter(r=>r.kind==='shareCup')){const ent=o=>o.members.map(m=>m.unit.entry&&m.unit.entry.id).filter(Boolean);
+    if(!r.groups.every(g=>others.some(o=>ent(o).some(e=>g.includes(e)))))continue;const all=r.groups.flat();
+    const hit=others.filter(o=>ent(o).some(e=>all.includes(e)));if(hit.length<2)continue;
+    const rank=o=>{const i=r.hostFirst.findIndex(h=>ent(o)[0]===h);return i<0?99:i;};const o=hit.slice().sort((a,b)=>rank(a)-rank(b))[0];
+    for(const p of hit){if(p===o)continue;o.members.push(...p.members);(o.sharedWith=o.sharedWith||[]).push({unit:p.members[0].unit,c:p.c,rule:r,g:null,from:o.members[0].unit});others.splice(others.indexOf(p),1);}}
   for(const o of others){o.label=o.c.altContainer?o.c.container+' or '+o.c.altContainer:o.c.container;o.css=tubeColour(o.c.container).css;o.ofType=1;o.no=1;o.chartOnly=[];
     // ui2 (2026-10-11): kit / site steps / time limit from the collection guides (verbatim; js/guide_data.js)
     const u=o.members[0].unit,ids=u.ids,gs=guidesFor(u);
