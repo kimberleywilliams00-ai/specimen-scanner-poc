@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.7'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-11';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -56,49 +56,64 @@ async function handleFile(file){
 
 function el(tag,attrs,...kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='class')e.className=attrs[k];else if(k==='text')e.textContent=attrs[k];else e.setAttribute(k,attrs[k]);}for(const k of kids)if(k)e.appendChild(typeof k==='string'?document.createTextNode(k):k);return e;}
 
+/* ui2: Step 1 'Confirm tests' - compact list; flagged lines (red possible missed line / not recognised, amber check) first and expanded;
+   what the scan read, section and form notes sit behind a small tap on each row. Same item states and selection logic as v3.7. */
 function render(r){
   const L=$('layout');L.innerHTML='';
-  if(r.layout==='list')L.appendChild(el('div',{class:'layout-ok',text:'✔ Printed test list recognised'}));
-  else if(r.layout==='grid')L.appendChild(el('div',{class:'layout-ok',text:'✔ LifeLabs standard requisition D2350'+(r.info.formVersion?' ('+r.info.formVersion+')':'')}));
-  else{L.appendChild(el('div',{class:'layout-bad',text:'⚠ Layout not recognised – please confirm tests manually'}));if(r.reason)L.appendChild(el('div',{class:'small',text:r.reason}));}
-  if(r.warning)L.appendChild(el('div',{class:'small',text:'⚠ '+r.warning}));
-  if(r.lowRes)L.appendChild(el('div',{class:'small',text:'⚠ Low-resolution photo: results are less reliable. Use the full camera resolution and fill the frame.'}));
+  const line=(cls,text)=>L.appendChild(el('div',{class:'stat '+cls,text}));
   const warn=r.items.filter(i=>i.warn);const tests=r.items.filter(i=>!i.warn);
-  if(warn.length)L.appendChild(el('div',{class:'alert-bad',text:`⚠ ${warn.length} possible missed line${warn.length>1?'s':''}: a checkbox was seen but its test could not be read. Check the paper (see red card${warn.length>1?'s':''} below).`}));
   const nv=tests.filter(i=>i.status!=='ok'&&i.checked!==false).length;
-  if(r.items.length)L.appendChild(el('div',{class:'small',text:`${tests.filter(i=>i.checked!==false).length} ticked line(s) read${nv?`, ${nv} need checking (amber/red)`:''}. Compare with the paper before confirming.`}));
-  if(r.standingOrder){const so=r.standingOrder;L.appendChild(el('div',{class:'note so so-banner',text:'🔁 Standing order ('+(so.all?'all tests':so.count+' of '+so.total+' tests')+'): '+so.text}));}
+  if(warn.length)line('stop',`${warn.length} possible missed line${warn.length>1?'s':''} – a ticked box was seen but not read. Check the paper.`);
+  if(r.layout!=='list'&&r.layout!=='grid'){line('check','Form layout not recognised – tick the tests by hand.');if(r.reason)L.appendChild(el('div',{class:'small stat-sub',text:r.reason}));}
+  if(r.warning)line('check',r.warning);
+  if(r.lowRes)line('check','Low-resolution photo – results are less reliable. Use the full camera and fill the frame.');
+  if(r.standingOrder){const so=r.standingOrder;line('neutral so-banner','Standing order ('+(so.all?'all tests':so.count+' of '+so.total+' tests')+'): '+so.text);}
+  const nt=tests.filter(i=>i.checked!==false).length;
+  const form=r.layout==='list'?'Printed test list':r.layout==='grid'?'LifeLabs D2350'+(r.info.formVersion?' ('+r.info.formVersion+')':''):'';
+  $('stepsub1').textContent=`${nt} test${nt===1?'':'s'} read${nv+warn.length?` · ${nv+warn.length} to check`:''}${form?' · '+form:''}`;
   const list=$('list');list.innerHTML='';
-  const groups={};const order=[];
-  const MISSED='⚠ Possible missed lines – check paper';
-  for(const [i,it] of r.items.entries()){it._i=i;const g=it.warn?MISSED:it.checked===false?'Unticked on form (not ordered)':(it.id?(it.category||'Other'):'Needs review');if(!groups[g]){groups[g]=[];order.push(g);}groups[g].push(it);}
-  const rank=g=>g===MISSED?-2:g==='Needs review'?-1:g.startsWith('Unticked')?1:0;order.sort((a,b)=>rank(a)-rank(b));
-  for(const g of order){const box=el('div',{class:'grp'+(g===MISSED?' missed':'')},el('h3',{text:g}));for(const it of groups[g])box.appendChild(itemEl(it,r));list.appendChild(box);}
+  const frank=i=>i.warn?0:i.status==='unrecognized'?1:2; // red first (possible missed line, not recognised), then amber
+  const flagged=r.items.filter(i=>i.warn||(i.checked!==false&&i.status!=='ok')).sort((a,b)=>frank(a)-frank(b));
+  const ok=r.items.filter(i=>!i.warn&&i.checked!==false&&i.status==='ok');
+  const unt=r.items.filter(i=>!i.warn&&i.checked===false);
+  r.items.forEach((it,i)=>{it._i=i;});
+  if(flagged.length){const g=el('div',{class:'grp flag'},el('h3',{text:'Check these ('+flagged.length+')'}));for(const it of flagged)g.appendChild(itemEl(it,r));list.appendChild(g);}
+  const g=el('div',{class:'grp',id:'grpTests'},el('h3',{text:flagged.length?'Tests read':'Tests'}));for(const it of ok)g.appendChild(itemEl(it,r));list.appendChild(g);
+  if(unt.length){const d=el('details',{class:'dx grp-unt'},el('summary',{text:unt.length+' line'+(unt.length>1?'s':'')+' not ticked on the form'}));const b=el('div',{class:'dx-body'});for(const it of unt)b.appendChild(itemEl(it,r));d.appendChild(b);list.appendChild(d);}
   const dl=$('dict');dl.innerHTML='';for(const t of D.TESTS)dl.appendChild(el('option',{value:t[1]}));
   const nb=(r.info.columnBoxes!=null?r.info.columnBoxes:(r.info.boxesFound||0))+(r.info.looseMarks||0);
   $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
   const ov=$('overlay');if(r.image){drawOverlay(r);ov.classList.remove('hidden');}else ov.classList.add('hidden');}
 
 function itemEl(it,r){
+  const flag=it.warn||(it.checked!==false&&it.status!=='ok');
   const cls='item '+(it.warn?'missed':it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});cb.checked=it.checked!==false&&it.status!=='unrecognized'&&!it.warn;
   cb.addEventListener('change',()=>{it.selected=cb.checked;});it.selected=cb.checked;
-  const body=el('div',{class:'body'});
-  const title=el('div',{class:'name',text:it.warn?'Possible missed line – check paper':it.id?(it.testName):(it.name||it.raw||'(unreadable line)')});
+  const nameTxt=el('span',{class:'nm',text:it.warn?'Possible missed line':it.id?(it.testName):(it.name||it.raw||'(unreadable line)')});
+  const title=el('span',{class:'name'},nameTxt);
   if(it.status==='verify')title.appendChild(el('span',{class:'badge',text:it.boxDetected===false?'check box?':'check'}));
   if(it.status==='unrecognized')title.appendChild(el('span',{class:'badge bad',text:'not recognised'}));
   if(it.checked===false)title.appendChild(el('span',{class:'badge grey',text:'unticked'}));
-  body.appendChild(title);
-  if(it.warn){body.appendChild(el('div',{class:'raw',text:'A ticked checkbox was found here but the test name could not be read. Find this line on the paper and choose the test below (or add it manually).'}));
+  const lab=el('label',{class:'rowlab'},cb,title);
+  // what the scan read + section + notes: behind a small tap for normal rows, shown for flagged rows
+  const more=el('div',{class:'more'});
+  const readTxt=it.raw&&(!it.id||it.status!=='ok'||D.norm(it.name)!==D.norm(it.testName))?'Read on form: “'+(it.name||it.raw)+'”'+(it.section?' · under '+it.section:''):it.section?'Under '+it.section:'';
+  if(readTxt)more.appendChild(el('div',{class:'raw',text:readTxt}));
+  const soAll=r&&r.standingOrder&&r.standingOrder.all;let nNotes=0;
+  for(const n of it.notes||[]){if(n.common&&soAll)continue;nNotes++;if(n.common){more.appendChild(el('div',{class:'note so',text:'Standing order: as above'}));continue;}more.appendChild(el('div',{class:'note'+(n.type==='standing order'?' so':''),text:(n.type==='standing order'?'Standing order: ':n.type==='frequency'?'Repeats: ':n.type.replace(/^./,c=>c.toUpperCase())+': ')+n.text}));}
+  if(nNotes)title.appendChild(el('span',{class:'tag',text:nNotes>1?nNotes+' notes':'note'}));
+  const body=el('div',{class:'body'},lab);
+  if(it.warn){body.appendChild(el('div',{class:'raw strong',text:'A ticked box was found here but the test could not be read. Find this line on the paper and choose the test below, or add it.'}));
     if(it.crop){const c=el('canvas',{class:'crop'});c.width=it.crop.width;c.height=it.crop.height;c.getContext('2d').putImageData(new ImageData(it.crop.data,it.crop.width,it.crop.height),0,0);body.appendChild(c);}}
-  if(it.raw&&(!it.id||it.status!=='ok'||D.norm(it.name)!==D.norm(it.testName)))body.appendChild(el('div',{class:'raw',text:'Read on form: “'+(it.name||it.raw)+'”'+(it.section?' · under '+it.section:'')}));
-  else if(it.section)body.appendChild(el('div',{class:'raw',text:'Under '+it.section}));
-  const soAll=r&&r.standingOrder&&r.standingOrder.all;
-  for(const n of it.notes||[]){if(n.common&&soAll)continue;if(n.common){body.appendChild(el('div',{class:'note so',text:'🔁 Standing order (as above)'}));continue;}body.appendChild(el('div',{class:'note'+(n.type==='standing order'?' so':''),text:(n.type==='standing order'?'🔁 Standing order: ':n.type==='frequency'?'🔁 ':'📝 '+n.type.replace(/^./,c=>c.toUpperCase())+': ')+n.text}));}
-  if(!it.id||it.status==='verify'){const sel=el('select');sel.appendChild(el('option',{value:'',text:it.id?'Change test…':'Choose matching test…'}));
+  let tog=null;
+  if(more.children.length){if(flag)body.appendChild(more);
+    else{more.hidden=true;tog=el('button',{type:'button',class:'moreb','aria-expanded':'false','aria-label':'Show what the scan read',text:'⋯'});
+      tog.addEventListener('click',()=>{more.hidden=!more.hidden;tog.setAttribute('aria-expanded',String(!more.hidden));});body.appendChild(more);}}
+  if(!it.id||it.status==='verify'){const sel=el('select',{'aria-label':'Choose the matching test'});sel.appendChild(el('option',{value:'',text:it.id?'Change test…':'Choose matching test…'}));
     for(const t of D.TESTS.slice().sort((a,b)=>a[1].localeCompare(b[1])))sel.appendChild(el('option',{value:t[0],text:t[1]}));
-    sel.addEventListener('change',()=>{if(!sel.value)return;const e=D.BYID[sel.value];it.id=e.id;it.testName=e.name;it.category=e.category;it.status='ok';it.manual=true;cb.checked=true;it.selected=true;title.firstChild.textContent=e.name;});
+    sel.addEventListener('change',()=>{if(!sel.value)return;const e=D.BYID[sel.value];it.id=e.id;it.testName=e.name;it.category=e.category;it.status='ok';it.manual=true;cb.checked=true;it.selected=true;nameTxt.textContent=e.name;});
     body.appendChild(sel);}
-  return el('div',{class:cls},cb,body);}
+  return el('div',{class:cls+(flag?' flagged':'')},body,tog);}
 
 function drawOverlay(r){const cv=window.cv;const c=$('overlay');const m=r.image;const rgba=new cv.Mat();cv.cvtColor(m,rgba,cv.COLOR_GRAY2RGBA);
   for(const it of r.items){const col=it.checked===false?[150,150,150,255]:it.status==='ok'?[0,160,0,255]:it.status==='verify'?[230,140,0,255]:[220,0,0,255];
@@ -119,7 +134,7 @@ $('discard').addEventListener('click',reset);$('finish').addEventListener('click
 $('addBtn').addEventListener('click',()=>{const v=$('addTest').value.trim();if(!v||!current)return;const m=D.match(v);
   const exact=D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
   const it={id:e?e.id:null,testName:e?e.name:v,name:v,raw:'',category:e?e.category:'Other',status:e?'ok':'unrecognized',checked:true,notes:[],manual:true};
-  current.items.push(it);const box=el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it));$('list').appendChild(box);$('addTest').value='';});
+  current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';});
 $('confirm').addEventListener('click',()=>{if(!current)return;const sel=current.items.filter(i=>i.selected);
   // v3.2: Collection Summary from the on-device LifeLabs data file (js/collection_data.js); in memory only
   const items=sel.map(it=>({id:it.id||null,name:it.testName||it.name||it.raw,notes:(it.notes||[]).filter(n=>n.text).map(n=>({type:n.type,text:n.text}))}));

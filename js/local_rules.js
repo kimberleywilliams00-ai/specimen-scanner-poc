@@ -6,6 +6,7 @@
    standing rule: {id, kind:'standing', source, date, scope:'bloodTube', text, detail} - shown on every matching tube card.
    tube rule (v3.4): {id, kind:'tube', appliesTo, tube, mix, shareSets, destination, text} - assigns tubes, overriding the LifeLabs chart.
    handling (v3.5): tube rule field {centrifuge, settingsFrom, source, date, text, reference} - tube-level processing set by local practice.
+   refer (ui2): {id, kind:'refer', appliesTo, effect:{severity:'red', excludeFromTubes:true, title, text}, quoteFrom} - always applies, no question.
    constraint (v3.4): {id, kind:'constraint', ids, text} - communicable disease tests never share a tube with other tests. */
 (function(root){'use strict';
 const L={rules:[
@@ -22,10 +23,53 @@ const L={rules:[
    no:{severity:'info',excludeFromTubes:false,hideStability:'heparin|unknown anticoagulant',text:'Not on heparin / unknown anticoagulant: PTT can be collected in community in the citrate tube below.'},
    unanswered:{severity:'ask',excludeFromTubes:true,text:'Answer this question to see the PTT collection instructions. PTT is not included in the tubes below until you answer No.'}}}
 ,
+ /* ui2 (2026-10-11) refer rule (kind 'refer'): no question - the test is always taken out of the tube plan and shown as a red
+    'refer' item. quoteFrom: a sentence of the test's own LifeLabs page (looked up in js/collection_data.js at render time, never copied here). */
+ {id:'hiv_vl_refer_psc', kind:'refer', source:'VCH community practice (K. Williams)', date:'2026-10-11', appliesTo:['hiv_vl'],
+  rationale:'Community nurses do not separate plasma.',
+  effect:{severity:'red', excludeFromTubes:true, title:'HIV viral load: refer to a LifeLabs Patient Service Centre',
+   text:'HIV viral load: not collected in community - the LifeLabs page requires centrifuging and separating plasma into a second tube, which community does not do. Refer the client to the nearest LifeLabs Patient Service Centre with the requisition.'},
+  quoteFrom:{entry:'hiv_viral_load', match:'refer patient to the nearest LifeLabs Patient Service Centre'}},
  /* v3.4 tube rules (kind 'tube'): take priority over the LifeLabs chart (js/tube_rules.js) and per-test entries where they conflict.
     appliesTo: dictionary ids; shareSets: 'all' = every unit covered shares ONE tube, or a list of id sets that share one tube
     (any other covered id gets its own tube). destination is shown on the tube card. */
- {id:'viral_load_own_edta', kind:'tube', source:'VCH community practice (K. Williams)', date:'2026-10-11', overrides:'LifeLabs Quick Reference Chart',
+ /* ui2 (2026-10-11): specimen rule - community practice for a non-blood specimen, overriding part of the BCCDC eLab collection steps.
+   {id, kind:'specimen', appliesTo, container, keepSteps:[indexes of the eLab specimen's collection steps shown on the card], labSide:[indexes shown
+   in Details as lab-side only], text} */
+{id:'ctgc_urine_send_cup', kind:'specimen', source:'VCH community practice (K. Williams)', date:'2026-10-11', appliesTo:['ct_ng_urine','urine_trich'],
+ container:'Sterile urine cup (first-catch urine)', keepSteps:[0,1], labSide:[2,3,4],
+ text:'Community nurses send the urine cup (first-catch urine, about 20-30 mL). They do not do the 2 mL Aptima urine transfer; the pipette/transfer steps on the eLab page are lab-side.'},
+/* ui2 (2026-10-11, turn 10): cupOnly - community sends the urine CUP for these LifeLabs entries (by entry id); the boric acid /
+   preservative tube and pour-off on the LifeLabs page are lab-side (shown in Details only). volume: cup volume shown on the card, taken
+   from a source whose verbatim sentence is quoteFrom (looked up in js/guide_data.js at render time; not shown if the sentence is missing). */
+{id:'urine_culture_send_cup', kind:'cupOnly', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['cs_urine','cs_urine_if_indicated'],
+ container:'Sterile urine cup (midstream)', volume:'at least 20 mL', quoteFrom:{guide:'ll_doc38130', match:'A minimum of 20mL is required.'},
+ short:'Local practice: send the cup, no boric acid tube.',
+ text:'Community nurses send the urine cup to LifeLabs. They do not use boric acid (preservative) tubes; the boric acid pour-off on the LifeLabs page is lab-side.'},
+/* ui2 (2026-10-11, turn 11): collector - which swab sites community nurses may collect (CT/GC NAAT and GC culture swabs). sites: scanner
+   id -> 'ok' | 'cert' | 'confirm' | 'unknownSite'; flags: amber text per status (no flag for 'ok'). Replaces the GC CULTURE page's generic
+   "Medical Practitioner to collect specimen" amber (the page quote stays in Details). */
+{id:'swab_collector_sites', kind:'collector', source:'VCH community practice (K. Williams)', date:'2026-10-11',
+ sites:{ct_ng_vaginal:'ok', ct_ng_rectal:'ok', ct_ng_throat:'ok', gc_culture_rectum:'ok', gc_culture_throat:'ok',
+        ct_ng_cervix:'cert', gc_culture_cervix:'cert', ct_ng_urethra:'confirm', gc_culture_urethra:'confirm', gc_culture_other:'unknownSite'},
+ flags:{cert:'Requires STI certified practice (cervical/endocervical swab).', confirm:'Confirm whether community nurses may collect urethral swabs.',
+        unknownSite:'Site not stated: cervical swabs require STI certified practice; confirm whether community nurses may collect urethral swabs.'},
+ text:'Community nurses can collect vaginal, rectal and throat swabs. Cervical/endocervical swabs require STI certified practice. Urethral swabs: not yet confirmed.'},
+/* ui2 (2026-10-11, turn 11): kitSource - the kit shown on the card comes from a named guide row (verbatim, js/guide_data.js), not the
+   LifeLabs page. The LifeLabs container stays in Details as a quiet 'sources differ' note (no amber). */
+/* ui2 (2026-10-11, turn 19): handOut - FIT (K. Williams): the kit is the Eiken FIT tube in her illustration; community nurses hand out FIT kits.
+   The LifeLabs page's "Refer patient to the nearest LifeLabs Patient Service Centre." is a quiet Details note, not amber. */
+{id:'fit_eiken_handout', kind:'handOut', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['fit_ll'],
+ img:'eiken_fit_tube_teal_cap', alt:'Eiken FIT tube', text:'Community nurses hand out FIT kits. FIT kit: Eiken FIT tube.'},
+{id:'gc_culture_eswab', kind:'kitSource', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['gc_culture'],
+ guide:'bccdc_sti_quickref', kit:'gc_culture', short:'eSwab (green top)', img:'eswab_green_cap',
+ text:'GC culture swab: COPAN green-top eSwab, as in the BCCDC Quick Reference STI Screening and Testing Guide (May 2026).'},
+/* ui2 (2026-10-11): community transport. urineCup: every non-blood urine container (any urine test) is refrigerated. dropoff: where all community samples go. */
+{id:'urine_cup_fridge', kind:'urineCup', source:'VCH community practice (K. Williams)', date:'2026-10-11', temp:'Refrigerate',
+ text:'Urine cups are always refrigerated.'},
+{id:'dropoff_lifelabs', kind:'dropoff', source:'VCH community practice (K. Williams)', date:'2026-10-11',
+ text:'Community samples are dropped off at LifeLabs. LifeLabs transports BCCDC tests to BCCDC; the BCCDC requisition (e.g. BAM requisition) still goes with them.'},
+{id:'viral_load_own_edta', kind:'tube', source:'VCH community practice (K. Williams)', date:'2026-10-11', overrides:'LifeLabs Quick Reference Chart',
   appliesTo:['hcv_rna_quant','hcv_genotype','hiv_vl'],
   tube:{type:'EDTA',sizeMl:6.0,colour:'lavender',css:'lav',rank:5,label:'EDTA lavender top 6.0 mL'}, mix:'8-10',
   shareSets:[['hcv_rna_quant','hcv_genotype']], destination:'BCCDC',
@@ -47,6 +91,30 @@ const L={rules:[
      is after centrifuging. The verbatim eLab text (incl. its serum-transfer option) stays in the Hep C test details, labelled as eLab text. */
   handling:{centrifuge:true, source:'VCH community practice (K. Williams)', date:'2026-10-11',
    text:'Clot, then centrifuge. Send in the original SST; do not transfer serum (VCH community practice).'}},
+ /* ui2 (2026-10-11, turn 14): companion - CD4 REQUIRES a CBC collected at the same time (K. Williams). CD4 itself is the ACD yellow tube.
+    The CD4 page's 4 mL EDTA slot "(one for the Hematology Panel performed at LifeLabs)" is NOT a CD4 tube: if a CBC is on the requisition no
+    extra tube (note on the CD4 card); if not, one lavender 4 mL CBC tube is added, labelled as required for CD4, with an amber reminder.
+    That tube uses the LifeLabs Hematology Panel handling (entry hematology_panel). The page quote stays in Details. */
+ {id:'cd4_requires_cbc', kind:'companion', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['cd4_sph'], slotMatch:'EDTA', group:'EDTA40', handlingEntry:'hematology_panel',
+  reqName:'CBC (required for CD4)', note:'Requires a CBC collected at the same time.', satisfiedNote:'Requires a CBC collected at the same time - the CBC tube covers it.',
+  text:'CD4 requires a CBC (lavender EDTA 4 mL) collected at the same time.',
+  missingText:'CBC not on the requisition: a CBC must be collected and ordered with CD4.'},
+ /* ui2 (turn 14): shareSpecimen - ONE specimen for these LifeLabs entries (K. Williams). Supporting wording (verbatim) from a guide source in
+    js/guide_data.js (quotes are looked up there; not shown if missing). */
+ {id:'idp_cdiff_one_swab', kind:'shareSpecimen', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['infectious_diarrhea_panel','c_diff'],
+  guide:'bc_gpac_infectious_diarrhea', short:'One swab for both tests.',
+  text:'One Copan FecalSwab covers both C. difficile and the Infectious Diarrhea Panel.'},
+ /* ui2 (turn 14): drawLast - tubes whose container matches are drawn last (local practice). */
+ {id:'acd_draw_last', kind:'drawLast', source:'VCH community practice (K. Williams)', date:'2026-10-11', match:'ACD', text:'ACD yellow tube: draw last (local practice).'},
+ /* ui2 (2026-10-11, turn 16): chartJoin - AFP tube (K. Williams): when other chemistry is ordered AFP shares the chemistry 5 mL SST
+    (chart group joinGroup); when AFP is alone in its tube, SST gold 3.5 mL (as on the LifeLabs ALPHA FETOPROTEIN page). If it shares its own
+    chart group (SST50_ENDO) with other tests, that 5 mL tube is kept. The page/chart size difference is a quiet Details note. */
+ {id:'afp_tube', kind:'chartJoin', source:'VCH community practice (K. Williams)', date:'2026-10-11', ids:['afp'], fromGroup:'SST50_ENDO', joinGroup:'SST50_CHEM',
+  alone:{sizeMl:3.5, label:'SST gold top 3.5 mL'},
+  text:'AFP: SST gold 3.5 mL when it is alone in its tube; 5 mL when it shares the chemistry SST with other tests.'},
+ /* ui2 (turn 16): tubeSize - tube size not printed on the page; size from local practice (container match on the named entries). */
+ {id:'cd4_acd_8_5', kind:'tubeSize', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['cd4_sph'], match:'ACD', label:'ACD-A yellow 8.5 mL',
+  text:'CD4 ACD tube: ACD-A 8.5 mL.'},
  /* constraint: communicable disease tests never share a tube with non-communicable tests (enforced in summary.js plan()). */
  {id:'communicable_separate', kind:'constraint', source:'VCH community practice (K. Williams)', date:'2026-10-11',
   ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbeag','hbv_serology','hbv_dna','hep_acute','hep_chronic'],

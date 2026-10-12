@@ -7,6 +7,1260 @@ const DATA={
 "lastChecked": "2026-10-11",
 "entries": [
 {
+"id": "acr_urine",
+"title": "ACR - URINE",
+"name": "ACR - Urine (albumin/creatinine ratio)",
+"region": "Lower Mainland",
+"aka": [
+"ACR URINE RANDOM",
+"ALBUMIN/CREATININE URINE RANDOM",
+"ALBUMIN/CREATININE RATIO URINE RANDOM",
+"ALBUMIN/CREATINIE URINE RANDOM",
+"MACROALBUMINURIA",
+"MICROALBUMIN",
+"MICROALBUMIN SCREEN",
+"MICROALBUMIN URINE QUANTITATIVE",
+"MICROALBUMIN URINE RANDOM",
+"MICROALBUMIN URINE SCREEN",
+"MICROALBUMIN/CREATININE RATIO",
+"MICROALBUMIN-QUANTITATIVE",
+"URINE ALBUMIN QUANT",
+"URINE MICROALBUMIN RANDOM"
+],
+"dictIds": [
+"acr"
+],
+"discipline": "Chemistry",
+"methodology": "Calculation",
+"specimenType": "Urine (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Urine Cup",
+"collectionVolume": "",
+"preTestPrep": [
+"1. This is the test of choice if physician requests Albumin/Creatinine Ratio (ACR). Random Urine",
+"Creatinine will automatically be added.",
+"2. First morning specimen is prefered.",
+"3. Do not collect during menses.",
+"4. Complete the LifeLabs requisition.",
+"5. Ensure full patient & physician demographic information is included.",
+"6. Label sterile urine container with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"date & time of collection"
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a labeled 100 mL sterile container.",
+"2. Do not over fill.",
+"3. Do not aliquot.",
+"4. Ensure cap is tightened to avoid leakage.",
+"5. Place container in a specimen transport bag.",
+"6. Seal bag.",
+"7. Fold completed requisition and place in sleeve of bag.",
+"8. Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed requisition."
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "intRlab auto-orders random urine Creatinine.",
+"patientInstructionDocs": [],
+"patientPrep": [
+"First morning specimen is prefered.",
+"Do not collect during menses."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named; no collection volume printed (\"Collect specimen in a labeled 100 mL sterile container.\"; \"Do not over fill.\").",
+"Separate container: no source says ACR may share a cup with urinalysis, urine culture or CT/GC urine."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-06-30",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Urine Cup",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)",
+"notes": [
+"Collect specimen in a labeled 100 mL sterile container.",
+"Do not over fill.",
+"Do not aliquot."
+]
+}
+],
+"requisitionNotes": [
+"Complete the LifeLabs requisition.",
+"Ensure full patient & physician demographic information is included."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ACR---URINE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "afp",
+"title": "ALPHA FETOPROTEIN",
+"name": "AFP",
+"region": "Lower Mainland",
+"aka": [
+"AFP",
+"ALPHA-1 FETOPROTEIN",
+"ALPHA-FETOPROTEIN (NON-PREGNANT)"
+],
+"dictIds": [
+"afp"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Electrochemiluminescence (ECLIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 3.5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Container \"SST Gold top 3.5 mL\" on the page; the LifeLabs tube chart puts Alpha Fetoprotein in a 5.0 mL SST gold top. Local practice (K. Williams, rule afp_tube): 3.5 mL when alone, 5 mL when sharing the chemistry SST."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1.0,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ALPHA-FETOPROTEIN-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "albumin",
+"title": "ALBUMIN",
+"name": "Albumin",
+"region": "Lower Mainland",
+"aka": [
+"ALBUMIN SERUM",
+"PLASMA PROTEINS"
+],
+"dictIds": [
+"albumin",
+"calcium_albumin"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Bromcresol Green)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "7 days refrigerated",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ALBUMIN-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "alp",
+"title": "ALKALINE PHOSPHATASE",
+"name": "Alkaline phosphatase",
+"region": "Lower Mainland",
+"aka": [
+"ALKALINE PHOSPHATASE SERUM",
+"ALP"
+],
+"dictIds": [
+"alp"
+],
+"discipline": "Chemistry",
+"methodology": "Atellica CH930 Enzymatic",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "7 days refrigerated",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ALKALINE-PHOSPHATASE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "alt",
+"title": "ALANINE AMINOTRANSFERASE",
+"name": "ALT",
+"region": "Lower Mainland",
+"aka": [
+"ALT",
+"GPT",
+"SGPT",
+"TRANSAMINASE"
+],
+"dictIds": [
+"alt",
+"alt_ast_ggt"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (NADH)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "7 days refrigerated",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ALANINE-AMINOTRANSFERASE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ast",
+"title": "ASPARTATE AMINOTRANSFERASE",
+"name": "AST",
+"region": "Lower Mainland",
+"aka": [
+"ASPARTATE TRANSAMINASE",
+"AST",
+"SGOT"
+],
+"dictIds": [
+"ast",
+"alt_ast_ggt"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (NADH)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "7 days refrigerated",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ASPARTATE-AMINOTRANSFERASE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "bilirubin_direct",
+"title": "BILIRUBIN DIRECT",
+"name": "Bilirubin direct (conjugated)",
+"region": "Lower Mainland",
+"aka": [
+"BILIRUBIN CONJUGATED"
+],
+"dictIds": [
+"bilirubin_direct"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Diazo)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "2 days room temperature; 7 days refrigerated; 3 months frozen",
+"turnaroundTime": "24 hours",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Note: this specimen must be protected from direct sunlight. If unable to meet the processing",
+"requirements send patient to the nearest LifeLabs Patient Service Centre or hospital lab.",
+"For neonatal micro collections:",
+"1. 1 full amber SST microtainer is required.",
+"2. Allow ample time for heel to warm before proceeding with the collection. This will facilitate good",
+"blood flow.",
+"3. Use Microtainer Tube Extender.",
+"4. Protect from light."
+],
+"includes": [],
+"handling": [
+"Note: this specimen must be protected from direct sunlight. If unable to meet the processing",
+"requirements send patient to the nearest LifeLabs Patient Service Centre.",
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: DBIL doesn’t need to be wrapped in foil, provided the tube is kept out of direct sunlight."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST).",
+"Neonatal micro collection steps (amber SST microtainer) do not apply to community adult collection."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Note: this specimen must be protected from direct sunlight."
+],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/BILIRUBIN-DIRECT-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "bilirubin_indirect",
+"title": "BILIRUBIN INDIRECT",
+"name": "Bilirubin indirect (unconjugated)",
+"region": "Lower Mainland",
+"aka": [
+"BILIRUBIN UNCONJUGATED"
+],
+"dictIds": [
+"bilirubin_indirect"
+],
+"discipline": "Chemistry",
+"methodology": "Calculation",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "24 hours",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt locations: Send all urgent/STAT patients to local",
+"hospital."
+],
+"includes": [],
+"handling": [
+"Note: this specimen must be protected from direct sunlight. If unable to meet the processing",
+"requirements send patient to the nearest LifeLabs Patient Service Centre.",
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST).",
+"Methodology \"Calculation\" - no separate specimen beyond the SST."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-10-26",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Note: this specimen must be protected from direct sunlight."
+],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/BILIRUBIN-INDIRECT-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "bilirubin_total",
+"title": "BILIRUBIN TOTAL",
+"name": "Bilirubin total",
+"region": "Lower Mainland",
+"aka": [
+"BILIRUBIN",
+"BILIRUBIN MICRO SERUM",
+"NEONATAL BILIRUBIN",
+"INFANT BILIRUBIN",
+"PAEDIATRIC BILIRUBIN"
+],
+"dictIds": [
+"bilirubin"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Diazo)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "1 day room temperature; 7 days refrigerated; 6 months frozen",
+"turnaroundTime": "24 hours",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Sunshine Coast: Gibsons & Sechelt locations: Send all urgent/STAT patients to local hospital."
+],
+"includes": [],
+"handling": [
+"Note: this specimen must be protected from direct sunlight. If unable to meet the processing",
+"requirements send patient to the nearest LifeLabs Patient Service Centre.",
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Note: this specimen must be protected from direct sunlight."
+],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/BILIRUBIN-TOTAL-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "c_diff",
+"title": "C DIFFICILE MOLECULAR ASSAY",
+"name": "C. difficile (stool)",
+"region": "Lower Mainland",
+"aka": [
+"AADD",
+"ANTIBIOTIC ASSOICATED DIARRHEA",
+"C DIFF TOXIN",
+"C DIFFICILE CULTURE OR TOXIN ASSAY",
+"C. DIFFICILE CULTURE & TOXIN",
+"C. DIFFICILE TOXIN",
+"CDAD",
+"CDIF",
+"CDIF CULTURE AND TOXIN",
+"CDIF TOXIN",
+"CLOSTRIDIUM DIFFICILE ASSOCIATED DIARRHEA",
+"CLOSTRIDIUM DIFFICILE CULTURE OR TOXIN ASSAY",
+"CLOSTRIDIUM DIFFICILE TOXIN",
+"PSEUDOMEMBRANOUS COLITIS",
+"STOOL CDIF"
+],
+"dictIds": [
+"c_diff"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Stool/Fecal",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Copan Fecal)",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Prior to collection:",
+"Review Stool Fecal Swab - English with the patient.",
+"Instruct the patient to:",
+"legibly write their First and Last Name and DOB or PHN on the container label, using the",
+"same format as their government ID",
+"emphasize the importance of two unique identifiers as unlabeled or incompletely",
+"labeled specimens will be rejected",
+"2. When dropping off the specimen at a LifeLabs Patient Service Centre, the patient is required to",
+"remain at the lab until staff have reviewed the requisition and specimen."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Arabic",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - English",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Chinese",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Farsi",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - French",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Korean",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Punjabi",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Tagalog",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Vietnamese"
+],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"One Copan FecalSwab with the Infectious Diarrhea Panel when both are ordered - local practice (K. Williams, local rule idp_cdiff_one_swab); the LifeLabs pages do not say so."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Copan Fecal)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": true,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": ""
+}
+],
+"requisitionNotes": [
+"2. When dropping off the specimen at a LifeLabs Patient Service Centre, the patient is required to remain at the lab until staff have reviewed the requisition and specimen."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-DIFFICILE-MOLECULAR-ASSAY-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "calcium",
+"title": "CALCIUM",
+"name": "Calcium",
+"region": "Lower Mainland",
+"aka": [
+"CALCIUM SERUM"
+],
+"dictIds": [
+"calcium",
+"calcium_albumin"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Arsenazo)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "1 day room temperature; 5 days refrigerated; 28 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt locations:",
+"For urgent/ STAT requests refer the patient to the local hospital immediately."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Sunshine Coast (Gibsons & Sechelt) STAT note - not for VCH community (Details only)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CALCIUM-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "cd4_sph",
+"title": "IMMUNOPHENOTYPING (CD4) - SPH",
+"name": "CD4 (SPH)",
+"region": "Lower Mainland",
+"aka": [
+"CD4",
+"CD4/CD8 FOR HIV",
+"FLOW CYTOMETRY FOR HIV",
+"HIV IMMUNOPHENOTYPING",
+"IMMUNOPHENOTYPING FOR CD4",
+"IMMUNOPHENOTYPING FOR CD8",
+"IMMUNOPHENOTYPING FOR HELPER/SUPPRESSOR RATIO",
+"IMMUNOPHENOTYPING FOR HIV",
+"IMMUNOPHENOTYPING FOR HSR",
+"IMMUNOPHENOTYPING FOR LYMPHOCYTE HELPER/SUPPRESSOR RATIO",
+"IMMUNOPHENOTYPING FOR T CELL COUNT",
+"IMMUNOPHENOTYPING FOR T HELPER CELLS",
+"IMMUNOPHENOTYPING FOR T4/T8",
+"IMMUNOPHENOTYPING FOR T4/T8 RATIO",
+"IMMUNOPHENOTYPING FOR T8 COUNT"
+],
+"dictIds": [
+"cd4"
+],
+"discipline": "Hematology",
+"methodology": "",
+"specimenType": "Blood (Whole Blood)",
+"frequency": "6x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "ACD A Yellow",
+"collectionVolume": "1 full tube",
+"preTestPrep": [
+"1. Complete the LifeLabs requisition.",
+"2. Ensure HIV diagnosis and other relevant information is indicated.",
+"3. Note: this is a Biological Substance Category B specimen.",
+"4. If unable to adhere to the strict guidelines, refer patient to the nearest LifeLabs Patient Service",
+"Centre with a completed requisition.",
+"5. Hematology Panel is also required."
+],
+"includes": [],
+"handling": [
+"1. Collect one ACD A Yellow top tube and one 4 mL EDTA Lavender top tube (one for the Hematology",
+"Panel performed at LifeLabs)",
+"2. Gently invert/mix tube 8-10 times.",
+"3. Package specimen with copy of original requisition, attention: Specimen Management Send-Out",
+"Bench",
+"4. Transport according to TDG Biological Substance Category B"
+],
+"labelling": [],
+"storageTemp": "Room Temperature TDG Biological Substance Category B",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"ACD A Yellow tube size not printed (\"ACD A Yellow\"; \"1 full tube\") - local practice: ACD-A 8.5 mL (K. Williams, rule cd4_acd_8_5).",
+"Second tube on the page: 4 mL EDTA lavender \"(one for the Hematology Panel performed at LifeLabs)\" - local practice (K. Williams): CD4 requires a CBC collected at the same time; it is the CBC tube, not a CD4 tube (local rule cd4_requires_cbc).",
+"3. Note: this is a Biological Substance Category B specimen.",
+"3. Package specimen with copy of original requisition, attention: Specimen Management Send-Out Bench"
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-03-04",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "ACD A Yellow",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "1 full tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Transport according to TDG Biological Substance Category B"
+],
+"volumeMl": null,
+"noShare": false,
+"temp": "Room Temperature",
+"destGroup": "",
+"bag": ""
+},
+{
+"kind": "blood",
+"container": "4 mL EDTA Lavender top tube",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"volumeMl": null,
+"noShare": false,
+"temp": "Room Temperature",
+"destGroup": "",
+"bag": "",
+"notes": [
+"Collect one ACD A Yellow top tube and one 4 mL EDTA Lavender top tube (one for the Hematology Panel performed at LifeLabs)"
+]
+}
+],
+"requisitionNotes": [
+"1. Complete the LifeLabs requisition.",
+"2. Ensure HIV diagnosis and other relevant information is indicated.",
+"5. Hematology Panel is also required."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/IMMUNOPHENOTYPING--CD4----SPH-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ck",
+"title": "CREATINE KINASE",
+"name": "CK",
+"region": "Lower Mainland",
+"aka": [
+"CK",
+"CPK",
+"CREATINE PHOSPHOKINASE"
+],
+"dictIds": [
+"ck"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (NAD)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CREATINE-KINASE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
 "id": "creatinine",
 "title": "CREATININE",
 "name": "Creatinine (eGFR)",
@@ -96,7 +1350,291 @@ const DATA={
 "Complete LifeLabs requisition.",
 "Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CREATININE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "cs_urine",
+"title": "C&S URINE",
+"name": "C&S Urine (urine culture)",
+"region": "Lower Mainland",
+"aka": [
+"C AND S URINE",
+"MIDSTREAM URINE FOR CULTURE",
+"MSU FOR CULTURE",
+"URINE CULTURE",
+"URINE CULTURE AND SENSITIVITY",
+"URINE MCS"
+],
+"dictIds": [
+"culture_urine"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Urine Mid-Stream (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Sterile Urine Container + BC Preservative Tube",
+"collectionVolume": "5 mL",
+"preTestPrep": [
+"1. Provide the patient with:",
+"Completed LifeLabs requisition.",
+"Sterile urine container labeled with:",
+"full name of patient",
+"one other unique patient identifier",
+"test name",
+"Specimen transport bag.",
+"Urine Collection Instructions",
+"2. Review collection procedure and ensure patient understands it is a midstream collection.",
+"Note: When both Urine Culture and Urine Chlamydia-Neisseria gonorrhoeae are requested:",
+"Provide patient with an additional sterile urine container for the CTGC collection:",
+"Mark the CTGC container as #1, draw a line at the 30mL mark and explain this is a first void collection. If the patient collects more than 60mL, have them wait an hour and recollect a first-void specimen.",
+"Mark the Urine culture container as #2 and explain this is a midstream collection.",
+"Provide both the Urine Collection Instructions and the Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions",
+"Specimen transport bag"
+],
+"includes": [],
+"handling": [
+"Aliquot requirements:",
+"1. If > 5 mL collected:",
+"Pour urine from sterile container into boric acid tube approximately 1/2 inch from the top.",
+"Refrigerate the remaining urine and discard the following day.",
+"2. If <5 mL collected:",
+"Do not pour off into boric acid.",
+"3. If C&S and UA are ordered place both labels on the single container.",
+"Refrigerate",
+"4. Boric Acid tube:",
+"May be stored at room temperature or refrigerated.",
+"Specimens submitted in patient's own container:",
+"1. These specimens will not be processed.",
+"2. Provide patient with a sterile urine container and instructions for a midstream collection."
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Urine specimens other than midstream which may be submitted for culture:",
+"Catheter",
+"Cytoscopy",
+"Urostomy",
+"Pedibag",
+"Pre-and Post-Prostatic Massage"
+],
+"reflex": "",
+"patientInstructionDocs": [
+"Urine C&S Collection Instructions - English",
+"Urine C&S Collection Instructions - Arabic",
+"Urine C&S Collection Instructions - Chinese",
+"Urine C&S Collection Instructions - Farsi",
+"Urine C&S Collection Instructions - French",
+"Urine C&S Collection Instructions - Korean",
+"Urine C&S Collection Instructions - Punjabi",
+"Urine C&S Collection Instructions - Tagalog",
+"Urine C&S Collection Instructions - Vietnamese",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Chinese",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - English",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Farsi",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - French",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Korean",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Punjabi",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Tagalog",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Vietnamese",
+"Urine Pediatric Collection Instructions"
+],
+"patientPrep": [
+"Review collection procedure and ensure patient understands it is a midstream collection."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no requisition form other than \"Completed LifeLabs requisition.\", no performing laboratory and no turnaround time."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-07-23",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Sterile Urine Container + BC Preservative Tube",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "5 mL",
+"volumeMl": 5,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"If > 5 mL collected: Pour urine from sterile container into boric acid tube approximately 1/2 inch from the top.",
+"If <5 mL collected: Do not pour off into boric acid.",
+"If C&S and UA are ordered place both labels on the single container.",
+"Boric Acid tube: May be stored at room temperature or refrigerated."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)",
+"shareWith": {
+"entries": [
+"urine_macroscopic",
+"urine_microscopic",
+"urine_micro_if_indicated"
+],
+"quote": "If C&S and UA are ordered place both labels on the single container."
+}
+}
+],
+"patientInstructionGuide": "ll_doc38130",
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-URINE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "cs_urine_if_indicated",
+"title": "C&S URINE IF INDICATED",
+"name": "C&S Urine if indicated (urine culture if pyuria or nitrite present)",
+"region": "Lower Mainland",
+"aka": [
+"C AND S URINE IF INDICATED",
+"C&S URINE IF PYURIA OR NITRITE PRESENT",
+"C AND S URINE IF PYURIA OR NITRITE PRESENT",
+"URINALYSIS CULTURE IF PYURIA OR NITRITE PRESENT",
+"URINE CULTURE IF PYURIA OR NITRITE PRESENT",
+"URINE CULTURE & SENSITIVITY IF INDICATED"
+],
+"dictIds": [
+"urine_macro_culture"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Urine Mid-Stream (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Sterile Urine Container + BC Preservative Tube",
+"collectionVolume": "5 mL",
+"preTestPrep": [
+"1. Provide the patient with:",
+"Completed LifeLabs requisition.",
+"Sterile urine container labeled with:",
+"full name of patient",
+"one other unique patient identifier",
+"test name",
+"Specimen transport bag.",
+"Urine Collection Instructions",
+"2. Review collection procedure and ensure patient understands it is a midstream collection.",
+"Note: When both Urine Culture and Urine Chlamydia-Neisseria gonorrhoeae are requested:",
+"Provide patient with an additional sterile urine container for the CTGC collection:",
+"Mark the CTGC container as #1, draw a line at the 30mL mark and explain this is a first void collection. If the patient collects more than 60mL, have them wait an hour and recollect a first-void specimen.",
+"Mark the Urine culture container as #2 and explain this is a midstream collection.",
+"Provide both the Urine Collection Instructions and the Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions",
+"Specimen transport bag"
+],
+"includes": [],
+"handling": [
+"Aliquot requirements:",
+"1. If > 5 mL collected:",
+"Pour urine from sterile container into boric acid tube approximately 1/2 inch from the top.",
+"Refrigerate the remaining urine and discard the following day.",
+"2. If <5 mL collected:",
+"Do not pour off into boric acid.",
+"If C&S and UA are ordered place both labels on the single container.",
+"1. Refrigerate",
+"Boric Acid tube:",
+"1. May be stored at room temperature or refrigerated.",
+"Specimens submitted in patient's own container:",
+"1. These specimens will not be processed.",
+"2. Provide patient with a sterile urine container and instructions for a midstream collection."
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Urine specimens other than midstream which may be submitted for culture:",
+"Catheter",
+"Cytoscopy",
+"Urostomy",
+"Pedibag",
+"Pre-and Post-Prostatic Massage"
+],
+"reflex": "",
+"patientInstructionDocs": [
+"Urine C&S Collection Instructions - English",
+"Urine C&S Collection Instructions - Arabic",
+"Urine C&S Collection Instructions - Chinese",
+"Urine C&S Collection Instructions - Farsi",
+"Urine C&S Collection Instructions - French",
+"Urine C&S Collection Instructions - Korean",
+"Urine C&S Collection Instructions - Punjabi",
+"Urine C&S Collection Instructions - Tagalog",
+"Urine C&S Collection Instructions - Vietnamese",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Chinese",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - English",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Farsi",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - French",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Korean",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Punjabi",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Tagalog",
+"Urine Chlamydia - Gonorrhea - Trichomonas or Mycoplasma genitalium Instructions - Vietnamese"
+],
+"patientPrep": [
+"Review collection procedure and ensure patient understands it is a midstream collection."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no requisition form other than \"Completed LifeLabs requisition.\", no performing laboratory and no turnaround time.",
+"Mapped from \"Urinalysis: Macroscopic -> Urine Culture if pyuria/nitrite\" together with URINE MACROSCOPIC (the urinalysis part); this page: \"If C&S and UA are ordered place both labels on the single container.\""
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-03-02",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Sterile Urine Container + BC Preservative Tube",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "5 mL",
+"volumeMl": 5,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"If > 5 mL collected: Pour urine from sterile container into boric acid tube approximately 1/2 inch from the top.",
+"If <5 mL collected: Do not pour off into boric acid.",
+"If C&S and UA are ordered place both labels on the single container."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)",
+"shareWith": {
+"entries": [
+"urine_macroscopic",
+"urine_microscopic",
+"urine_micro_if_indicated"
+],
+"quote": "If C&S and UA are ordered place both labels on the single container."
+}
+}
+],
+"patientInstructionGuide": "ll_doc38130",
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-URINE-IF-INDICATED-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "cs_vag_chronic",
@@ -225,7 +1763,430 @@ const DATA={
 }
 ],
 "includesDictIds": [],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-VAG-CHRONIC-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ct_gc_genital",
+"title": "CHLAMYDIA and GC",
+"name": "Chlamydia & GC - Genital swab (NAAT)",
+"region": "Lower Mainland",
+"aka": [
+"APTIMA SWAB CHLAMYDIA DNA ASSAY",
+"CHLAMYDIA & GC APTIMA SWAB",
+"CHLAMYDIA & GC NAAT",
+"CHLAMYDIA DNA ASSAY APTIMA SWAB",
+"CT APTIMA SWAB",
+"CTGC APTIMA SWAB",
+"GC APTIMA SWAB",
+"GONORRHOEA APTIMA SWAB",
+"NEISSERIA GONORRHOEAE & CHLAMYDIA"
+],
+"dictIds": [
+"ct_ng_vaginal",
+"ct_ng_cervix",
+"ct_ng_urethra"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Aptima)",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Complete the LifeLabs laboratory requisition.",
+"2. Mark the CT & GC Testing box AND the applicable Source/Site box.",
+"Sites may include: Cervix, Urethra or Vagina.",
+"For non-genital sites see: CHLAMYDIA AND GONORRHEA NON-GENITAL SITE",
+"For CTGC Urine see: URINE CHLAMYDIA & GC DNA ASSAY",
+"3. GC only: GC CULTURE.",
+"4. Include the date of collection."
+],
+"includes": [],
+"handling": [
+"1. Label the swab with:",
+"Full name of patient",
+"One other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test name & Source/Site",
+"Date of collection",
+"2. Package specimen in specimen transport bag.",
+"3. Seal bag.",
+"4. Place folded requisition in sleeve of bag."
+],
+"labelling": [],
+"storageTemp": "Refrigerate or Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Healthcare providers information for:",
+"1. Changes to Trichomonas vaginalis testing",
+"2. Collection changes and ordering supplies.",
+"3. Clinician's guide to sample collection for GENITAL sites",
+"4. Microbiology Swab and Collection Containers"
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names \"Swab (Aptima)\" only. Kit per site: LifeLabs Microbiology Swab and Collection Containers (Doc#31971): Aptima Unisex Swab for cervix and urethra; Aptima Multitest Swab for vaginal, throat, eye and rectal. The BCCDC Quick Reference STI Screening and Testing Guide (May 2026) lists \"Aptima Unisex Swab Sample Collection Kit\" for Throat, Vagina and Rectum. (Unisex wording treated as superseded - K. Williams 2026-10-11: the guide’s photo shows a Multitest swab. The BCCDC eLab Handbook entry \"Chlamydia trachomatis, Neisseria gonorrhoeae\" applies for BCCDC-bound samples: Multitest for throat, vaginal, rectal; Unisex for endocervical and male urethral.)",
+"The page names no performing laboratory and no turnaround time; requisition: \"Complete the LifeLabs laboratory requisition.\"",
+"Storage: this page \"Refrigerate or Room Temperature\"; Doc#31847: \"Store swabs at room temperature.\""
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-11-04",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Aptima)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Test name & Source/Site"
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerate or Room Temperature"
+}
+],
+"perDictId": true,
+"requisitionNotes": [
+"2. Mark the CT & GC Testing box AND the applicable Source/Site box.",
+"Sites may include: Cervix, Urethra or Vagina."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CHLAMYDIA-and-GC-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ct_gc_nongenital",
+"title": "CHLAMYDIA AND GONORRHOEA NON-GENITAL SITE",
+"name": "Chlamydia & GC - Non-genital swab (NAAT)",
+"region": "Lower Mainland",
+"aka": [
+"APTIMA SWAB CHLAMYDIA DNA ASSAY",
+"CHLAMYDIA & GC APTIMA SWAB",
+"CHLAMYDIA AND GC APTIMA SWAB",
+"CHLAMYDIA & GC NAAT",
+"CHLAMYDIA DNA ASSAY APTIMA SWAB",
+"CT APTIMA SWAB",
+"CTGC APTIMA SWAB",
+"CTGC NON GENITAL SITE",
+"CTGC OTHER SITE",
+"GC APTIMA SWAB",
+"GONORRHEA APTIMA SWAB",
+"NEISSERIA GONORRHEA & CHLAMYDIA"
+],
+"dictIds": [
+"ct_ng_rectal",
+"ct_ng_throat"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Aptima)",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Complete the LifeLabs laboratory requisition.",
+"2. Mark the CT & GC test box AND the applicable Source/Site box.",
+"Sites may include: eye, throat, rectal.",
+"3. Note the date of collection.",
+"4. GC only: GC CULTURE"
+],
+"includes": [],
+"handling": [
+"1. Label the swab with:",
+"Full name of patient",
+"One other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test name & Source/Site",
+"Date of collection",
+"2. Package specimen in specimen transport bag.",
+"3. Seal bag.",
+"4. Place folded requisition in sleeve of bag."
+],
+"labelling": [],
+"storageTemp": "Refrigerate or Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Healthcare providers information for:",
+"Chlamydia and Gonorrhea Collection Instructions",
+"Microbiology Specimen Containers"
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names \"Swab (Aptima)\" only. Kit per site: LifeLabs Microbiology Swab and Collection Containers (Doc#31971): Aptima Unisex Swab for cervix and urethra; Aptima Multitest Swab for vaginal, throat, eye and rectal. The BCCDC Quick Reference STI Screening and Testing Guide (May 2026) lists \"Aptima Unisex Swab Sample Collection Kit\" for Throat, Vagina and Rectum. (Unisex wording treated as superseded - K. Williams 2026-10-11: the guide’s photo shows a Multitest swab. The BCCDC eLab Handbook entry \"Chlamydia trachomatis, Neisseria gonorrhoeae\" applies for BCCDC-bound samples: Multitest for throat, vaginal, rectal; Unisex for endocervical and male urethral.)",
+"The page names no performing laboratory and no turnaround time; requisition: \"Complete the LifeLabs laboratory requisition.\"",
+"Storage: this page \"Refrigerate or Room Temperature\"; Doc#31847: \"Store swabs at room temperature.\""
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-06",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Aptima)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Test name & Source/Site"
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerate or Room Temperature"
+}
+],
+"perDictId": true,
+"requisitionNotes": [
+"2. Mark the CT & GC test box AND the applicable Source/Site box.",
+"Sites may include: eye, throat, rectal."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CHLAMYDIA-AND-GONORRHOEA-NON-GENITAL-SITE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ct_gc_trich_self_vag",
+"title": "CHLAMYDIA AND GONORRHEA AND TRICHOMONAS SELF COLLECTED VAGINAL SWAB",
+"name": "Chlamydia, Gonorrhea & Trichomonas - Self-collected vaginal swab",
+"region": "Lower Mainland",
+"aka": [
+"APTIMA SWAB CHLAMYDIA DNA ASSAY SELF COLLECTED",
+"CHLAMYDIA & GC APTIMA SWAB SELF COLLECTED",
+"CHLAMYDIA & GC & TRICHOMONAS NAAT SELF COLLECTED",
+"CHLAMYDIA DNA ASSAY APTIMA SWAB SELF COLLECTED",
+"CT APTIMA SWAB SELF COLLECTED",
+"CTGC APTIMA SWAB SELF COLLECTED",
+"GC APTIMA SWAB SELF COLLECTED",
+"GONORRHOEA APTIMA SWAB SELF COLLECTED",
+"NEISSERIA GONORRHOEAE & CHLAMYDIA SELF COLLECTED",
+"TRICHOMONAS SELF COLLECTED VAGINAL SWAB"
+],
+"dictIds": [],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"Note: swabs are not available for pick-up at LifeLabs Patient Service Centres.",
+"1. Provide patient with:",
+"Completed requisition for CHLAMYDIA, GONORRHEA and/or TRICHOMONAS SELF COLLECTION",
+"Aptima Multitest swab for Patient Self Collection",
+"Self-Collected Vaginal Swab - for CTGC or Trichomonas Testing Aptima Multitest Swab.",
+"2. Ensure swab is labelled appropriately with:",
+"Full name of patient",
+"DOB and Medical Health Number",
+"Test name",
+"Date of collection",
+"3. Package specimen in specimen transport bag.",
+"4. Seal bag.",
+"5. Place folded requisition in sleeve of bag."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Refrigerate or Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Self-Collected Vaginal Swab - for CTGC or Trichomonas Testing Aptima Multitest Swab"
+],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"No scanner test maps to this page yet (self-collected kit given to the client); kept for reference and for the kit-sharing evidence.",
+"Container is not in a Container field: Pre-Test Preparation names \"Aptima Multitest swab for Patient Self Collection\"."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-03-31",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "Aptima Multitest swab for Patient Self Collection",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerate or Room Temperature"
+}
+],
+"patientInstructionGuide": "ll_doc49222",
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CHLAMYDIA-AND-GONORRHEA-AND-TRICHOMONAS-SELF-COLLECTED-VAGINAL-SWAB-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ct_gc_urine",
+"title": "CHLAMYDIA & GC DNA ASSAY - URINE",
+"name": "Chlamydia & GC - Urine (NAAT)",
+"region": "Lower Mainland",
+"aka": [
+"CHLM URINE",
+"NEISSERIA GONORRHOEAE & CHLAMYDIA URINE",
+"URINE CTGC",
+"URINE CHLAMYDIA & GC NAAT"
+],
+"dictIds": [
+"ct_ng_urine"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Urine (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Sterile Urine Container",
+"collectionVolume": "30 mL",
+"preTestPrep": [
+"1. Patient must not have voided within the last hour.",
+"2. Provide patient with:",
+"Sterile urine container",
+"Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (English)",
+"Specimen transport bag.",
+"3. Review the collection procedure with the patient.",
+"4. Draw the 30 mL maximum collection level on the container.",
+"5. Note: specimen collections should not exceed 30 mL. If >60 mL is collected, ask the patient to wait 1 hour and recollect the specimen.",
+"If C&S Urine is also required a second midstream urine specimen must be collected.",
+"1. Mark the C&S Urine container #2.",
+"2. Review with patient that container #1 marked at 30 mL is for a first void collection. Container #2 is for a midstream collection.",
+"3. Provide the patient with:",
+"C&S URINE INSTRUCTIONS",
+"Sterile urine container - Marked as #2",
+"Specimen transport bag."
+],
+"includes": [],
+"handling": [
+"Label urine container with:",
+"1. Full name of patient",
+"2. One other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"3. Test name & Source/Site",
+"4. Date of collection",
+"5. Package specimen in specimen transport bag.",
+"6. Seal bag.",
+"7. Place folded requisition in sleeve of bag."
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (English)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (Chinese)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (French)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (Korean)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (Farsi/Persian)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (Punjabi)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (Tagalog)",
+"Patient Collection Instructions for Urine Chlamydia Gonorrhea - Trichomonas or Mycoplasma genitalium (Vietnamese)"
+],
+"patientPrep": [
+"Patient must not have voided within the last hour."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no requisition form, no performing laboratory and no turnaround time.",
+"Volume: this page says 30 mL (\"Draw the 30 mL maximum collection level on the container.\"); LifeLabs Chlamydia and Gonorrhea Collection Instructions (Doc#31847) say \"Collect the first 20-30 mL of voided urine (NOT midstream)\". No source in this batch says 15-20 mL.",
+"Container: this page says \"Sterile Urine Container\" (Doc#31847: \"Orange top sterile container\"); the BCCDC Quick Reference STI Screening and Testing Guide (May 2026) shows \"Orange-top specimen container and Aptima Urine Sample Transport Kit\" (a transfer tube) - no LifeLabs source in this batch mentions an Aptima urine transport tube. BCCDC eLab Handbook (applies; BCCDC-bound): \"Aptima Urine Sample Collection Kit\" with a 2 mL transfer; local practice (K. Williams 2026-10-11): community sends the cup, no transfer.",
+"Time limit: none on this page; Doc#31847: \"Urine specimens received at the lab greater than one day after collection will be rejected.\"; patient instruction Doc.#38123: \"Refrigerate and bring the container to the laboratory the same day as collection.\""
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-08-19",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Sterile Urine Container",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "30 mL",
+"volumeMl": 30,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Patient must not have voided within the last hour.",
+"Draw the 30 mL maximum collection level on the container.",
+"Note: specimen collections should not exceed 30 mL. If >60 mL is collected, ask the patient to wait 1 hour and recollect the specimen."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"dictIdsVia": {
+"urine_trich": {
+"guide": "ll_doc31847",
+"quote": "Chlamydia, Gonorrhea and Trichomonas nucleic acid amplification testing can be performed from a single APTIMA swab or urine specimen.",
+"also": {
+"guide": "ll_doc38123",
+"quote": "Urine for Chlamydia trachomatis(CT), Neisseria gonorrhoeae (GC),Trichomonas vaginalis or Mycoplasma genitalium"
+}
+}
+},
+"patientInstructionGuide": "ll_doc38123",
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/CHLAMYDIA---GC-DNA-ASSAY---URINE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "electrolytes_cl_co2",
@@ -330,7 +2291,10 @@ const DATA={
 "includesDictIds": [],
 "relatedEntries": [
 "electrolytes_extended"
-]
+],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ELECTROLYTES-SERUM--CL--CO2--Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "verified by K. Williams 2026-10-11"
 },
 {
 "id": "electrolytes_extended",
@@ -374,7 +2338,10 @@ const DATA={
 "collect": [],
 "includesDictIds": [],
 "requisitionNotes": [],
-"infoOnly": true
+"infoOnly": true,
+"sourceUrl": "https://tests.lifelabs.com/s/article/ELECTROLYTES-EXTENDED-PANEL-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "electrolytes_na_k",
@@ -473,7 +2440,201 @@ const DATA={
 "scopeSatisfiedBy": [
 "chloride",
 "bicarbonate"
-]
+],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ELECTROLYTES-SERUM--Na---K--Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "verified by K. Williams 2026-10-11"
+},
+{
+"id": "ferritin",
+"title": "FERRITIN",
+"name": "Ferritin",
+"region": "Lower Mainland",
+"aka": [],
+"dictIds": [
+"ferritin"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "1 tube",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition.",
+"3. Note: if Iron test is required, order FE separately under \"other tests\".",
+"4. Hemolysis is unacceptable."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST).",
+"\"Note: if Iron test is required, order FE separately under \"other tests\".\" - ordering note (Details only)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/FERRITIN-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "fit_ll",
+"title": "IMMUNOCHEMICAL FECAL OCCULT BLOOD",
+"name": "FIT (fecal immunochemical test)",
+"region": "Lower Mainland",
+"aka": [
+"BORDERLINE FIT RETEST",
+"FECAL IMMUNOCHEMICAL OCCULT BLOOD",
+"FECAL OCCULT BLOOD",
+"FIT",
+"IMMUNOCHEMICAL OCCULT BLOOD",
+"OB",
+"OB1",
+"OB2",
+"OB3",
+"OCCULT BLOOD X3"
+],
+"dictIds": [
+"fit"
+],
+"discipline": "Urinalysis",
+"methodology": "",
+"specimenType": "Stool/Fecal",
+"frequency": "6x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "FIT Collection Device",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Complete laboratory requisition.",
+"2. Refer patient to the nearest LifeLabs Patient Service Centre.",
+"3. Note: in order to perform testing, the collection date must be noted on the specimen/requisition."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"FIT Patient Instructions: All languages",
+"FIT Patient Instructions: Arabic",
+"FIT Patient Instructions: English",
+"FIT Patient Instructions: Farsi",
+"FIT Patient Instructions: French",
+"FIT Patient Instructions: German",
+"FIT Patient Instructions: Japanese",
+"FIT Patient Instructions: Korean",
+"FIT Patient Instructions: Punjabi",
+"FIT Patient Instructions: Spanish",
+"FIT Patient Instructions: Simplified Chinese",
+"FIT Patient Instructions: Tagalog",
+"FIT Patient Instructions: Traditional Chinese",
+"FIT Patient Instructions: Vietnamese",
+"Patient Instructions - Video"
+],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Container \"FIT Collection Device\" - device make not named (Eiken illustration not assigned).",
+"The page says \"2. Refer patient to the nearest LifeLabs Patient Service Centre.\" - Details note only: community nurses hand out FIT kits (local practice, K. Williams 2026-10-11)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-09-01",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "FIT Collection Device",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": true,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "",
+"cardWarn": "2. Refer patient to the nearest LifeLabs Patient Service Centre."
+}
+],
+"requisitionNotes": [
+"1. Complete laboratory requisition.",
+"3. Note: in order to perform testing, the collection date must be noted on the specimen/requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/IMMUNOCHEMICAL-FECAL-OCCULT-BLOOD-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "free_t4",
@@ -571,7 +2732,492 @@ const DATA={
 "1. Complete the LifeLabs Laboratory Requisition.",
 "2. Ensure applicable Thyroid Function box is marked and when required, a written justification/diagnosis is noted."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/FREE-T4-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "gc_culture",
+"title": "GC CULTURE",
+"name": "GC culture (swab)",
+"region": "Lower Mainland",
+"aka": [
+"C&S GC",
+"C AND S GC",
+"GC CULTURE ONLY",
+"GC CULTURE SWAB",
+"Gonorrhea Culture",
+"Neisseria Gonorrhoeae Culture"
+],
+"dictIds": [
+"gc_culture_cervix",
+"gc_culture_urethra",
+"gc_culture_throat",
+"gc_culture_rectum",
+"gc_culture_other"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Culturette - Copan Liquid Amies Single Plastic)",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Medical Practitioner to collect specimen using the Red cap, Liquid Amies Single Plastic Swab.",
+"2. Complete the LifeLabs requisition:",
+"For GC ONLY testing:",
+"mark the appropriate GC culture test box and ensure the collection site is noted",
+"include the date and time of collection.",
+"3. For CTGC NAAT, see: CHLAMYDIA and GC"
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Refrigerate or Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no performing laboratory, no turnaround time, no collection sites, no volume and no time limit; External Specimen Handling is empty.",
+"Collector: \"Medical Practitioner to collect specimen using the Red cap, Liquid Amies Single Plastic Swab.\" - local practice swab_collector_sites (K. Williams 2026-10-11) decides by site: vaginal/rectal/throat yes; cervical needs STI certified practice; urethral not yet confirmed.",
+"Separate from CT/GC NAAT: \"For CTGC NAAT, see: CHLAMYDIA and GC\" (a different swab; NAAT goes to BCCDC, GC culture to LifeLabs)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Culturette - Copan Liquid Amies Single Plastic)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Medical Practitioner to collect specimen using the Red cap, Liquid Amies Single Plastic Swab."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "",
+"temp": "Refrigerate or Room Temperature"
+}
+],
+"perDictId": true,
+"akaTarget": "gc_culture_other",
+"requisitionNotes": [
+"mark the appropriate GC culture test box and ensure the collection site is noted",
+"include the date and time of collection."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/GC-CULTURE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ggt",
+"title": "GAMMA GLUTAMYL TRANSFERASE (GGT)",
+"name": "GGT",
+"region": "Lower Mainland",
+"aka": [
+"5 NUCLEOTIDASE",
+"5NT",
+"5NTD",
+"GAMMA GLUTAMYL TRANSPEPTIDASE",
+"GAMMA GT",
+"GGTP",
+"GT",
+"LEUCINE AMINOPEPTIDASE",
+"NUCLEOTIDASE"
+],
+"dictIds": [
+"ggt",
+"alt_ast_ggt"
+],
+"discipline": "Chemistry",
+"methodology": "Atellica CH930 Enzymatic",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST).",
+"AKA line also lists other test names (5 NUCLEOTIDASE, 5NT, 5NTD, LEUCINE AMINOPEPTIDASE, NUCLEOTIDASE) - fed as scanner names per the all-AKA rule; they will map those lines to GGT."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/GAMMA-GLUTAMYL-TRANSFERASE--GGT--Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "glucose",
+"title": "GLUCOSE",
+"name": "Glucose",
+"region": "Lower Mainland",
+"aka": [
+"GLUCOSE RANDOM",
+"RANDOM BLOOD SUGAR",
+"RANDOM SUGAR",
+"RBS",
+"RGLU"
+],
+"dictIds": [
+"glucose_random"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Enzymatic - Hexokinase)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "2 days room temperature; 7 days refrigerated; 28 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt locations:",
+"For urgent/ STAT requests refer the patient to the local hospital immediately.",
+"When Random Blood Glucose/Sugar is requested but the patient is fasting, a Fasting Blood",
+"Glucose/Sugar (FBS) test will be performed."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Sunshine Coast (Gibsons & Sechelt) STAT note - not for VCH community (Details only).",
+"When Random Blood Glucose/Sugar is requested but the patient is fasting, a Fasting Blood Glucose/Sugar (FBS) test will be performed."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/GLUCOSE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "hcv_genotype_ll",
+"title": "HEPATITIS C GENOTYPE",
+"name": "HCV genotype",
+"region": "Lower Mainland",
+"aka": [
+"GENOTYPING FOR HEPATITIS C",
+"HCV GENOTYPE",
+"HEP C GENOTYPE",
+"HEP C SUBTYPE",
+"HEPATITIS C SUBTYPE"
+],
+"dictIds": [
+"hcv_genotype"
+],
+"discipline": "Chemistry",
+"methodology": "",
+"specimenType": "Blood (Whole Blood)",
+"frequency": "1x per/wk",
+"specimenStability": "",
+"turnaroundTime": "14 days",
+"container": "EDTA Lavender 6 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Complete the PHSA Serology Requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect a 6 mL Lavender top tube.",
+"2. Gently invert tube 8-10 times.",
+"3. Label the tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test name.",
+"4. DO NOT OPEN TUBE FOR ANY REASON",
+"5. Do NOT centrifuge.",
+"6. Place specimen in BCCDC Biohazard specimen transport bag & seal bag",
+"7. Fold the requisition and place in sleeve of specimen transport bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test name."
+],
+"storageTemp": "Refrigerated (2-8°C) TDG Biological Substance Category B",
+"form": "PHL - Serology Screening Requisition",
+"performingLab": "",
+"additionalInfo": [
+"If you are unable to meet the specimen collection and transportation criteria, please refer your patient",
+"to the nearest LifeLabs Patient Service Centre."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Collection volume is not stated (container EDTA Lavender 6 mL).",
+"The page does not name the performing laboratory; BCCDC is inferred from the PHL requisition form named and the BCCDC Biohazard bag.",
+"Pre-test preparation says \"Complete the PHSA Serology Requisition.\"; the Form field says \"PHL - Serology Screening Requisition\". The BCCDC eLab \"Hepatitis C Virus Genotyping\" page names PHRQ_VIR_0001F_Virology_Requisition, but that Virology Requisition says \"Please see the Serology Screening Requisition to order HCV RNA and/or HCV genotyping testing\" - Serology Screening Requisition (as resolved for HCV RNA, K. Williams 2026-10-11)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-07-21",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "EDTA Lavender 6 mL",
+"count": 1,
+"centrifuge": false,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"destination": "",
+"form": "PHL - Serology Screening Requisition",
+"tests": "",
+"notes": [
+"DO NOT OPEN TUBE FOR ANY REASON",
+"Do NOT centrifuge."
+],
+"volumeMl": null,
+"destinationInferred": true,
+"destGroup": "PHL",
+"noShare": true,
+"bag": "BCCDC Biohazard specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"requisitionNotes": [
+"Complete the PHSA Serology Requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-C-GENOTYPE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "hcv_rna_quant",
+"title": "HEPATITIS C RNA QUANTITATIVE",
+"name": "Hepatitis C RNA Quantitative",
+"region": "Lower Mainland",
+"aka": [
+"HCV PCR QUANTITATIVE",
+"HCV RNA QUANTITATIVE",
+"HEP C NAT",
+"HEP C RNA QUANTITATIVE",
+"HEP C VIRAL LOAD",
+"HEPATITIS C NAT",
+"HEPATITIS C QUANTITATIVE NAT",
+"HEPATITIS C RNA QUANTITATIVE",
+"HEPATITIS C VIRAL LOAD",
+"HEPATITIS C VIRAL QUANTIFICATION",
+"PCR HEPATITIS C QUANTITATIVE",
+"VIRAL LOAD HEPATITIS C"
+],
+"dictIds": [
+"hcv_rna_quant"
+],
+"discipline": "Chemistry",
+"methodology": "",
+"specimenType": "Blood (Whole Blood)",
+"frequency": "5x per/wk",
+"specimenStability": "",
+"turnaroundTime": "5 days",
+"container": "EDTA Lavender 6 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Complete the PHSA Serology Requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect a 6 mL Lavender top tube.",
+"2. Gently invert tube 8-10 times.",
+"3. Label the tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test name.",
+"4. DO NOT OPEN TUBE FOR ANY REASON",
+"5. Do NOT centrifuge.",
+"6. Place specimen in BCCDC Biohazard specimen transport bag & seal bag",
+"7. Fold the requisition and place in sleeve of specimen transport bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test name."
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "PHL - Serology Screening Requisition",
+"performingLab": "",
+"additionalInfo": [
+"If you are unable to meet the specimen collection and transportation criteria, please refer your patient to the nearest LifeLabs Patient Service Centre."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Collection volume is not stated (container EDTA Lavender 6 mL).",
+"The page does not name the performing laboratory; BCCDC is inferred from the PHL requisition form named and the BCCDC Biohazard bag.",
+"Pre-test preparation says \"Complete the PHSA Serology Requisition.\"; the Form field says \"PHL - Serology Screening Requisition\" (read as the same BCCDC PHL Serology Screening Requisition). The BCCDC eLab \"Hepatitis C Quantitative NAT\" page names PHRQ_VIR_0001F_Virology_Requisition, but that Virology Requisition (PHRQ_VIR_0001F, Version 1.0 August 2026) says \"Please see the Serology Screening Requisition to order HCV RNA and/or HCV genotyping testing\" - resolved: Serology Screening Requisition (K. Williams 2026-10-11)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-07-06",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "EDTA Lavender 6 mL",
+"count": 1,
+"centrifuge": false,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"destinationInferred": true,
+"destGroup": "PHL",
+"form": "PHL - Serology Screening Requisition",
+"tests": "",
+"notes": [
+"DO NOT OPEN TUBE FOR ANY REASON",
+"Do NOT centrifuge."
+],
+"noShare": true,
+"bag": "BCCDC Biohazard specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"requisitionNotes": [
+"Complete the PHSA Serology Requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-C-RNA-QUANTITATIVE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hematology_panel",
@@ -693,7 +3339,93 @@ const DATA={
 }
 ],
 "includesDictIds": [],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEMATOLOGY-PANEL-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "verified by K. Williams 2026-10-11"
+},
+{
+"id": "heme_interp",
+"title": "HEMATOLOGY INTERPRETATION",
+"name": "Hematology interpretation (smear review)",
+"region": "Lower Mainland",
+"aka": [
+"BLOOD FILM OR SMEAR FOR PATHOLOGIST REVIEW",
+"HEMATOPATHOLOGIST",
+"PATHOLOGIST TO REVIEW",
+"SLIDE REVIEW BY HEMATOPATHOLOGIST OR PATHOLOGIST",
+"PERIPHERAL SMEAR BY PATHOLOGIST; PATHOLOGIST PERIPHERAL SMEAR",
+"SMEAR TO PATHOLOGIST"
+],
+"dictIds": [
+"peripheral_smear"
+],
+"discipline": "Hematology",
+"methodology": "",
+"specimenType": "Blood (Whole Blood)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "24 hours",
+"container": "EDTA Lavender 4 mL",
+"collectionVolume": "1 full tube",
+"preTestPrep": [],
+"includes": [],
+"handling": [
+"1. Collect one 4 mL EDTA Lavender top tube.",
+"2. Gently invert/mix tube 8-10 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB, Medical Health Number)",
+"test name"
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB, Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "Hematology Panel and RBC Morphology is auto-orded.",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Mapped from the scanner test \"Peripheral Blood Smear\" via the page AKAs (PERIPHERAL SMEAR BY PATHOLOGIST, BLOOD FILM OR SMEAR FOR PATHOLOGIST REVIEW).",
+"Hematology Panel and RBC Morphology is auto-orded.",
+"Not on the tube chart - own 4 mL EDTA (no source says it shares the CBC tube)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-05-03",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "EDTA Lavender 4 mL",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "1 full tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": ""
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEMATOLOGY-INTERPRETATION-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hemoglobin_a1c",
@@ -791,7 +3523,10 @@ const DATA={
 }
 ],
 "includesDictIds": [],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEMOGLOBIN-A1C-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hep_a_ab_igg_igm",
@@ -895,7 +3630,10 @@ const DATA={
 }
 ],
 "includesDictIds": [],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-A-ANTIBODY-IgG---IgM-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "verified by K. Williams 2026-10-11"
 },
 {
 "id": "hep_a_ab_igm",
@@ -985,7 +3723,10 @@ const DATA={
 "requisitionNotes": [
 "Ensure requisition is completed with patient and physician demographic information."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-A-ANTIBODY-IGM-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hep_b_carrier",
@@ -1117,7 +3858,10 @@ const DATA={
 "hbv_immune",
 "hcv_screen"
 ],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-B-CARRIER-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hep_b_core_ab",
@@ -1215,7 +3959,10 @@ const DATA={
 "requisitionNotes": [
 "Ensure requisition is completed with Patient and Physician demographic information."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-B-CORE-ANTIBODY-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hep_b_screen",
@@ -1310,7 +4057,10 @@ const DATA={
 "hbv_immune",
 "hbc_ab"
 ],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-B-SCREEN-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hep_b_surface_ag",
@@ -1401,7 +4151,10 @@ const DATA={
 "requisitionNotes": [
 "Ensure requisition is completed with Patient and Physician demographic information."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-B-SURFACE-ANTIGEN-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hepatitis_acute",
@@ -1540,7 +4293,10 @@ const DATA={
 "hcv_screen",
 "hbc_ab"
 ],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-ACUTE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hepatitis_c",
@@ -1631,7 +4387,134 @@ const DATA={
 }
 ],
 "includesDictIds": [],
-"requisitionNotes": []
+"requisitionNotes": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-C-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "verified by K. Williams 2026-10-11"
+},
+{
+"id": "hfe_confirm",
+"title": "HEMOCHROMATOSIS CONFIRM DIAGNOSIS",
+"name": "HFE hemochromatosis (confirm diagnosis)",
+"region": "Lower Mainland",
+"aka": [
+"DNA SCREEN FOR HEMOCHROMATOSIS",
+"GENOTYPING FOR HEMOCHROMATOSIS",
+"H63D",
+"HEMOCHROMATOSIS",
+"HEMOCHROMATOSIS SCREEN",
+"HEMOCHROMATOSIS GENE MUTATION",
+"HEMOCHROMATOSIS GENOTYPE",
+"HEMOCHROMATOSIS GENOTYPING",
+"HEMOCHROMATOSIS MOLECULAR DIAGNOSTIC",
+"HEMOCHROMATOSIS MOLECULAR DIAGNOSTIC",
+"HEREDITARY HEMOCHROMATOSIS (HHC)",
+"HFE",
+"HFECD",
+"HFECDII (Test name on intRlab label)"
+],
+"dictIds": [
+"hfe"
+],
+"discipline": "Chemistry",
+"methodology": "",
+"specimenType": "Blood (Serum) + Blood (Whole Blood)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"1. When Hemochromatosis confirm diagnosis is ordered, Ferritin is auto-added.",
+"2. Transferrin Saturation & DNA testing are auto-added if indicated by the Ferritin result.",
+"3. Note: Do NOT mark both \"Confirm diagnosis...\" & \"Sibling/parent\" boxes."
+],
+"includes": [],
+"handling": [
+"1. Collect one 5 mL SST Gold top tube and one 6 mL EDTA Lavender top tube.",
+"2. Gently invert/mix SST tube 5-6 times and the EDTA tube 8-10 times.",
+"3. Label specimens with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow SST tube to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge SST tube for 10 minutes at 1300 RCF.",
+"6. Place specimens in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag.",
+"9. Transport SST tube refrigerated and the EDTA tube at room temperature."
+],
+"labelling": [],
+"storageTemp": "",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"1. For questions regarding this test refer to: http://www.genebc.ca",
+"2. For BC Guidelines refer to: http://www.bcguidelines.ca"
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"1. When Hemochromatosis confirm diagnosis is ordered, Ferritin is auto-added.",
+"2. Transferrin Saturation & DNA testing are auto-added if indicated by the Ferritin result.",
+"Not on the tube chart - own SST and own EDTA tube."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-01-16",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"count": 1,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag",
+"notes": [],
+"kind": "blood",
+"container": "5 mL SST Gold top tube",
+"centrifuge": true,
+"temp": "refrigerated"
+},
+{
+"count": 1,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag",
+"notes": [
+"Transport SST tube refrigerated and the EDTA tube at room temperature."
+],
+"kind": "blood",
+"container": "6 mL EDTA Lavender top tube",
+"centrifuge": null,
+"temp": "room temperature"
+}
+],
+"requisitionNotes": [
+"3. Note: Do NOT mark both \"Confirm diagnosis...\" & \"Sibling/parent\" boxes."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEMOCHROMATOSIS-CONFIRM-DIAGNOSIS-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "hiv_serology",
@@ -1737,7 +4620,358 @@ const DATA={
 "requisitionNotes": [
 "If the patient requests non-nominal reporting see: HIV CONFIDENTIAL"
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HIV-SEROLOGY-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "hiv_viral_load",
+"title": "HIV VIRAL LOAD",
+"name": "HIV Viral Load",
+"region": "Lower Mainland",
+"aka": [
+"HIV PLASMA VIRAL LOAD",
+"HIV PLASMA VL",
+"HIV 1 RNA VIRAL LOAD",
+"HIV QUANTITATIVE",
+"HIV RNA PCR"
+],
+"dictIds": [
+"hiv_vl"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Blood (Plasma)",
+"frequency": "5x per/wk",
+"specimenStability": "",
+"turnaroundTime": "5 days",
+"container": "EDTA Lavender 6 mL",
+"collectionVolume": "3 mL",
+"preTestPrep": [
+"1. The minimum volume requirement is 2 mL of Plasma.",
+"< 2 mL of Plasma is NSQ.",
+"2. If unable to meet the criteria listed below, refer patient to the nearest LifeLabs Patient Service Centre with a completed laboratory requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect one, full 6 mL EDTA lavender top tube.",
+"2. Gently invert/mix 8-10 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique patient identifier (DOB and/or Medical Health Number)",
+"4. Centrifuge at 1300 RCF for 10 minutes.",
+"5. Separate plasma into a 13 x 75 mm BD non-additive Vacutainer.",
+"6. Label tube with:",
+"full name of patient",
+"one other unique patient identifier (DOB and/or Medical Health Number).",
+"7. Place specimen in Biohazard specimen transport bag.",
+"8. Seal bag.",
+"9. Fold requisition and place in sleeve of bag.",
+"10. Package according to TTG regulations."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (DOB and/or Medical Health Number)"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: This is a Biological Substance Category B specimen. If unable to adhere to strict guidelines, refer patient to the nearest LifeLabs Patient Service Centre with a completed requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no requisition form (no Form field) and no performing laboratory.",
+"Handling steps 4-5 centrifuge the tube and separate plasma into a second (non-additive) tube; VCH community practice (K. Williams, 2026-10-11): community does not separate plasma - HIV viral load is referred to a LifeLabs Patient Service Centre.",
+"Not the BCCDC eLab \"Human Immunodeficiency Virus 1 NAT\" test (diagnostic NAT; K. Williams 2026-10-11) - no eLab entry is linked."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-03-19",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "EDTA Lavender 6 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": null,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "3 mL",
+"volumeMl": 3,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Collect one, full 6 mL EDTA lavender top tube.",
+"Centrifuge at 1300 RCF for 10 minutes.",
+"Separate plasma into a 13 x 75 mm BD non-additive Vacutainer."
+],
+"separatePlasma": true,
+"noShare": true,
+"bag": "Biohazard specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HIV-VIRAL-LOAD-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "infectious_diarrhea_panel",
+"title": "INFECTIOUS DIARRHEA PANEL",
+"name": "Infectious diarrhea panel (stool)",
+"region": "Lower Mainland",
+"aka": [
+"AEROMONAS",
+"C AND S STOOL CULTURE",
+"C AND S STOOL FECAL SWAB",
+"CAMPYLOBACTER",
+"CRYPTOSPORIDIUM",
+"CYCLOSPORA",
+"DIARRHEA ASSOCIATED E COLI",
+"E.COLI 0157/STEC/SHIGA TOXIN PRODUCING E.COLI",
+"ENTAMOEBA HISTOLYTICA",
+"ENTERO-INVASIVE E.COLI",
+"GASTROINTESTINAL PANEL",
+"GI PANEL",
+"GIARDIA",
+"GPMP",
+"IDP",
+"OVA AND PARASITES",
+"OVA & PARASITES",
+"O AND P",
+"O&P",
+"PARASITES STOOL",
+"SALMONELLA",
+"SHIGELLA",
+"STOOL CULTURE",
+"STOOL FOR ADENOVIRUS",
+"STOOL FOR ASTROVIRUS",
+"STOOL FOR NOROVIRUS",
+"STOOL FOR ROTAVIRUS",
+"STOOL OVA AND PARASITE EXAM (HIGH RISK)",
+"STOOL OVA AND PARASITE EXAM",
+"STOOL PCR PANEL",
+"STOOL VIRAL CULTURE",
+"STOOL VIRUS (OTHER THAN ENTEROVIRUS)",
+"VIBRIO",
+"YERSINIA"
+],
+"dictIds": [
+"stool_culture",
+"stool_op"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Copan Fecal)",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Prior to collection:",
+"Review Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions -",
+"English with the patient.",
+"Instruct the patient to:",
+"legibly write their First and Last Name and DOB or PHN on the container label, using the",
+"same format as their government ID",
+"emphasize the importance of two unique identifiers as unlabeled or incompletely",
+"labeled specimens will be rejected",
+"when dropping off the specimen at a LifeLabs Patient Service Centre, the patient is",
+"required to remain at the lab until staff have reviewed the requisition and specimen",
+"2. Note: SAF containers are still required when the following tests are requested:",
+"Stool Microscopy, Strongyloides, Strongyloidiasis",
+"Stool WBC",
+"See Stool Collection Instructions."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"For further information regarding Infectious Diarrhea, see the BC Guidelines: Infectious Diarrhea -",
+"Guideline for Investigation."
+],
+"reflex": "",
+"patientInstructionDocs": [
+"Collecting Stool/Fecal Swab Instructions:",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Arabic",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - English",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Chinese",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Farsi",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - French",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Korean",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Punjabi",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Tagalog",
+"Stool Fecal Swab for Infectious Diarrhea and C.difficile Collection Instructions - - Vietnamese",
+"Collecting Stool Samples from Children in Diapers Instructions:",
+"Collecting Stool Samples Children in Diapers - - Chinese",
+"Collecting Stool Samples Children in Diapers - - English",
+"Collecting Stool Samples Children in Diapers - - Farsi",
+"Collecting Stool Samples Children in Diapers - - Korean",
+"Collecting Stool Samples Children in Diapers - - Punjabi",
+"Collecting Stool Samples Children in Diapers - - Vietnamese"
+],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Stool culture and stool O&P lines both map here (both are on the page AKA line) - one swab.",
+"Note: SAF containers are still required when the following tests are requested: Stool Microscopy, Strongyloides, Strongyloidiasis Stool WBC - not mapped (no SAF container page).",
+"C&S STOOL page: \"This test has been replaced with Stool Fecal Swab for Infectious Diarrhea and C. difficile (IDP)\"."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-06-16",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Copan Fecal)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": true,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": ""
+}
+],
+"akaRoute": [
+[
+"\\bova\\b|parasit|\\bo (and )?p\\b|\\bo&p\\b|giardia|cryptospor|cyclospora|entamoeba",
+"stool_op"
+]
+],
+"requisitionNotes": [
+"when dropping off the specimen at a LifeLabs Patient Service Centre, the patient is required to remain at the lab until staff have reviewed the requisition and specimen"
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/INFECTIOUS-DIARRHEA-PANEL-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "iron",
+"title": "IRON",
+"name": "Iron",
+"region": "Lower Mainland",
+"aka": [
+"FE",
+"IBC",
+"IRON",
+"IRON BINDING CAPACITY",
+"IRON PROFILE",
+"TIBC",
+"TOTAL IRON BINDING CAPACITY",
+"UIBC",
+"UNCONJUGATED IRON-BINDING CAPACITY",
+"UNCONJUGATED IRON BINDING CAPACITY"
+],
+"dictIds": [
+"iron_tibc"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Ferene)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "1 tube",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition.",
+"3. Note: if Ferritin is required, order separately.",
+"4. Hemolysis is unacceptable."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient indentifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient indentifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"AKA line includes TIBC / IRON BINDING CAPACITY / UIBC - the IRON page covers the \"Iron and TIBC\" line.",
+"3. Note: if Ferritin is required, order separately.",
+"4. Hemolysis is unacceptable."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-09-11",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/IRON-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "lipid_profile_full",
@@ -1842,7 +5076,718 @@ const DATA={
 "Medical Practitioner to mark the appropriate box on the requisition.",
 "Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/LIPID-PROFILE-FULL-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "magnesium",
+"title": "MAGNESIUM",
+"name": "Magnesium",
+"region": "Lower Mainland",
+"aka": [
+"MAGNESIUM",
+"MAGNESIUM SERUM",
+"MG"
+],
+"dictIds": [
+"magnesium"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Enzymatic)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient indentifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient indentifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/MAGNESIUM-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "nt_probnp",
+"title": "NT-PRO BNP",
+"name": "NT-proBNP",
+"region": "Lower Mainland",
+"aka": [
+"BNP",
+"BRAIN NATRIURETIC PEPTIDE",
+"BRAIN-TYPE NATRIURETIC PEPTIDE",
+"BNP (B-TYPE NATRIURETIC PEPTIDE)",
+"Natriuretic Peptide B Prohormone",
+"NTproNP",
+"pro BNP",
+"NT pro BNP"
+],
+"dictIds": [
+"bnp"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "2 mL",
+"preTestPrep": [
+"MSC Protocol guidelines for BNP state that it is the physician's responsibility to indicate private pay on",
+"the requisition when the protocol is not met. If \"private pay\" is NOT indicated, process as usual.",
+"When medically appropriate, patients should avoid high-dose biotin supplements for at least 24 hours",
+"prior to blood collection."
+],
+"includes": [],
+"handling": [
+"1. Collect one 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Grossly hemolyzed samples are unsuitable for testing. Grossly lipemic will be ultracentrifuged.",
+"Units",
+"ng/L",
+"Reference Ranges",
+"Effective July 15, 2024:",
+"Suggested interpretation of NT pro BNP in the ambulatory care setting:",
+"Age       Heart failure is   Heart failure is possible but          Heart        Heart failure",
+"highly unlikely    consider alternative diagnosis         failure      highly likely",
+"likely",
+"125 -",
+"<50                                                                 2000",
+"<125 ng/L          -                                      ng/L         >2000 ng/L",
+"NT                                                                             251 -",
+"50 - 74",
+"pro                                                                            2000",
+"years",
+"BNP                  <125 ng/L          125 - 250 ng/L                         ng/L         >2000 ng/L",
+"501 -",
+">74",
+"2000",
+"years",
+"<125 ng/L          125 - 500 ng/L                         ng/L         >2000 ng/L",
+"Suggested interpretation of NT pro BNP in the acute care setting:",
+"Age       Heart failure is   Heart failure is possible but          Heart        Heart failure",
+"highly unlikely    consider alternative diagnosis         failure      highly likely",
+"likely",
+"451 -",
+"<50                                                                 5000",
+"<300 ng/L          300 - 450 ng/L                         ng/L         >5000 ng/L",
+"NT                                                                             901 -",
+"50 - 74",
+"pro                                                                            5000",
+"years",
+"BNP                  <300 ng/L          300 - 900 ng/L                         ng/L         >5000 ng/L",
+"1801 -",
+">74",
+"5000",
+"years",
+"<300 ng/L          300 - 1800 ng/L                        ng/L         >5000 ng/L",
+"Sources: (1) Bayes-Genis, Antoni, et al. \"Practical algorithms for early diagnosis of heart failure and heart",
+"stress using NT-pro BNP: A clinical consensus statement from the Heart Failure Association of the ESC.\"",
+"European Journal of Heart Failure 25.11 (2023): 1891-1898.",
+"(2) Ezekowitz JA, O’Meara E, McDonald MA, et al. \"2017 Comprehensive Update of the Canadian",
+"Cardiovascular Society Guidelines for the Management of Heart Failure\". Canadian Journal of",
+"Cardiology 33.11 (2017): 1342-1433.",
+"Upper Clinical Reporting Range",
+"40 000",
+"Lower Clinical Reporting Range",
+"30",
+"Critical Value",
+"Critical Value",
+"N/A"
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [
+"When medically appropriate, patients should avoid high-dose biotin supplements for at least 24 hours prior to blood collection."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Not on the tube chart - own SST (no sharing statement)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-07-24",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "2 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 2.0,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"MSC Protocol guidelines for BNP state that it is the physician's responsibility to indicate private pay on the requisition when the protocol is not met. If \"private pay\" is NOT indicated, process as usual."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/NT-PRO-BNP-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "phosphorus",
+"title": "PHOSPHORUS - SERUM",
+"name": "Phosphorus",
+"region": "Lower Mainland",
+"aka": [
+"INORGANIC PHOSPHATE",
+"PHOSPHATE",
+"PO4",
+"PO4 SERUM"
+],
+"dictIds": [
+"phosphorus"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Phosphomolybdate)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "4 days room temperature; 14 days refrigerated; 28 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/PHOSPHORUS---SERUM-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "potassium",
+"title": "POTASSIUM",
+"name": "Potassium",
+"region": "Lower Mainland",
+"aka": [
+"POTASSIUM SERUM",
+"K SERUM"
+],
+"dictIds": [
+"potassium"
+],
+"discipline": "Chemistry",
+"methodology": "Ion Selective Electrode",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "room temp 1 day capped, 10hrs uncapped; 4 days refrigerated; 28 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt locations:",
+"For urgent/ STAT requests refer the patient to the local hospital immediately."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet specimen collection and processing criteria, refer patient to the nearest LifeLabs",
+"Patient Service Centre with a completed requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Sunshine Coast (Gibsons & Sechelt) STAT note - not for VCH community (Details only)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/POTASSIUM-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "prothrombin_time",
+"title": "PROTHROMBIN TIME",
+"name": "INR (prothrombin time)",
+"region": "Lower Mainland",
+"aka": [
+"COUMADIN",
+"INR",
+"INR ONLY",
+"INTERNATIONAL NORMALIZED RATIO",
+"PROTHROMBIN TIME",
+"PT",
+"VITAMIN K"
+],
+"dictIds": [
+"inr"
+],
+"discipline": "Hematology",
+"methodology": "",
+"specimenType": "Blood (Whole Blood)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Sodium Citrate Light Blue top (3.2 %)",
+"collectionVolume": "1 full tube",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt:",
+"For urgent/ STAT requests, refer the patient to the local hospital immediately.",
+"Indicate on requisition what anticoagulant, if any, patient is taking.",
+"Note minimum fill line. Underfilled tubes will be rejected."
+],
+"includes": [],
+"handling": [
+"1. Collect one Sodium Citrate Blue top tube (note: must be a full draw).",
+"2. Gently invert/mix the Sodium Citrate tube 3-4 times.",
+"3. Label the tubes with:",
+"Full name of patient",
+"One other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"Test",
+"4. Package specimens in a specimen transport bag.",
+"5. Seal bag.",
+"6. Fold completed requisition and place in sleeve of bag."
+],
+"labelling": [],
+"storageTemp": "Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Sample must arrive at testing site within 24 hours of collection."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Sunshine Coast (Gibsons & Sechelt) STAT note - not for VCH community (Details only).",
+"Tube size not printed (\"Sodium Citrate Light Blue top (3.2 %)\") - chart 2.7 mL used.",
+"PT only - PTT is not on this page.",
+"Sample must arrive at testing site within 24 hours of collection."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-11-24",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "Sodium Citrate Light Blue top (3.2 %)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "1 full tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Note minimum fill line. Underfilled tubes will be rejected.",
+"Collect one Sodium Citrate Blue top tube (note: must be a full draw)."
+],
+"volumeMl": null,
+"noShare": false,
+"temp": "Room Temperature",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"Indicate on requisition what anticoagulant, if any, patient is taking."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/PROTHROMBIN-TIME-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "psa",
+"title": "PSA",
+"name": "PSA",
+"region": "Lower Mainland",
+"aka": [
+"PROSTATE SPECIFIC AG",
+"PROSTATE SPECIFIC ANTIGEN",
+"PSA TOTAL",
+"TANDEM E",
+"ULTRA-SENSITIVE PSA"
+],
+"dictIds": [
+"psa"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "1 tube",
+"preTestPrep": [
+"1. Note: As per the BCMA/MSC, for screening purposes, the patient is responsible for payment",
+"2. Complete LifeLabs requisition and mark the appropriate box for PSA testing.",
+"3. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"1. Note: As per the BCMA/MSC, for screening purposes, the patient is responsible for payment",
+"Not on the tube chart - own 5 mL SST."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"2. Complete LifeLabs requisition and mark the appropriate box for PSA testing.",
+"3. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/PSA-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "pth",
+"title": "PARATHYROID HORMONE",
+"name": "PTH",
+"region": "Lower Mainland",
+"aka": [
+"INTACT PARATHYROID HORMONE (IPTH)",
+"PARATHYROID HORMONE INTACT",
+"PTH"
+],
+"dictIds": [
+"pth"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Electrochemiluminescence (ECLIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"Note: Calcium is included.",
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 3.5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Note: Calcium is included.",
+"Not on the tube chart - own 3.5 mL SST."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1.0,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/PARATHYROID-HORMONE-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "ptt",
@@ -1958,7 +5903,99 @@ const DATA={
 "requisitionNotes": [
 "Indicate on requisition what anticoagulant, if any, patient is taking."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/PTT-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "sodium",
+"title": "SODIUM",
+"name": "Sodium",
+"region": "Lower Mainland",
+"aka": [
+"NA"
+],
+"dictIds": [
+"sodium"
+],
+"discipline": "Chemistry",
+"methodology": "Ion Selective Electrode",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "room temp 1 day capped, 6hrs uncapped; 4 days refrigerated; 28 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt locations:",
+"For urgent/ STAT requests refer the patient to the local hospital immediately.",
+"DO NOT accession the requisition or collect any samples."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition).",
+"Sunshine Coast (Gibsons & Sechelt) STAT note - not for VCH community (Details only)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/SODIUM-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "syphilis_screen",
@@ -2060,7 +6097,10 @@ const DATA={
 "requisitionNotes": [
 "2. For Prenatal testing see: RPR PRENATAL"
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/SYPHILIS-SCREEN--BLOOD--Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "verified by K. Williams 2026-10-11"
 },
 {
 "id": "tsh",
@@ -2156,7 +6196,234 @@ const DATA={
 "1. Complete the LifeLabs Laboratory Requisition.",
 "2. Ensure applicable Thyroid Function box is marked and when required, a written justification/diagnosis is noted."
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/TSH-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "urea",
+"title": "UREA",
+"name": "Urea",
+"region": "Lower Mainland",
+"aka": [
+"BLOOD UREA NITROGEN",
+"BUN",
+"UREA",
+"UREA NITROGEN",
+"UREA SERUM"
+],
+"dictIds": [
+"urea"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Urease)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "24 hrs room temperature; 7 days refrigerated",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete LifeLabs requisition.",
+"2. Ensure Phlebotomist's initials and date and time of collection are also noted on the requisition."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/UREA-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "urine_macroscopic",
+"title": "URINE MACROSCOPIC",
+"name": "Urinalysis - macroscopic (dipstick)",
+"region": "Lower Mainland",
+"aka": [
+"PH URINE",
+"URINALYSIS MACROSCOPIC",
+"URINE ACETONE",
+"URINE BILE PIGMENT",
+"URINE CHEMISTRY",
+"URINE DIP STICK",
+"URINE DIPSTICK",
+"URINE KETO ACIDS",
+"URINE KETONES",
+"URINE FOR PH",
+"URINE PH",
+"URINE SPECIFIC GRAVITY"
+],
+"dictIds": [
+"urine_macro",
+"urine_macro_culture"
+],
+"discipline": "Urinalysis",
+"methodology": "",
+"specimenType": "Urine Mid-Stream (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Urine Cup",
+"collectionVolume": "",
+"preTestPrep": [
+"1. As per the MSP Requirement Guidelines by Topic: Urological System",
+"Exemptions:",
+"Catheter or bagged specimen or suprapubic aspiration",
+"Patient is",
+"Non-MSP patients",
+"2. Complete the LifeLabs Laboratory Requisition.",
+"3. In the URINE TESTS section on the requisition, mark the appropriate box.",
+"4. Provide written clinical information for the following requests:",
+"Macroscopic > Microscopic if dipstick positive",
+"Macroscopic >Urine Culture if pyria or nitriate present",
+"Macroscopic (dipstick) AND Microscopic is marked",
+"5. Label container with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"6. Provide patient with mid-stream (C&S) urine specimen collection instructions.",
+"7. Do not collect specimen during menses."
+],
+"includes": [],
+"handling": [
+"1. Do not aliquot specimen.",
+"2. Ensure lid of container is tightened to avoid leakage.",
+"3. Ensure date and time of collection is noted on the container.",
+"4. Place specimen in specimen transport bag.",
+"5. Seal bag.",
+"6. Fold completed requisition and place in sleeve of bag.",
+"7. Refrigerate specimen immediately.",
+"8. Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Urine C&S Collection Instructions - Arabic",
+"Urine C&S Collection Instructions - Chinese",
+"Urine C&S Collection Instructions - English",
+"Urine C&S Collection Instructions - Farsi",
+"Urine C&S Collection Instructions - French",
+"Urine C&S Collection Instructions - Korean",
+"Urine C&S Collection Instructions - Punjabi",
+"Urine C&S Collection Instructions - Tagalog",
+"Urine C&S Collection Instructions - Vietnamese",
+"Urine Pediatric Collection Instructions"
+],
+"patientPrep": [
+"Do not collect specimen during menses."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no performing laboratory and no turnaround time; requisition: \"Complete the LifeLabs Laboratory Requisition.\"",
+"Handling: \"Do not aliquot specimen.\" The C&S URINE pages describe a boric acid pour-off (lab-side under local practice: community sends the cup).",
+"Mapped from \"Urinalysis: Macroscopic -> Urine Culture if pyuria/nitrite\" together with C&S URINE IF INDICATED (the culture part)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-06-30",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Urine Cup",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Do not aliquot specimen.",
+"Ensure date and time of collection is noted on the container.",
+"Refrigerate specimen immediately."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"requisitionNotes": [
+"Complete the LifeLabs Laboratory Requisition.",
+"In the URINE TESTS section on the requisition, mark the appropriate box."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/URINE-MACROSCOPIC-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 },
 {
 "id": "urine_micro_if_indicated",
@@ -2292,7 +6559,389 @@ const DATA={
 "Macroscopic >Urine Culture if pyria or nitriate present",
 "Macroscopic (dipstick) AND Microscopic is marked"
 ],
-"includesDictIds": []
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/URINE-MICROSCOPIC-IF-INDICATED-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "urine_microscopic",
+"title": "URINE MICROSCOPIC",
+"name": "Urinalysis - microscopic",
+"region": "Lower Mainland",
+"aka": [
+"URINALYSIS MICROSCOPIC",
+"URINE CASTS"
+],
+"dictIds": [
+"urine_micro"
+],
+"discipline": "Urinalysis",
+"methodology": "",
+"specimenType": "Urine Mid-Stream (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Urine Cup",
+"collectionVolume": "8 mL",
+"preTestPrep": [
+"1. As per the MSP Requirement Guidelines by Topic: Urological System",
+"Exemptions:",
+"Catheter or bagged specimen or suprapubic aspiration",
+"Patient is",
+"Non-MSP patients",
+"2. Complete the LifeLabs Laboratory Requisition.",
+"3. In the URINE TESTS section on the requisition, mark the appropriate box.",
+"4. Provide written clinical information for the following requests:",
+"Macroscopic > Microscopic if dipstick positive",
+"Macroscopic >Urine Culture if pyria or nitriate present",
+"Macroscopic (dipstick) AND Microscopic is marked",
+"5. Label container with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"6. Provide patient with mid-stream (C&S) urine specimen collection instructions and a towelette.",
+"7. Do not collect specimen during menses."
+],
+"includes": [],
+"handling": [
+"1. Do not aliquot specimen.",
+"2. Ensure lid of container is tightened to avoid leakage.",
+"3. Ensure date and time of collection is noted on the container.",
+"4. Place specimen in specimen transport bag.",
+"5. Seal bag.",
+"6. Fold completed requisition and place in sleeve of bag.",
+"7. Refrigerate specimen immediately.",
+"8. Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Urine C&S Collection Instructions - Arabic",
+"Urine C&S Collection Instructions - Chinese",
+"Urine C&S Collection Instructions - English",
+"Urine C&S Collection Instructions - Farsi",
+"Urine C&S Collection Instructions - French",
+"Urine C&S Collection Instructions - Korean",
+"Urine C&S Collection Instructions - Punjabi",
+"Urine C&S Collection Instructions - Tagalog",
+"Urine C&S Collection Instructions - Vietnamese",
+"Urine Pediatric Collection Instructions"
+],
+"patientPrep": [
+"Do not collect specimen during menses."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page names no performing laboratory and no turnaround time; requisition: \"Complete the LifeLabs Laboratory Requisition.\"",
+"Handling: \"Do not aliquot specimen.\" The C&S URINE pages describe a boric acid pour-off (lab-side under local practice: community sends the cup)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-06-30",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Urine Cup",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "8 mL",
+"volumeMl": 8,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"Do not aliquot specimen.",
+"Ensure date and time of collection is noted on the container.",
+"Refrigerate specimen immediately."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"requisitionNotes": [
+"Complete the LifeLabs Laboratory Requisition.",
+"In the URINE TESTS section on the requisition, mark the appropriate box."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/URINE-MICROSCOPIC-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "urine_pregnancy",
+"title": "URINE PREGNANCY TEST",
+"name": "Urine pregnancy test",
+"region": "Lower Mainland",
+"aka": [
+"PG",
+"PREG TEST",
+"PREGNANCY URINE",
+"URINE HCG"
+],
+"dictIds": [
+"pregnancy"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Electrochemiluminescence (ECLIA)",
+"specimenType": "Urine (Random)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Urine Cup",
+"collectionVolume": "10 mL",
+"preTestPrep": [
+"1. Complete the requisition and mark the Pregnancy test box or write Urine Pregnancy test in the",
+"additional test section.",
+"2. First morning specimen is preferred, but random sample is acceptable."
+],
+"includes": [],
+"handling": [
+"1. Label sterile urine container with full name of patient and one other unique patient identifier (i.e.",
+"DOB and/or Medical Health Number)",
+"2. No preservative required.",
+"3. Secure lid of container and place in specimen transport bag.",
+"4. Seal bag.",
+"5. Fold completed requisition and place in sleeve of bag."
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [
+"2. First morning specimen is preferred, but random sample is acceptable."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Own cup - no source says it may share a cup with other urine tests."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-06-30",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "urine",
+"container": "Urine Cup",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "10 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"2. No preservative required."
+],
+"volumeMl": 10,
+"noShare": true,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"1. Complete the requisition and mark the Pregnancy test box or write Urine Pregnancy test in the additional test section."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/URINE-PREGNANCY-TEST-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "valproic_acid",
+"title": "VALPROIC ACID",
+"name": "Valproic acid",
+"region": "Lower Mainland",
+"aka": [
+"DEPAKENE",
+"DIVALPROEX",
+"EPIVAL",
+"VALPROATE"
+],
+"dictIds": [
+"drug_valproic"
+],
+"discipline": "Chemistry",
+"methodology": "Particle-enhanced turbidimetric inhibition immunoassay (PETINIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Usual collection is trough level.",
+"2. Best time to collect trough level is immediately prior to next dose."
+],
+"includes": [],
+"handling": [
+"1. Collect one 3.5 mL Gold SST tube.",
+"2. Gently invert tube 5-6 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique identifier (DOB and/or Medical Health Number)",
+"4. Clot for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in a specimen transport bag.",
+"7. Seal bag.",
+"8. Fold completed requisition and place in sleeve of bag.",
+"9. Note: If unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a",
+"completed requisition."
+],
+"labelling": [
+"full name of patient",
+"one other unique identifier (DOB and/or Medical Health Number)"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [
+"1. Usual collection is trough level.",
+"2. Best time to collect trough level is immediately prior to next dose."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": null,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag",
+"clotText": "Clot for a minimum of 30 minutes."
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/VALPROIC-ACID-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "vitamin_b12",
+"title": "VITAMIN B12",
+"name": "Vitamin B12",
+"region": "Lower Mainland",
+"aka": [
+"B12",
+"COBALAMINE",
+"CYANOCOBALAMINE",
+"TOTAL B12",
+"TOTAL VITAMIN B12",
+"VITAMIN B12 TOTAL"
+],
+"dictIds": [
+"b12"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [],
+"includes": [],
+"handling": [
+"1. Collect blood in 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique identifier (i.e. DOB and/or Medical Health Number)",
+"4. Note date & time of collection on the requisition.",
+"5. Allow to clot upright for a minimum of 30 minutes.",
+"6. Centrifuge for 10 minutes at 1300 RCF.",
+"7. Place in specimen transport bag.",
+"8. Fold requisition and place in back sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique identifier (i.e. DOB and/or Medical Health Number)"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory and destination are not named on the page (LifeLabs requisition; chemistry SST)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-11",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/VITAMIN-B12-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified"
 }
 ]
 };

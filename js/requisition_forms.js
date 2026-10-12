@@ -31,6 +31,15 @@ const F={forms:[
    {onForm:'HIV', section:'HIV (Non-prenatal)', ids:['hiv_serology'], specimen:'serum'},
    {onForm:'Routine', section:'SYPHILIS ANTIBODY', ids:['syphilis'], specimen:'serum'}]}
 ]};
+/* ui2 (2026-10-11): redirects printed on OTHER BCCDC requisitions (verbatim; source text collection-src/phl_req/virology_req.txt, from the
+   Virology Requisition PDF supplied by K. Williams 2026-10-11 - the PDF itself is not published). Not routable forms: no tests are listed here. */
+F.redirects=[
+ {from:{title:'Virology Requisition', issuer:'Public Health Laboratory', org:'BCCDC (PHSA)', number:'PHRQ_VIR_0001F', version:'Version 1.0 August 2026',
+   display:'BCCDC PHL Virology Requisition (PHRQ_VIR_0001F, Version 1.0 August 2026)'},
+  section:'HEPATITIS', text:'Please see the Serology Screening Requisition to order HCV RNA and/or HCV genotyping testing',
+  to:'PHL_SER', ids:['hcv_rna_quant','hcv_genotype'], lastChecked:'2026-10-11',
+  source:'BCCDC Public Health Laboratory Virology Requisition PHRQ_VIR_0001F (Version 1.0 August 2026), supplied by K. Williams 2026-10-11'}];
+F.redirectFor=(number,ids)=>F.redirects.find(r=>r.from.number===number&&ids.some(i=>r.ids.includes(i)))||null;
 F.byId={};for(const f of F.forms)for(const t of f.tests)for(const id of t.ids)if(!F.byId[id])F.byId[id]={form:f,test:t,spec:f.specimens[t.specimen]};
 F.formOfName=n=>{const k=(n||'').toLowerCase();return F.forms.find(f=>f.aliases.some(a=>a.toLowerCase()===k))||null;};
 if(typeof module!=='undefined'&&module.exports)module.exports=F;else root.RequisitionForms=F;
