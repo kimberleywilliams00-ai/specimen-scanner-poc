@@ -5,8 +5,8 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.2'; // must match version.json and VERSION in sw.js
-const APP_DATE='2026-10-11';
+const APP_VERSION='v3.8.3'; // must match version.json and VERSION in sw.js
+const APP_DATE='2026-10-12';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -83,12 +83,15 @@ function render(r){
   const dl=$('dict');dl.innerHTML='';for(const t of D.TESTS)dl.appendChild(el('option',{value:t[1]}));
   const nb=(r.info.columnBoxes!=null?r.info.columnBoxes:(r.info.boxesFound||0))+(r.info.looseMarks||0);
   $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
+  updConfirm();
   const ov=$('overlay');if(r.image){drawOverlay(r);ov.classList.remove('hidden');}else ov.classList.add('hidden');}
 
 function itemEl(it,r){
   const flag=it.warn||(it.checked!==false&&it.status!=='ok');
-  const cls='item '+(it.warn?'missed':it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});cb.checked=it.checked!==false&&it.status!=='unrecognized'&&!it.warn;
-  cb.addEventListener('change',()=>{it.selected=cb.checked;});it.selected=cb.checked;
+  const cls='item '+(it.warn?'missed':it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});// ui2 (2026-10-12, K. Williams): every scanned line starts UNchecked - the nurse confirms each test against the paper. Manually added
+  // tests start checked (the nurse picked them). it.selected survives Back to tests (the list DOM is kept, not rebuilt).
+  if(it.selected===undefined)it.selected=!!it.manual;cb.checked=it.selected;
+  cb.addEventListener('change',()=>{it.selected=cb.checked;updConfirm();});
   const nameTxt=el('span',{class:'nm',text:it.warn?'Possible missed line':it.id?(it.testName):(it.name||it.raw||'(unreadable line)')});
   const title=el('span',{class:'name'},nameTxt);
   if(it.status==='verify')title.appendChild(el('span',{class:'badge',text:it.boxDetected===false?'check box?':'check'}));
@@ -111,10 +114,14 @@ function itemEl(it,r){
       tog.addEventListener('click',()=>{more.hidden=!more.hidden;tog.setAttribute('aria-expanded',String(!more.hidden));});body.appendChild(more);}}
   if(!it.id||it.status==='verify'){const sel=el('select',{'aria-label':'Choose the matching test'});sel.appendChild(el('option',{value:'',text:it.id?'Change test…':'Choose matching test…'}));
     for(const t of D.TESTS.slice().sort((a,b)=>a[1].localeCompare(b[1])))sel.appendChild(el('option',{value:t[0],text:t[1]}));
-    sel.addEventListener('change',()=>{if(!sel.value)return;const e=D.BYID[sel.value];it.id=e.id;it.testName=e.name;it.category=e.category;it.status='ok';it.manual=true;cb.checked=true;it.selected=true;nameTxt.textContent=e.name;});
+    sel.addEventListener('change',()=>{if(!sel.value)return;const e=D.BYID[sel.value];it.id=e.id;it.testName=e.name;it.category=e.category;it.status='ok';it.manual=true;cb.checked=true;it.selected=true;updConfirm();nameTxt.textContent=e.name;});
     body.appendChild(sel);}
   return el('div',{class:cls+(flag?' flagged':'')},body,tog);}
 
+/* ui2: Build plan stays disabled until at least one test is ticked */
+function updConfirm(){const n=current?current.items.filter(i=>i.selected).length:0;const b=$('confirm');b.disabled=!n;
+  b.textContent=n?'Build plan ('+n+' test'+(n>1?'s':'')+')':'Tick tests to build the plan';
+  $('confirmHint').hidden=!!n;}
 function drawOverlay(r){const cv=window.cv;const c=$('overlay');const m=r.image;const rgba=new cv.Mat();cv.cvtColor(m,rgba,cv.COLOR_GRAY2RGBA);
   for(const it of r.items){const col=it.checked===false?[150,150,150,255]:it.status==='ok'?[0,160,0,255]:it.status==='verify'?[230,140,0,255]:[220,0,0,255];
     const b=it.bbox;if(b)cv.rectangle(rgba,new cv.Point(b.x-4,b.y-4),new cv.Point(b.x+b.w+4,b.y+b.h+4),col,4);
@@ -130,15 +137,22 @@ function reset(){ // wipe everything from memory and screen (incl. in-memory lin
 
 $('cam').addEventListener('change',e=>handleFile(e.target.files[0]));
 $('pick').addEventListener('change',e=>handleFile(e.target.files[0]));
-$('discard').addEventListener('click',reset);$('finish').addEventListener('click',reset);
+$('discard').addEventListener('click',reset);$('finish').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.replaceState(null,'');reset();});
 $('addBtn').addEventListener('click',()=>{const v=$('addTest').value.trim();if(!v||!current)return;const m=D.match(v);
   const exact=D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
   const it={id:e?e.id:null,testName:e?e.name:v,name:v,raw:'',category:e?e.category:'Other',status:e?'ok':'unrecognized',checked:true,notes:[],manual:true};
-  current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';});
-$('confirm').addEventListener('click',()=>{if(!current)return;const sel=current.items.filter(i=>i.selected);
+  it.selected=true;current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';updConfirm();});
+let listY=0;
+$('confirm').addEventListener('click',()=>{if(!current)return;listY=window.scrollY;const sel=current.items.filter(i=>i.selected);
   // v3.2: Collection Summary from the on-device LifeLabs data file (js/collection_data.js); in memory only
   const items=sel.map(it=>({id:it.id||null,name:it.testName||it.name||it.raw,notes:(it.notes||[]).filter(n=>n.text).map(n=>({type:n.type,text:n.text}))}));
-  window.CollectionSummary.render($('summary'),items);show('done');window.scrollTo(0,0);});
+  window.CollectionSummary.render($('summary'),items);show('done');window.scrollTo(0,0);
+  // ui2: a history entry for the plan, so the phone/browser back gesture returns to Confirm tests (scan + ticks kept)
+  if(!(history.state&&history.state.ui2==='plan'))history.pushState({ui2:'plan'},'');});
+/* ui2 (2026-10-12): Back to tests - the Confirm tests screen is only hidden while the plan shows, so the scan, crops and ticks are intact */
+function backToTests(){if(!current||$('done').classList.contains('hidden'))return;show('result');updConfirm();window.scrollTo(0,listY);}
+$('back').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.back();else backToTests();});
+window.addEventListener('popstate',()=>backToTests());
 $('print').addEventListener('click',()=>window.print());
 // warm up engines in the background (still fully local)
 window.addEventListener('load',()=>{waitCv().then(()=>{$('engine').textContent='Engine: image engine ready (on-device).';});

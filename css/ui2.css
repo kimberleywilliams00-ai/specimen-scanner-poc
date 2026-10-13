@@ -145,3 +145,9 @@ a.tn:active{color:var(--b)}
 .tcard.has-thumb{position:relative;padding-left:60px}
 .tc-thumb{position:absolute;left:10px;top:12px;width:40px;height:64px;object-fit:contain;object-position:center top}
 .tcard.has-thumb>.dx{margin-left:0}
+
+/* ui2 (2026-10-12): Back to tests + confirm hint */
+.backrow{margin:4px 0 6px}
+.backb{padding:8px 14px;font-weight:600}
+.confirm-hint{flex-basis:100%;margin:0;padding:6px 2px 0;color:#7a4b00;background:var(--bg);font-weight:600}
+#confirm:disabled{opacity:.55;cursor:not-allowed}

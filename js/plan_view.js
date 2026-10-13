@@ -112,18 +112,32 @@ const PREP_FACTS=[ // [key, test, phrase, personal phrase (n = test name) or nul
   ['morning_rand',/first morning (?:specimen|sample) is preferr?ed,? but random (?:specimen |sample )?is acceptable/i,'First morning sample preferred; random is acceptable.',n=>n+' prefers a first morning sample (random is acceptable).'],
   ['morning',/first morning (?:specimen|sample) is preferr?ed/i,'First morning sample preferred.',n=>n+' prefers a first morning sample.']];
 const SUPERSEDES={morning_rand:['morning']};
-function prepFacts(text){const out=[];const s=text.replace(/^“|”$/g,'').replace(/^\d+\.\s+/,'');
+/* ui2 (2026-10-12, turn 25): OCR-tolerant matching for requisition (form) notes. ocrFix maps common OCR confusions and near-miss verbs
+   (edit distance <= 2 to void/urinate, e.g. 'vous' -> 'void') before the fact patterns run. Unmatched form-note fragments are NOT shown in
+   Before you start unless they clearly carry a distinct instruction (reqDistinct); the verbatim note is always in Details. */
+function lev(a,b){const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t;}}return d[b.length];}
+function ocrFix(f){return f.replace(/\b([A-Za-z]{3,9})\b(?=\s+(?:for|within)\b)/g,(w)=>{const l=w.toLowerCase();
+    for(const v of ['void','voided','urinate','urinated'])if(l!==v&&lev(l,v)<=(v.length<6?2:3)&&!/^(?:food|wait|meal|eat|test|hold|fast)$/.test(l))return v;return w;})
+  .replace(/\b(?:f[il1|]rst|frist)\b/gi,'first').replace(/(\d)\s*m[l1I|]\b/g,'$1 ml').replace(/\b(?:[l1I|])\s*(hour|hr)/gi,'1 $1').replace(/\bh(?:our|r)s?\b/gi,m=>m)
+  .replace(/\bmid\s+strea[mn]\b|\bmidstrea[n]\b/gi,'midstream').replace(/\bmen[s5]e[s5]\b/gi,'menses');}
+const NOVOID_FUZZY=/\b(?:do\s+)?not\s+(?:void|voided|urinate|urinated)\w*\s+(?:for|within)\s+(?:at least\s+)?(?:1|one)\s*h/i;
+function reqDistinct(f){const w=f.split(/\s+/).filter(Boolean);if(w.length<3)return false;
+  const real=w.filter(x=>/^[A-Za-z][a-z]*[.,;:]?$|^\d+$/.test(x)&&/[aeiouy]/i.test(x)).length;if(real/w.length<0.8)return false;
+  return /\b(?:fast(?:ing|ed)?|npo|nothing (?:to eat|by mouth)|medication|dose|drink|water|exercise|diet|alcohol|stop|hold|bring|before (?:the )?(?:dose|meal|breakfast))\b/i.test(f);}
+function prepFacts(text,isReq){const out=[];let s=text.replace(/^“|”$/g,'').replace(/^\d+\.\s+/,'');if(isReq)s=ocrFix(s);
   if(/\bnot (?:required|needed|necessary)\b|\bno fasting\b/i.test(s))return out; // K. Williams 2026-10-11: action-only; 'not required' stays in Details
   const frags=s.split(/;\s*|\.\s+(?=[A-Z0-9])|\.\.\.\s*/).map(x=>x.trim()).filter(Boolean);
-  for(const f of frags){let hit=false;for(const [k,re,ph,pp] of PREP_FACTS){const m=f.match(re);if(!m)continue;
+  for(const f of frags){let hit=false;if(isReq&&NOVOID_FUZZY.test(f)&&!PREP_FACTS[1][1].test(f)){hit=true;out.push({k:'novoid',ph:PREP_FACTS[1][2],pp:null});}
+    for(const [k,re,ph,pp] of PREP_FACTS){const m=f.match(re);if(!m)continue;
       if(k==='morning'&&PREP_FACTS[5][1].test(f))continue;hit=true;out.push({k,ph:typeof ph==='function'?ph(m):ph,pp:pp||null});}
+    if(!hit&&isReq&&!reqDistinct(f))continue; // garbled / leftover form-note text: Details only
     if(!hit&&!/^\s*\(?(?:see|refer)\b/i.test(f))out.push({k:'raw:'+f.toLowerCase().replace(/[.\s]+$/,''),ph:f.replace(/\.?$/,'.'),pp:null,raw:true});}
   return out;}
 function prepVolRules(){const LR=root.LocalRules||{rules:[]},GD=root.GuideData||{entries:[]};
   return LR.rules.filter(r=>r.kind==='prepVolume'&&(()=>{const g=GD.entries.find(g=>g.id===r.quoteFrom.guide);return g&&JSON.stringify(g).includes(r.quoteFrom.match);})());}
 function prepLines(U){const tests=new Map();const unitByName=n=>U.units.find(x=>x.name===n)||U.units.find(x=>(x.items||[]).some(it=>it.name===n));
   for(const [w,p] of U.prep){const isReq=/\(requisition\)$/.test(w);const who=w.replace(/ \(BCCDC eLab Handbook\)$/,'').replace(/ \(requisition\)$/,'');
-    const us=isReq?[unitByName(who)]:who.split(', ').map(unitByName);const fs=prepFacts(p);if(!fs.length)continue;
+    const us=isReq?[unitByName(who)]:who.split(', ').map(unitByName);const fs=prepFacts(p,isReq);if(!fs.length)continue;
     us.forEach((u,i)=>{const lab=u?prepLabel(u):(isReq?who:who.split(', ')[i]);if(!tests.has(lab))tests.set(lab,new Map());const m=tests.get(lab);
       for(const f of fs){if(!m.has(f.k)||f.ph.length>m.get(f.k).ph.length)m.set(f.k,f);}});}
   // turn 21: prepVolume local rule (K. Williams, LifeLabs Doc#31847) - the first-catch volume always comes from the quoted source
@@ -266,19 +280,23 @@ function render(host,items,opts){
   const other=uniq(all.flatMap(t=>t.members.map(m=>m.c&&(m.c.form||(m.unit.entry&&m.unit.entry.form)))).filter(f=>f&&!H.RF.formOfName(f)));
   for(const f of other)rows.push(el('div',{class:'pwrow'},el('div',{class:'pw-h',text:f})));
   if(U.rn.some(([,r])=>/initials/i.test(r)))rows.push(el('div',{class:'pw-t',text:'Write your initials and the collection date and time on the requisition.'}));
-  for(const r of rows)pw.appendChild(r);
+  // ui2 (2026-10-12, turn 26, K. Williams): Paperwork shows only when useful - more than one requisition/destination, a 'check' row,
+  // or an amber paperwork caveat (other than regional order notes). Otherwise its rows + sources go to the plan-level Details & sources.
   const paper=part('paper');const pwCav=paper?[...paper.querySelectorAll(':scope > .caveat')]:[];
-  if(paper)pw.appendChild(details('Details & sources',[paper],{dot:pwCav.length>0}));
-  if(rows.length||paper)host.appendChild(pw);
-
-  // ---- Labelling (one line) ----
+  const REGIONAL=/Order notes:|Sunshine Coast|STAT requests/i;const pwWarn=pwCav.filter(c=>!REGIONAL.test(c.textContent));
+  const reqRows=rows.filter(r=>r.classList&&r.classList.contains('pwrow'));
+  const showPw=reqRows.length>1||rows.some(r=>r.querySelector&&r.querySelector('.pw-h.check'))||pwWarn.length>0;
+  const planDet=[];
+  if(showPw){for(const r of rows)pw.appendChild(r);if(paper)pw.appendChild(details('Details & sources',[paper],{dot:pwCav.length>0}));host.appendChild(pw);}
+  else if(rows.length||paper)planDet.push(el('div',{class:'dx-sub',text:'Paperwork'}),...rows,paper);
+  // ---- Labelling: removed from the plan view (turn 26); wording + sources live in the plan-level Details & sources ----
   const lab=part('label');const keys=Object.keys(U.L||{}).join(' ');
   if(keys||lab){const bits=[];if(/full name/.test(keys))bits.push('full name');if(/identifier/.test(keys))bits.push('second ID (DOB or health number)');if(/test name/.test(keys))bits.push('test name');
     let line=bits.length?'Every tube: '+bits.join(', ')+'.':'';const f=[...U.byForm.keys()];if(f.length)line+=(line?' ':'')+'BCCDC: 2 matching IDs on tube and requisition.';
     if(nonBlood.some(t=>/swab/i.test(t.label||'')&&t.steps))line+=(line?' ':'')+'Swabs: also the anatomic site and collection date/time (LifeLabs Doc#31847).';
-    host.appendChild(el('section',{class:'blk'},el('h2',{text:'Labelling'}),line?el('div',{class:'pw-t',text:line}):null,lab?details('Details & sources',[lab]):null));}
-
-  const ban=part('banner');if(ban&&ban.isConnected&&ban.parentNode===L)host.appendChild(el('section',{class:'blk'},details('Details & sources',[ban])));
+    planDet.push(el('div',{class:'dx-sub',text:'Labelling'}),line?el('div',{class:'pw-t',text:line}):null,lab);}
+  const ban=part('banner');if(ban&&ban.isConnected&&ban.parentNode===L)planDet.push(ban);
+  const pdk=planDet.filter(Boolean);if(pdk.length)host.appendChild(el('section',{class:'blk'},details((showPw?'Labelling':'Labelling, paperwork')+' & sources',pdk,{dot:!showPw&&pwCav.length>0})));
   host.appendChild(el('div',{class:'foot',text:'Prototype - verify against LifeLabs/BCCDC. Sources: tap Details.'}));
   // anything the legacy renderer produced that has not been placed yet goes in a final expander (should be empty)
   const tcard=part('tests');if(tcard&&!tcard.querySelector('.test-line'))tcard.remove();
