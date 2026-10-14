@@ -5,8 +5,8 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.3'; // must match version.json and VERSION in sw.js
-const APP_DATE='2026-10-12';
+const APP_VERSION='v3.8.4'; // must match version.json and VERSION in sw.js
+const APP_DATE='2026-10-13';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -88,7 +88,7 @@ function render(r){
 
 function itemEl(it,r){
   const flag=it.warn||(it.checked!==false&&it.status!=='ok');
-  const cls='item '+(it.warn?'missed':it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});// ui2 (2026-10-12, K. Williams): every scanned line starts UNchecked - the nurse confirms each test against the paper. Manually added
+  const cls='item '+(it.warn?'missed':it.checked===false?'unticked':it.status);const cb=el('input',{type:'checkbox'});// ui2 (2026-10-13, K. Williams): every scanned line starts UNchecked - the nurse confirms each test against the paper. Manually added
   // tests start checked (the nurse picked them). it.selected survives Back to tests (the list DOM is kept, not rebuilt).
   if(it.selected===undefined)it.selected=!!it.manual;cb.checked=it.selected;
   cb.addEventListener('change',()=>{it.selected=cb.checked;updConfirm();});
@@ -149,7 +149,7 @@ $('confirm').addEventListener('click',()=>{if(!current)return;listY=window.scrol
   window.CollectionSummary.render($('summary'),items);show('done');window.scrollTo(0,0);
   // ui2: a history entry for the plan, so the phone/browser back gesture returns to Confirm tests (scan + ticks kept)
   if(!(history.state&&history.state.ui2==='plan'))history.pushState({ui2:'plan'},'');});
-/* ui2 (2026-10-12): Back to tests - the Confirm tests screen is only hidden while the plan shows, so the scan, crops and ticks are intact */
+/* ui2 (2026-10-13): Back to tests - the Confirm tests screen is only hidden while the plan shows, so the scan, crops and ticks are intact */
 function backToTests(){if(!current||$('done').classList.contains('hidden'))return;show('result');updConfirm();window.scrollTo(0,listY);}
 $('back').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.back();else backToTests();});
 window.addEventListener('popstate',()=>backToTests());

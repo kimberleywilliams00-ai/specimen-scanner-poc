@@ -53,7 +53,7 @@ function el(tag,attrs,...kids){const e=document.createElement(tag);for(const k i
 const uniq=a=>[...new Set(a.filter(Boolean))];
 function nominalMl(container){const m=(container||'').match(/(\d+(?:\.\d+)?)\s*mL/i);return m?+m[1]:null;}
 function tubeColour(container){const c=(container||'').toLowerCase();
-  if(/citrate|light blue/.test(c))return {rank:2,css:'lblue'};if(/sst|gold|red top|serum/.test(c))return {rank:3,css:'gold'};
+  if(/citrate|light blue/.test(c))return {rank:2,css:'lblue'};if(/^red top|^\d+(\.\d+)? ?ml red top/.test(c))return {rank:3,css:'red'}; /* turn 27: Red top pages (chart RED60) */ if(/sst|gold|red top|serum/.test(c))return {rank:3,css:'gold'};
   if(/heparin|green/.test(c))return {rank:4,css:'green'};if(/edta|lavender|pink/.test(c))return {rank:5,css:'lav'};if(/fluoride|grey|gray/.test(c))return {rank:6,css:'grey'};if(/acd|yellow/.test(c))return {rank:9,css:'yellow'};return {rank:9,css:''};} // ui2 turn 13: ACD yellow chip colour only (draw-order rank unchanged)
 function destLabel(c){if(c.destination)return c.destination+(c.destGroup==='PHL'&&!/PHL/.test(c.destination)?' (BCCDC Public Health Lab)':'');
   if(c.destGroup==='PHL'&&RF.formOfName(c.form))return 'BCCDC Public Health Lab (the '+RF.formOfName(c.form).title+' named is the BCCDC PHL form '+RF.formOfName(c.form).number+')';
@@ -113,6 +113,11 @@ function ruleStates(units,answers){const ids=new Set(units.flatMap(u=>u.ids));co
   for(const r of LR.rules.filter(r=>r.kind==='question')){if(!r.appliesTo.some(i=>ids.has(i)))continue;const a=answers[r.id]||null;const ans=a&&r.answers.find(x=>x.v===a);
     const resolved=ans?(ans.as||ans.v):'unanswered';out.push({rule:r,answer:a,resolved,effect:r.effects[resolved]||{}});}
   for(const r of LR.rules.filter(r=>r.kind==='refer'))if(r.appliesTo.some(i=>ids.has(i)))out.push({rule:r,answer:null,resolved:'refer',effect:r.effect,refer:true}); // ui2
+  { const RD=LR.rules.find(r=>r.kind==='redirect'); // ui2 turn 28 (K. Williams 2026-10-13): separate serum/plasma, freeze, blood films -> redirect to LifeLabs (amber)
+    if(RD)for(const u of units){const c=u.entry&&u.entry.collect.find(c=>c.redirect);if(!c)continue;const q='“'+c.redirect.quote.join('” “')+'”';
+      out.push({rule:{id:'redirect_'+u.entry.id,kind:'refer',redirect:true,appliesTo:u.ids.slice(),source:RD.source,date:RD.date,rationale:RD.rationale,base:RD},answer:null,resolved:'refer',refer:true,
+        effect:{severity:'amber',excludeFromTubes:true,title:u.name+': redirect to LifeLabs',short:'Page requires '+c.redirect.reason+': '+q+' Send the client to the nearest LifeLabs Patient Service Centre with the requisition.',
+          text:u.name+': the LifeLabs page requires '+c.redirect.reason+' - '+q+'. '+RD.text}});}}
   for(const u of units){u.excludedBy=null;u.localNotes=[];
     for(const st of out)if(u.ids.every(i=>st.rule.appliesTo.includes(i))){if(st.effect.excludeFromTubes)u.excludedBy=st;else u.localNotes.push(st);}}
   return out;}
@@ -144,7 +149,7 @@ function plan(units){
     else if(g.mode==='separate'){for(const c of list)mk({group:g,source:'chart',members:[{unit:u,c}]});}
     else for(const c of list){let t=tubes.find(t=>t.group===g&&!t.members.some(m=>m.unit===u)&&compatible(t,c,u));
       if(!t){const sib=tubes.filter(t=>t.group===g);t=mk({group:g,source:'chart'});
-        if(sib.length){for(const x of sib.concat(t))x.split=true;
+        if(sib.some(x=>!x.members.some(m=>m.unit===u))){for(const x of sib.concat(t))x.split=true; /* turn 27: a 2nd tube of the SAME test (count 2, e.g. Malaria) is not a handling split */
           conflicts.push('Chart shows one '+g.tube.label+' for '+uniq(sib.flatMap(x=>x.members.map(m=>m.unit.name)).concat(u.name)).join(', ')+', but the per-test PDFs give different handling (centrifuged vs not / destination) - kept in separate tubes.');}}
       t.members.push({unit:u,c});}}
   // (a2) tests not on the chart that go on a requisition form with a combined-tube instruction (BCCDC PHL Serology Screening
@@ -181,6 +186,14 @@ function plan(units){
       const j=tubes.find(x=>x!==t&&x.group&&x.group.id===r.joinGroup&&!x.split&&t.members.every(m=>commOk(x,m.unit)&&compatible(x,m.c,m.unit)));
       if(j){j.members.push(...t.members);(j.joined=j.joined||[]).push({rule:r,names:t.members.map(m=>m.unit.name)});tubes.splice(tubes.indexOf(t),1);}
       else{t.group=Object.assign({},t.group,{tube:Object.assign({},t.group.tube,r.alone)});t.sizeRule=r;}}}
+  // ui2 turn 28: LifeLabs page says one tube for two tests (collect.shareTubeWith, verbatim) - used when the page is newer than the chart (page_vs_chart_date)
+  { const PR=LR.rules.find(r=>r.kind==='precedence');
+    for(const t of tubes.slice()){if(!tubes.includes(t))continue;const m0=t.members.find(m=>m.c&&m.c.shareTubeWith);if(!m0)continue;const sw=m0.c.shareTubeWith,pd=m0.unit.entry.lastPublished;
+      for(const x of tubes.slice()){if(x===t)continue;const mx=x.members.find(m=>m.unit.entry&&sw.entries.includes(m.unit.entry.id));if(!mx||x.members.length!==1||t.members.length!==1)continue;
+        const px=mx.unit.entry.lastPublished,newer=PR&&pd&&px&&pd>PR.chartDate&&px>PR.chartDate;
+        if(!newer){t.caveats.push('Chart vs per-test PDF: '+m0.unit.name+' page says “'+sw.quote+'” but the chart (effective '+(PR?PR.chartDate:'?')+') is newer or a page date is missing - chart kept (separate tubes).');conflicts.push(m0.unit.name+' / '+mx.unit.name+': page says one tube, chart separate - chart kept.');continue;}
+        t.members.push(...x.members);tubes.splice(tubes.indexOf(x),1);
+        t.infos.push('One tube for '+m0.unit.name+' and '+mx.unit.name+': LifeLabs page “'+sw.quote+'” (pages published '+pd+' / '+px+', newer than the chart '+PR.chartDate+', which shows separate tubes; rule page_vs_chart_date).');}}}
   // per-tube facts, conflicts, caveats
   for(const t of tubes.filter(t=>t.local)){const r=t.local;t.label=r.tube.label;t.css=r.tube.css;t.rank=r.tube.rank;t.mix=r.mix;t.amber=[];
     // per-test centrifuge instructions from the LifeLabs pages (all blood slots of each member)
@@ -255,14 +268,22 @@ function plan(units){
         if(m.unit.chart.partial)t.caveats.push(nm+': '+m.unit.chart.partial);if(m.unit.chart.coverageNote)t.infos.push(m.unit.chart.coverageNote+'.');
         if(!m.c)continue;
         const pm=nominalMl(m.c.container),pc=tubeColour(m.c.container).css;
-        if(pc&&pc!==t.css){const s=nm+': per-test PDF container "'+m.c.container+'" differs from the chart ('+g.tube.label+') - chart used.';t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}
-        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6){const s=nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - chart size used.';const jr=LR.rules.find(r=>r.kind==='chartJoin'&&m.unit.ids.some(i=>r.ids.includes(i)));if(jr)t.infos.push(s+' Local practice: '+jr.text);else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
+        const PR=LR.rules.find(r=>r.kind==='precedence'),pd=m.unit.entry&&m.unit.entry.lastPublished,pageWins=!!(PR&&pd&&pd>PR.chartDate); // turn 28: newer source wins
+        const win=s=>pageWins?s.replace(/ - chart (size )?used\.$/,' - page used (page published '+pd+', newer than the chart '+PR.chartDate+'; rule page_vs_chart_date).'):s.replace(/\.$/,' (chart effective '+(PR?PR.chartDate:'')+' is newer than the page'+(pd?' published '+pd:' - page date missing')+').');
+        const isSST=/sst/i.test(g.tube.type||g.tube.label);
+        if(pc&&pc!==t.css){const s=win(nm+': per-test PDF container "'+m.c.container+'" differs from the chart ('+g.tube.label+') - chart used.');if(pageWins)t.infos.push('Chart vs per-test PDF: '+s);else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
+        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6&&!(isSST&&LR.rules.some(r=>r.kind==='sstSize'))){const s=win(nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - chart size used.');const jr=LR.rules.find(r=>r.kind==='chartJoin'&&m.unit.ids.some(i=>r.ids.includes(i)));if(jr)t.infos.push(s+' Local practice: '+jr.text);else if(pageWins){t.infos.push('Chart vs per-test PDF: '+s);t.pageSize=pm;}else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
+        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6)t.infos.push(nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - SST size by local rule sst_size_alone_shared (3.5 mL alone, 5 mL shared).');
         else if(pm==null)t.infos.push(nm+': tube size not stated in the per-test PDF ("'+m.c.container+'"); '+g.tube.sizeMl.toFixed(1)+' mL from the chart.');
-        const px=parseMix(m.unit.entry);if(px&&px!==g.mix){const s=nm+': per-test PDF says mix '+px+' times, chart says '+g.mix+' times.';t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}
+        const px=parseMix(m.unit.entry);if(px&&px!==g.mix){const s=win(nm+': per-test PDF says mix '+px+' times, chart says '+g.mix+' times - chart used.');if(pageWins){t.infos.push('Chart vs per-test PDF: '+s);t.mix=px;}else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
         if(m.c.noShare&&!m.c.shareGroup&&t.members.length>1)t.infos.push(nm+': per-test PDF describes its own tube ("'+(m.c.notes||[])[0]+'"); the chart shares this tube with '+t.members.filter(x=>x!==m).map(x=>x.unit.name).join(', ')+'.');}
       if(g.confirm&&(!g.confirmWhenAlso||tubes.some(x=>x.group&&x.group.id===g.confirmWhenAlso))&&(!g.confirmWhenMulti||uniq(tubes.filter(x=>x.group===g).flatMap(x=>x.members.map(m=>m.unit.key))).length>1))t.caveats.push('Chart interpretation: '+g.confirm);
       if(t.split)t.caveats.push('Chart shows one tube for these tests but the per-test handling differs (centrifuged vs not / destination), so they are kept apart.');}
-    t.chartOnly=t.members.filter(m=>!m.c).map(m=>m.unit.name);t.typeKey=t.css+'|'+(g?g.tube.sizeMl:(nominalMl(t.label)||(t.css==='gold'?5:null)));}
+    { const SR=LR.rules.find(r=>r.kind==='sstSize'); // ui2 turn 28: SST 3.5 mL alone / 5 mL shared (generalises afp_tube); newer page size for other tubes
+      if(SR&&/sst/i.test(t.label)&&!t.sizeLocal){const n=uniq(t.members.map(m=>m.unit.key)).length,ml=n>1?SR.shared:SR.alone;t.label='SST gold top '+ml.toFixed(1)+' mL';t.sstSize={ml,n};
+        if(!t.sizeRule)t.infos.push('Tube size: local rule - '+SR.text+' ('+SR.source+', '+SR.date+')');}
+      else if(t.pageSize&&/[\d.]+ mL/.test(t.label))t.label=t.label.replace(/[\d.]+ mL/,(+t.pageSize).toFixed(1)+' mL'); }
+    t.chartOnly=t.members.filter(m=>!m.c).map(m=>m.unit.name);t.typeKey=t.css+'|'+(g?(nominalMl(t.label)||g.tube.sizeMl):(nominalMl(t.label)||(t.css==='gold'?5:null)));}
   for(const t of tubes)if(t.own){const same=tubes.filter(x=>x!==t&&x.typeKey===t.typeKey&&x.c.centrifuge===t.c.centrifuge&&(x.c.destGroup||'')===(t.c.destGroup||''));
     t.caveats.push('Not on the LifeLabs Quick Reference Chart: drawn as its own tube'+(same.length?' (same tube type and handling as the tube for '+uniq(same.flatMap(x=>x.members.map(m=>m.unit.name))).join(', ')+' - the lab may allow combining)':'')+'.');}
   if(live.some(u=>u.chart&&!u.localTube&&u.chart.group.mode==='perTest'&&u.route))conflicts.push('Hepatitis Acute / Chronic profiles: the '+(RF.forms[0]||{}).display+' says “'+((RF.forms[0]||{specimens:{serum:{}}}).specimens.serum.combine)+'”, but the LifeLabs chart and LifeLabs pages say two SST tubes per profile (one centrifuged for LifeLabs, one unspun for BCCDC) - LifeLabs used for LifeLabs collection.');
@@ -421,8 +442,8 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
 
   // 0. local practice questions (e.g. PTT on heparin) - before anything else
   for(const st of RS){const r=st.rule;
-    if(st.refer){const ef=st.effect;const q=el('div',{class:'sum-card local','data-part':'question'},el('h3',{text:'Refer - not collected in community'}),
-        el('div',{class:'redstop'},el('div',{class:'redstop-h',text:'⛔ '+ef.title}),el('div',{text:ef.text})));
+    if(st.refer){const ef=st.effect;const amb=ef.severity==='amber';const q=el('div',{class:'sum-card local','data-part':'question'},el('h3',{text:amb?'Redirect to LifeLabs':'Refer - not collected in community'}),
+        el('div',{class:'redstop'+(amb?' amberstop':'')},el('div',{class:'redstop-h',text:(amb?'⚠ ':'⛔ ')+ef.title}),el('div',{text:ef.text})));
       const qe=r.quoteFrom&&DATA.entries.find(x=>x.id===r.quoteFrom.entry);
       const qt=qe&&[].concat(qe.preTestPrep||[],qe.additionalInfo||[]).filter(x=>x.includes(r.quoteFrom.match));
       if(qt&&qt.length){const u=units.find(u=>u.entry===qe);q.appendChild(el('div',{class:'fact'},el('b',{text:'LifeLabs page '+qe.title+' (published '+qe.lastPublished+'): '}),qt.map(x=>'“'+x+'”').join(' ')));
@@ -633,7 +654,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
   // requisition forms (e.g. BCCDC PHL Serology Screening Requisition) - from the form itself, plus names used on LifeLabs pages
   const HOW={local:'to BCCDC (local practice: communicable disease tests go to BCCDC)',named:'named on its LifeLabs page',bccdc:'BCCDC tube; LifeLabs page names no form - test is listed on this form, confirm',listed:'listed on this form (LifeLabs pages do not say which requisition) - confirm'};
   const byForm=new Map();
-  for(const u of units){if(u.excludedBy&&u.excludedBy.effect.severity==='red')continue;const r=u.route;if(!r||r.how==='lifelabs')continue;
+  for(const u of units){if(u.excludedBy&&u.excludedBy.effect.excludeFromTubes)continue;const r=u.route;if(!r||r.how==='lifelabs')continue;
     if(!byForm.has(r.form))byForm.set(r.form,[]);byForm.get(r.form).push([u,r]);}
   for(const [f,list] of byForm){const box=el('div',{class:'reqform'},el('div',{class:'reqform-h',text:'Requisition: '+f.display}));
     const l=el('ul');for(const [u,r] of list)l.appendChild(el('li',{},el('b',{text:u.name}),' - on form: “'+r.test.onForm+'” ('+r.test.section+') · '+HOW[r.how]));box.appendChild(l);
@@ -678,12 +699,13 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
     d.appendChild(el('div',{class:'tname'},srcLink(u,e?e.name:u.name),' ',unvTag(u)||''));
     const asked=uniq(u.items.map(i=>i.name));if(asked.some(a=>a!==(e?e.name:u.name)))d.appendChild(el('div',{class:'small',text:'Confirmed as: '+asked.join('; ')}));
     if(u.excludedBy&&u.excludedBy.effect.severity==='red')d.appendChild(el('div',{class:'fact warn',text:'⛔ Not collected in community - see the red card above.'}));
+    else if(u.excludedBy&&u.excludedBy.effect.severity==='amber')d.appendChild(el('div',{class:'fact warn',text:'⚠ Redirect to LifeLabs - see the amber card above.'}));
     else if(u.excludedBy)d.appendChild(el('div',{class:'fact caveat',text:'Answer the question above first.'}));
     if(u.localTube){const lt=P.blood.find(t=>t.members.some(m=>m.unit===u));
       d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),(lt?lt.label+(lt.ofType>1?' #'+lt.no:''):u.localTube.tube.label)+' - local practice ',localTag(u.localTube)));
       if(u.chart)d.appendChild(el('div',{class:'small',text:'LifeLabs chart (overridden by local practice): '+u.chart.group.tube.label+' (chart: '+u.chart.chartNames.join(', ')+')'}));}
     else if(u.chart){const g=u.chart.group;
-      d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),g.tube.label+(e?'':' - per LifeLabs Quick Reference Chart; full handling: check Lab Test Information'),' (chart: '+u.chart.chartNames.join(', ')+')'));
+      d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),(((P.blood||[]).find(t=>t.members.some(m=>m.unit===u))||{}).label||g.tube.label)+(e?'':' - per LifeLabs Quick Reference Chart; full handling: check Lab Test Information'),' (chart: '+u.chart.chartNames.join(', ')+')'));
       if(u.chart.partial)d.appendChild(el('div',{class:'fact caveat',text:'⚠ '+u.chart.partial+' - confirm with lab.'}));}
     if(!e&&!u.chart&&!u.localTube&&u.route)d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),u.route.spec.tube+' - per the '+u.route.form.display+' (“'+u.route.spec.combine+'”); not on the LifeLabs chart; full handling: check Lab Test Information / PHSA eLab Handbook'));
     if(u.route&&u.route.how!=='lifelabs')d.appendChild(el('div',{class:'small',text:'Requisition: '+u.route.form.display+' - “'+u.route.test.onForm+'” ('+u.route.test.section+')'}));

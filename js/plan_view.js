@@ -198,7 +198,7 @@ function render(host,items,opts){
   for(const q of parts('question')){const st=q.__st,ef=st.effect;need=true;
     const names=st.rule.appliesTo.map(H.dictName).map(n=>n.replace(/\s*\(.*\)$/,'')).join(', ');
     const us=U.units.filter(u=>u.excludedBy===st||(u.localNotes||[]).includes(st)||u.ids.some(i=>st.rule.appliesTo.includes(i)));
-    if(st.refer){bys.appendChild(el('div',{class:'stop'},el('div',{class:'stop-h'},...linkLead(ef.title,us)),el('div',{class:'stop-t',text:REFER_SHORT[st.rule.id]||ef.text}),qdet(q,st)));continue;}
+    if(st.refer){bys.appendChild(el('div',{class:'stop'+(ef.severity==='amber'?' amb':'')},el('div',{class:'stop-h'},...linkLead(ef.title,us)),el('div',{class:'stop-t',text:REFER_SHORT[st.rule.id]||ef.short||ef.text}),qdet(q,st)));continue;} // turn 28: amber redirect
     if(ef.severity==='red'){const sh=(STOP_SHORT[st.rule.id]||{})[st.answer]||(STOP_SHORT[st.rule.id]||{})[st.resolved]||{title:(ef.title||names+': do not collect'),text:ef.text};
       bys.appendChild(el('div',{class:'stop'},el('div',{class:'stop-h'},...linkLead(sh.title,us)),el('div',{class:'stop-t',text:sh.text}),
         el('div',{class:'qline',text:st.rule.question}),seg(st,rerender,opts),
@@ -241,6 +241,7 @@ function render(host,items,opts){
     const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
       el('div',{class:'tc-tests'},...tests.flatMap((u,i)=>i?[' · ',nameLink(u)]:[nameLink(u)])),
       h.text?el('div',{class:'tc-hand '+h.cls,text:h.text}):null,
+      ...t.members.filter(m=>m.c&&m.c.cardNote).map(m=>el('div',{class:'tc-hand',text:shortName(m.unit)+': '+m.c.cardNote.replace(/^\d+\.\s+/,'').replace(/^./,x=>x.toLowerCase())})), // turn 29: plain source-based card line (fibrinogen 8 h)
       ...(nb?otherBits(t):[]),
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC
       t.drawLast?el('div',{class:'tc-kit'},'Draw last ',el('span',{class:'tc-local',text:'Local practice'})):null, // turn 14: ACD yellow

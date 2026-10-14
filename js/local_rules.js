@@ -76,7 +76,7 @@ const L={rules:[
   text:'HCV RNA (Hep C viral load / PCR) and HIV Viral Load each need their OWN 6.0 mL EDTA lavender tube.',
   shareText:'HCV genotyping shares the HCV RNA tube per the BCCDC PHL Serology Screening Requisition (“For HCV RNA and HCV genotyping requests, please provide 1 EDTA plasma (lavender-top) tube.”).'},
  {id:'bccdc_serology_one_sst', kind:'tube', source:'VCH community practice (K. Williams)', date:'2026-10-11', overrides:'LifeLabs Quick Reference Chart',
-  appliesTo:['syphilis','hiv_serology','hcv_screen','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbeag','hbv_serology','hep_acute','hep_chronic'],
+  appliesTo:['syphilis','hiv_serology','hcv_screen','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbv_serology','hep_acute','hep_chronic'], /* turn 28: hbeag removed (rule hep_b_lifelabs) */
   tube:{type:'SST',sizeMl:5.0,colour:'gold',css:'gold',rank:3,label:'SST gold top 5.0 mL'}, mix:'5-6',
   shareSets:'all', destination:'BCCDC', form:'PHL_SER', formSpec:'serum',
   text:'BCCDC serology tube: any combination of syphilis, HIV, hepatitis A/B/C serology and other serology goes in ONE SST, following the BCCDC PHL Serology Screening Requisition guidance (LifeLabs sends all of these to BCCDC). Overrides the LifeLabs chart’s separate Hep A IgM / Hep B tube and two tubes per hepatitis profile.',
@@ -130,8 +130,18 @@ const L={rules:[
  {id:'cd4_acd_8_5', kind:'tubeSize', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['cd4_sph'], match:'ACD', label:'ACD-A yellow 8.5 mL',
   text:'CD4 ACD tube: ACD-A 8.5 mL.'},
  /* constraint: communicable disease tests never share a tube with non-communicable tests (enforced in summary.js plan()). */
+ /* ui2 turn 28 (K. Williams decisions 2026-10-13) */
+ {id:'hep_b_lifelabs', kind:'note', source:'K. Williams decision', date:'2026-10-13', appliesTo:['hbeag','hbv_dna'],
+  text:'HBeAg and Hepatitis B viral load are processed by LifeLabs, not BCCDC: LifeLabs pages and the LifeLabs requisition are used (not the BCCDC serology SST).'},
+ {id:'lab_processing_redirect', kind:'redirect', source:'K. Williams decision', date:'2026-10-13',
+  rationale:'Spinning/centrifuging is fine in community, but community does not separate serum/plasma (aliquot off the cells), freeze specimens, or make blood films.',
+  text:'Redirect to LifeLabs: send the client to the nearest LifeLabs Patient Service Centre with the requisition.'},
+ {id:'page_vs_chart_date', kind:'precedence', source:'K. Williams decision', date:'2026-10-13', chartDate:'2024-04-08',
+  text:'When a LifeLabs directory page conflicts with the Quick Reference Chart (Doc#49141, effective 2024-04-08), the more recent source wins (page Last Published date vs chart date). Chart newer or page date missing: chart kept and the conflict stays flagged.'},
+ {id:'sst_size_alone_shared', kind:'sstSize', source:'K. Williams decision (generalises afp_tube)', date:'2026-10-13', alone:3.5, shared:5.0,
+  text:'SST gold: 3.5 mL when the test is alone in its SST, 5 mL when the SST is shared.'},
  {id:'communicable_separate', kind:'constraint', source:'VCH community practice (K. Williams)', date:'2026-10-11',
-  ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbeag','hbv_serology','hbv_dna','hep_acute','hep_chronic'],
+  ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbv_serology','hep_acute','hep_chronic'], /* turn 28: hbeag, hbv_dna removed - LifeLabs-processed (hep_b_lifelabs) */
   text:'All communicable disease tests (HIV, hepatitis, syphilis) go to BCCDC and never share a tube with non-communicable tests (lipids, chemistry, etc.).'}
 ]};
 L.communicable=new Set([].concat(...L.rules.filter(r=>r.kind==='constraint').map(r=>r.ids)));
