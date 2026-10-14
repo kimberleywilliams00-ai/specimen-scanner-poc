@@ -1,4 +1,4 @@
-# Labbie (v3.8.5)
+# Labbie (v3.8.6)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by

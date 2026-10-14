@@ -182,3 +182,8 @@ header{background:#0b2a4a}
 
 /* turn 39: header app icon (mockup group-B2-final) */
 .hrow{display:flex;align-items:center;gap:9px}.happicon{width:30px;height:30px;border-radius:6.7px;display:block;flex:none}
+
+/* turn 40: Add a test at the top of Confirm tests; list fits above the keyboard (8 x 48 px max ~ 4.5 rows visible, scrolls inside) */
+.addrow.addtop{margin:4px 0 12px}
+#addTest[type=search]{-webkit-appearance:none;appearance:none}#addTest::-webkit-search-cancel-button{-webkit-appearance:none}
+.ta-list{max-height:170px} /* ~3.5 rows visible, scrolls inside: stays above the iPhone keyboard + accessory bar (~330 px) when the field is near the top */

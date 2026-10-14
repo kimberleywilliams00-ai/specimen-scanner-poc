@@ -19,8 +19,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Labbie">
 <meta name="format-detection" content="telephone=no">
-<link rel="stylesheet" href="css/app.css?v=3.8.5">
-<link rel="stylesheet" href="css/ui2.css?v=3.8.5">
+<link rel="stylesheet" href="css/app.css?v=3.8.6">
+<link rel="stylesheet" href="css/ui2.css?v=3.8.6">
 </head>
 <body>
 <header>
@@ -36,7 +36,7 @@
     </div>
     <details class="dx tiny"><summary>Options & version</summary><div class="dx-body">
       <label class="opt"><input type="checkbox" id="dbg"> Show debug overlay</label>
-      <p class="small ver-start">Version <b>v3.8.5</b> (2026-10-14)</p>
+      <p class="small ver-start">Version <b>v3.8.6</b> (2026-10-14)</p>
       <p id="engine" class="small">Engine: not loaded yet (loads from this site only, works offline after first visit).</p>
     </div></details>
   </section>
@@ -45,13 +45,13 @@
 
   <section id="result" class="hidden ui2">
     <div class="stephead"><div class="step"><span class="stepn">1</span>Confirm tests</div><div id="stepsub1" class="stepsub"></div></div>
-    <div id="layout"></div>
-    <div id="list"></div>
-    <div class="addrow">
+    <div class="addrow addtop">
       <label for="addTest" class="addlbl">Add a test</label>
-      <div class="row ta-wrap"><input id="addTest" placeholder="Start typing a test name…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addList"><button id="addBtn" class="btn">Add</button>
+      <div class="row ta-wrap"><input id="addTest" name="labtest_lookup" type="search" inputmode="search" placeholder="Start typing a test name…" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addList"><button id="addBtn" class="btn">Add</button>
         <ul id="addList" class="ta-list hidden" role="listbox" aria-label="Matching tests"></ul></div>
     </div>
+    <div id="layout"></div>
+    <div id="list"></div>
     <canvas id="overlay" class="hidden"></canvas>
     <details class="dx tiny"><summary>Scan info</summary><div class="dx-body"><p id="timing" class="small"></p></div></details>
     <div class="btns sticky">
@@ -73,18 +73,18 @@
 <footer class="small">Not for clinical use. Always check the paper requisition. Done – clear wipes the photo and results. <span id="ver"></span></footer>
 <script src="vendor/opencv.js" async id="cvjs"></script>
 <script src="vendor/tesseract/tesseract.min.js"></script>
-<script src="js/dictionary.js?v=3.8.5"></script>
-<script src="js/template_d2350.js?v=3.8.5"></script>
-<script src="js/preprocess.js?v=3.8.5"></script>
-<script src="js/pipeline.js?v=3.8.5"></script>
-<script src="js/collection_data.js?v=3.8.5"></script>
-<script src="js/tube_rules.js?v=3.8.5"></script>
-<script src="js/local_rules.js?v=3.8.5"></script>
-<script src="js/requisition_forms.js?v=3.8.5"></script>
-<script src="js/elab_data.js?v=3.8.5"></script>
-<script src="js/guide_data.js?v=3.8.5"></script>
-<script src="js/summary.js?v=3.8.5"></script>
-<script src="js/plan_view.js?v=3.8.5"></script>
-<script src="js/app.js?v=3.8.5"></script>
+<script src="js/dictionary.js?v=3.8.6"></script>
+<script src="js/template_d2350.js?v=3.8.6"></script>
+<script src="js/preprocess.js?v=3.8.6"></script>
+<script src="js/pipeline.js?v=3.8.6"></script>
+<script src="js/collection_data.js?v=3.8.6"></script>
+<script src="js/tube_rules.js?v=3.8.6"></script>
+<script src="js/local_rules.js?v=3.8.6"></script>
+<script src="js/requisition_forms.js?v=3.8.6"></script>
+<script src="js/elab_data.js?v=3.8.6"></script>
+<script src="js/guide_data.js?v=3.8.6"></script>
+<script src="js/summary.js?v=3.8.6"></script>
+<script src="js/plan_view.js?v=3.8.6"></script>
+<script src="js/app.js?v=3.8.6"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.5'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.6'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-14';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -143,25 +143,26 @@ function addManual(v,pickId){if(!v||!current)return;const m=pickId?null:D.match(
   it.selected=true;current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';taClose();updConfirm();}
 $('addBtn').addEventListener('click',()=>addManual($('addTest').value.trim()));
 /* ui2 turn 30: Add-test type-ahead (on-device; names + all aliases incl. held-back ones via ReqDict.suggest). Keyboard: arrows, Enter, Esc. */
+/* ui2 turn 40 (K. Williams iPhone recording, v3.8.5): the field now sits at the TOP of Confirm tests, so there is NO scroll/resize logic
+   (no scrollIntoView/scrollTo/visualViewport, nothing runs on input except rebuilding the list). Selection logic unchanged (it works). */
 let taItems=[],taAct=-1;const taIn=$('addTest'),taList=$('addList');
 function taClose(){taList.classList.add('hidden');taList.innerHTML='';taItems=[];taAct=-1;taIn.setAttribute('aria-expanded','false');taIn.removeAttribute('aria-activedescendant');}
-function taFit(){const vv=window.visualViewport;const vh=vv?vv.height+vv.offsetTop:window.innerHeight;const r=taIn.getBoundingClientRect();taList.style.maxHeight=Math.max(150,vh-r.bottom-12)+'px';}
 function taMark(i){taAct=i;[...taList.children].forEach((li,k)=>{li.classList.toggle('act',k===i);li.setAttribute('aria-selected',String(k===i));});
-  if(i>=0){taIn.setAttribute('aria-activedescendant','ta'+i);taList.children[i].scrollIntoView({block:'nearest'});}else taIn.removeAttribute('aria-activedescendant');}
+  if(i>=0)taIn.setAttribute('aria-activedescendant','ta'+i);else taIn.removeAttribute('aria-activedescendant');}
 function taOpen(){const q=taIn.value.trim();if(!q){taClose();return;}taItems=D.suggest(q,8);taList.innerHTML='';taAct=-1;
   if(!taItems.length){taClose();return;}
   taItems.forEach((s,i)=>{const li=el('li',{id:'ta'+i,role:'option','aria-selected':'false',class:'ta-item'},el('span',{class:'ta-name',text:s.name}),s.matched?el('span',{class:'ta-aka',text:'also called '+s.matched}):null);
-    li.addEventListener('mousedown',e=>e.preventDefault());li.addEventListener('click',()=>addManual(s.name,s.id));taList.appendChild(li);});
-  taList.classList.remove('hidden');taIn.setAttribute('aria-expanded','true');taFit();}
+    li.addEventListener('mousedown',e=>e.preventDefault());li.addEventListener('click',()=>addManual(s.name,s.id)); // selection unchanged from turn 30 (works on iPhone)
+    taList.appendChild(li);});
+  taList.classList.remove('hidden');taIn.setAttribute('aria-expanded','true');}
 taIn.addEventListener('input',taOpen);
-taIn.addEventListener('focus',()=>{setTimeout(()=>{const r=taIn.getBoundingClientRect();if(r.top>window.innerHeight*0.3)window.scrollBy({top:r.top-80,behavior:'smooth'});taOpen();},300);});
+taIn.addEventListener('focus',()=>{if(taIn.value.trim())taOpen();});
 taIn.addEventListener('keydown',e=>{const open=!taList.classList.contains('hidden');
   if(e.key==='ArrowDown'){e.preventDefault();if(!open)taOpen();else taMark(Math.min(taAct+1,taItems.length-1));}
   else if(e.key==='ArrowUp'){e.preventDefault();if(open)taMark(Math.max(taAct-1,0));}
   else if(e.key==='Enter'){e.preventDefault();if(open&&taAct>=0)addManual(taItems[taAct].name,taItems[taAct].id);else if(open&&taItems.length===1)addManual(taItems[0].name,taItems[0].id);else addManual(taIn.value.trim());}
   else if(e.key==='Escape'){taClose();}});
 document.addEventListener('pointerdown',e=>{if(!taList.classList.contains('hidden')&&!e.target.closest('.ta-wrap'))taClose();});
-if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(!taList.classList.contains('hidden'))taFit();});
 let listY=0;
 $('confirm').addEventListener('click',()=>{if(!current)return;listY=window.scrollY;const sel=current.items.filter(i=>i.selected);
   // v3.2: Collection Summary from the on-device LifeLabs data file (js/collection_data.js); in memory only
