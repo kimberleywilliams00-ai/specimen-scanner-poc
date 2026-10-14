@@ -392,7 +392,7 @@ const DATA={
 "destGroup": "",
 "bag": "specimen transport bag",
 "redirect": {
-"reason": "separating serum",
+"reason": "serum separation required",
 "quote": [
 "6. Separate serum into a 13 x 75 mm BD non-additive Vacutainer."
 ]
@@ -2355,7 +2355,7 @@ const DATA={
 "destGroup": "",
 "bag": "specimen transport bag",
 "redirect": {
-"reason": "aliquoting serum",
+"reason": "serum aliquoting required",
 "quote": [
 "Aliquot into 12 x 75 mm Amber transport tube."
 ]
@@ -2750,7 +2750,7 @@ const DATA={
 "bag": "",
 "clotText": "4. Allow to clot upright for a minimum of 1 hour.",
 "redirect": {
-"reason": "separating serum",
+"reason": "serum separation required",
 "quote": [
 "6. Separate serum into a 13 x 75 mm BD non-additive Vacutainer."
 ]
@@ -4153,7 +4153,7 @@ const DATA={
 "bag": "",
 "clotText": "3. Allow to clot for 30 minutes",
 "redirect": {
-"reason": "aliquoting serum and frozen storage",
+"reason": "serum aliquoting and freezing required",
 "quote": [
 "5. Aliquot 2 mL of serum into 13 x 75 mm BD non-additive Vacutainer",
 "6. Store and transport frozen with copy of requisition"
@@ -6054,7 +6054,7 @@ const DATA={
 "bag": "Biohazard specimen transport bag",
 "separatePlasma": true,
 "redirect": {
-"reason": "separating plasma",
+"reason": "plasma separation required",
 "quote": [
 "5. Separate plasma into a 13 x 75 mm BD non-additive Vacutainer."
 ]
@@ -9255,7 +9255,7 @@ const DATA={
 "destGroup": "",
 "bag": "transvelope",
 "redirect": {
-"reason": "blood films within 1 hour and same-day arrival",
+"reason": "blood films within 1 hour and same-day arrival required",
 "quote": [
 "4. Make three thin blood films within one hour of collection using the Malaria/Hematology Panel tube.",
 "Both EDTA tubes and three slides must be received at testing site on day of collection"
@@ -9512,7 +9512,7 @@ const DATA={
 "bag": "specimen transport bag",
 "clotText": "4. Clot for a minimum of 30 minutes.",
 "redirect": {
-"reason": "aliquoting serum",
+"reason": "serum aliquoting required",
 "quote": [
 "6. Aliquot into 13 x 75 mm BD non-additive Vacutainer."
 ]
@@ -9628,7 +9628,7 @@ const DATA={
 "altContainer": "Red top",
 "clotText": "4. Clot for 30 minutes.",
 "redirect": {
-"reason": "aliquoting serum",
+"reason": "serum aliquoting required",
 "quote": [
 "6. Aliquot serum into 13 x 75 mm BD non-additive Vacutainer.",
 "7. Note: serum must be aliquoted within 24 hours of collection."
@@ -11184,7 +11184,7 @@ const DATA={
 "bag": "specimen transport bag",
 "clotText": "4. Clot for a minimum of 30 minutes.",
 "redirect": {
-"reason": "aliquoting serum",
+"reason": "serum aliquoting required",
 "quote": [
 "6. Aliquot into 13 x 75 mm BD non-additive Vacutainer."
 ]
@@ -12344,7 +12344,7 @@ const DATA={
 "quote": "3. Note: when Vitamin E is also requested, collect one tube for both specimens."
 },
 "redirect": {
-"reason": "aliquoting serum and freezing",
+"reason": "serum aliquoting and freezing required",
 "quote": [
 "7. Aliquot 3 mL of serum into Amber transport tube.",
 "9. Freeze immediately."
@@ -12533,7 +12533,7 @@ const DATA={
 "bag": "specimen transport bag",
 "clotText": "4. Allow to clot upright for 1 hour.",
 "redirect": {
-"reason": "aliquoting serum and freezing",
+"reason": "serum aliquoting and freezing required",
 "quote": [
 "6. Aliquot 2 mL serum into 13 x 75 mm BD non-additive Vacutainer.",
 "8. Freeze tube upright."
@@ -12652,7 +12652,7 @@ const DATA={
 "quote": "3. Note: when Vitamin A is also requested, collect one specimen for both tests."
 },
 "redirect": {
-"reason": "aliquoting serum and freezing",
+"reason": "serum aliquoting and freezing required",
 "quote": [
 "7. Aliquot 3 mL of serum into Amber transport tube.",
 "9. Freeze immediately."

@@ -27,7 +27,7 @@ const L={rules:[
     'refer' item. quoteFrom: a sentence of the test's own LifeLabs page (looked up in js/collection_data.js at render time, never copied here). */
  {id:'hiv_vl_refer_psc', kind:'refer', source:'VCH community practice (K. Williams)', date:'2026-10-11', appliesTo:['hiv_vl'],
   rationale:'Community nurses do not separate plasma.',
-  effect:{severity:'red', excludeFromTubes:true, title:'HIV viral load: refer to a LifeLabs Patient Service Centre',
+  effect:{severity:'red', excludeFromTubes:true, title:'HIV viral load: plasma aliquoting required - refer to a LifeLabs Patient Service Centre',
    text:'HIV viral load: not collected in community - the LifeLabs page requires centrifuging and separating plasma into a second tube, which community does not do. Refer the client to the nearest LifeLabs Patient Service Centre with the requisition.'},
   quoteFrom:{entry:'hiv_viral_load', match:'refer patient to the nearest LifeLabs Patient Service Centre'}},
  /* v3.4 tube rules (kind 'tube'): take priority over the LifeLabs chart (js/tube_rules.js) and per-test entries where they conflict.
@@ -77,7 +77,7 @@ const L={rules:[
   shareText:'HCV genotyping shares the HCV RNA tube per the BCCDC PHL Serology Screening Requisition (“For HCV RNA and HCV genotyping requests, please provide 1 EDTA plasma (lavender-top) tube.”).'},
  {id:'bccdc_serology_one_sst', kind:'tube', source:'VCH community practice (K. Williams)', date:'2026-10-11', overrides:'LifeLabs Quick Reference Chart',
   appliesTo:['syphilis','hiv_serology','hcv_screen','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbv_serology','hep_acute','hep_chronic'], /* turn 28: hbeag removed (rule hep_b_lifelabs) */
-  tube:{type:'SST',sizeMl:5.0,colour:'gold',css:'gold',rank:3,label:'SST gold top 5.0 mL'}, mix:'5-6',
+  tube:{type:'SST',sizeMl:5.0,colour:'gold',css:'gold',rank:3,label:'SST gold top 5.0 mL'}, mix:null, /* turn 34: 'Mix 5-6x' dropped - no BCCDC source */
   shareSets:'all', destination:'BCCDC', form:'PHL_SER', formSpec:'serum',
   text:'BCCDC serology tube: any combination of syphilis, HIV, hepatitis A/B/C serology and other serology goes in ONE SST, following the BCCDC PHL Serology Screening Requisition guidance (LifeLabs sends all of these to BCCDC). Overrides the LifeLabs chart’s separate Hep A IgM / Hep B tube and two tubes per hepatitis profile.',
   prenatal:'Prenatal panel: 2 SSTs (BCCDC PHL Serology Screening Requisition: “Prenatal Testing -Please provide 2 serum separator tubes.”) - no prenatal panel test in the scanner dictionary yet.',
@@ -89,8 +89,9 @@ const L={rules:[
      this tube; each test's LifeLabs page wording stays visible in its test details, labelled as LifeLabs page text.
      v3.6 (VCH community practice, K. Williams, 2026-10-11): community nurses NEVER transfer serum to a separate tube - the SST is sent as
      is after centrifuging. The verbatim eLab text (incl. its serum-transfer option) stays in the Hep C test details, labelled as eLab text. */
-  handling:{centrifuge:true, source:'VCH community practice (K. Williams)', date:'2026-10-11',
-   text:'Clot, then centrifuge. Send in the original SST; do not transfer serum (VCH community practice).'}},
+  /* turn 34 (K. Williams, 2026-10-14): NOT centrifuged in community - clotted blood preferred per BCCDC eLab; still never transfer serum */
+  handling:{centrifuge:false, source:'VCH community practice (K. Williams)', date:'2026-10-14', elabUrl:'https://www.elabhandbook.info/phsa',
+   text:'Not centrifuged in community: clotted blood (BCCDC eLab Handbook Preferred specimen), refrigerate. Send in the original SST; do not transfer serum (VCH community practice).'}},
  /* ui2 (2026-10-11, turn 14): companion - CD4 REQUIRES a CBC collected at the same time (K. Williams). CD4 itself is the ACD yellow tube.
     The CD4 page's 4 mL EDTA slot "(one for the Hematology Panel performed at LifeLabs)" is NOT a CD4 tube: if a CBC is on the requisition no
     extra tube (note on the CD4 card); if not, one lavender 4 mL CBC tube is added, labelled as required for CD4, with an amber reminder.
@@ -101,7 +102,7 @@ const L={rules:[
   missingText:'CBC not on the requisition: a CBC must be collected and ordered with CD4.'},
  /* ui2 (turn 14): shareSpecimen - ONE specimen for these LifeLabs entries (K. Williams). Supporting wording (verbatim) from a guide source in
     js/guide_data.js (quotes are looked up there; not shown if missing). */
- {id:'idp_cdiff_one_swab', kind:'shareSpecimen', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['infectious_diarrhea_panel','c_diff'],
+ {id:'idp_cdiff_one_swab', kind:'shareSpecimen', source:'BC Gov guidance', sourceUrl:'https://www2.gov.bc.ca/gov/content?id=9C231B7C58E54FF4999A2B52AD396043', notLocal:true, date:'2026-10-11', /* turn 34: was mislabelled 'Local practice' - source is BC government guidance */ entries:['infectious_diarrhea_panel','c_diff'],
   guide:'bc_gpac_infectious_diarrhea', short:'One swab for both tests.',
   text:'One Copan FecalSwab covers both C. difficile and the Infectious Diarrhea Panel.'},
  /* ui2 (2026-10-12, turn 21): prepVolume - K. Williams' decision: the CT/GC urine prep line always shows the first-catch volume from

@@ -116,7 +116,7 @@ function ruleStates(units,answers){const ids=new Set(units.flatMap(u=>u.ids));co
   { const RD=LR.rules.find(r=>r.kind==='redirect'); // ui2 turn 28 (K. Williams 2026-10-13): separate serum/plasma, freeze, blood films -> redirect to LifeLabs (amber)
     if(RD)for(const u of units){const c=u.entry&&u.entry.collect.find(c=>c.redirect);if(!c)continue;const q='“'+c.redirect.quote.join('” “')+'”';
       out.push({rule:{id:'redirect_'+u.entry.id,kind:'refer',redirect:true,appliesTo:u.ids.slice(),source:RD.source,date:RD.date,rationale:RD.rationale,base:RD},answer:null,resolved:'refer',refer:true,
-        effect:{severity:'amber',excludeFromTubes:true,title:u.name+': redirect to LifeLabs',short:'Page requires '+c.redirect.reason+': '+q+' Send the client to the nearest LifeLabs Patient Service Centre with the requisition.',
+        effect:{severity:'red',excludeFromTubes:true,title:u.name+': '+c.redirect.reason+' - refer to a LifeLabs Patient Service Centre',short:'LifeLabs page: '+q,
           text:u.name+': the LifeLabs page requires '+c.redirect.reason+' - '+q+'. '+RD.text}});}}
   for(const u of units){u.excludedBy=null;u.localNotes=[];
     for(const st of out)if(u.ids.every(i=>st.rule.appliesTo.includes(i))){if(st.effect.excludeFromTubes)u.excludedBy=st;else u.localNotes.push(st);}}
@@ -218,6 +218,7 @@ function plan(units){
       else t.c=Object.assign(t.c,{centrifuge:true,clotMinutes:ll&&ll.clotMinutes,spinMinutes:ll&&ll.spinMinutes,rcf:ll&&ll.rcf});
       t.handling=r.handling;t.handlingSettingsOk=!!es||!!ll;
       if(kinds.length>1||none.length)t.llSpin=spin;delete t.partialSpin;}
+    else if(r.handling&&r.handling.centrifuge===false){t.handling=r.handling;t.elab=r.destination==='BCCDC'?uniq(t.members.map(m=>elabOf(m.unit))):[];if(kinds.length>1||none.length)t.llSpin=spin;delete t.partialSpin;} // turn 34: BCCDC serology SST not spun
     else if(kinds.length>1){t.spinMixed=spin;t.amber.push(r.centrifugeConflict||'LifeLabs pages differ on centrifuging - confirm with lab');}
     /* ui2 (2026-10-11): BCCDC eLab Handbook entries for BCCDC-bound local tubes WITHOUT a local handling rule (HCV RNA / HIV viral load
        EDTA). The eLab page takes priority where it states something; where it is silent the LifeLabs entry is used - except that a
@@ -428,7 +429,7 @@ function guideBlock(g,u){const b=el('div',{class:'elab-block guide-block'},el('d
   b.appendChild(el('div',{class:'src',text:'Source: '+guideRef(g)+(g.issuerBasis?' ('+g.issuerBasis+')':'')+(g.issuerNote?' ('+g.issuerNote+')':'')+' · supplied by K. Williams, checked '+GD.lastChecked+' · '+(g.url?g.url:'no web address printed in the document')}));
   return b;}
 const STANDING=()=>LR.rules.filter(r=>r.kind==='standing');
-function localTag(r){return el('span',{class:'local-tag'},'Local practice · '+r.source+', ',el('span',{class:'nw',text:r.date}));}
+function localTag(r){if(r.sourceUrl)return el('span',{class:'local-tag'},el('a',{href:r.sourceUrl,target:'_blank',rel:'noopener',text:r.source}),', ',el('span',{class:'nw',text:r.date})); /* turn 34 */ return el('span',{class:'local-tag'},'Local practice · '+r.source+', ',el('span',{class:'nw',text:r.date}));}
 
 function render(host,items,opts){ // ui2: legacy full renderer, used as the source of every 'Details & sources' block (js/plan_view.js)
   opts=opts||{};opts.answers=opts.answers||{};
@@ -442,7 +443,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
 
   // 0. local practice questions (e.g. PTT on heparin) - before anything else
   for(const st of RS){const r=st.rule;
-    if(st.refer){const ef=st.effect;const amb=ef.severity==='amber';const q=el('div',{class:'sum-card local','data-part':'question'},el('h3',{text:amb?'Redirect to LifeLabs':'Refer - not collected in community'}),
+    if(st.refer){const ef=st.effect;const amb=ef.severity==='amber';const q=el('div',{class:'sum-card local','data-part':'question'},el('h3',{text:(amb||st.rule.redirect)?'Redirect to LifeLabs':'Refer - not collected in community'}),
         el('div',{class:'redstop'+(amb?' amberstop':'')},el('div',{class:'redstop-h',text:(amb?'⚠ ':'⛔ ')+ef.title}),el('div',{text:ef.text})));
       const qe=r.quoteFrom&&DATA.entries.find(x=>x.id===r.quoteFrom.entry);
       const qt=qe&&[].concat(qe.preTestPrep||[],qe.additionalInfo||[]).filter(x=>x.includes(r.quoteFrom.match));
@@ -503,7 +504,8 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
       else if(t.spinInfo&&t.spinMixed)box.appendChild(el('div',{class:'fact small',text:'Per-test LifeLabs pages: '+t.spinInfo+'.'}));
       if(t.handling){const h=t.handling;box.appendChild(el('div',{class:'fact okline'},'✔ '+h.text+' ',localTag(h)));
         const es=t.elabSet;
-        if(es){const names=es.rows.map(r=>r.eb.title+' (Last Changed '+r.eb.lastChanged+')');
+        if(!h.centrifuge){const eb=(t.elab||[]).filter(Boolean);if(eb.length)box.appendChild(el('div',{class:'fact elab'},el('b',{text:'BCCDC eLab Handbook - '+eb.map(e=>e.title).join('; ')+': '}),'Clotted blood (Preferred). Shipping: “'+(eb[0].shipping||'')+'”'));}
+        else if(es){const names=es.rows.map(r=>r.eb.title+' (Last Changed '+r.eb.lastChanged+')');
           // v3.7: tube card quotes only the clot and centrifuge sentences - no serum-transfer / sterile-tube wording (local practice: send
           // the original SST). The full verbatim eLab text is in each test's details below.
           if(es.same)box.appendChild(el('div',{class:'fact elab'},el('b',{text:'BCCDC eLab Handbook - '+names.join('; ')+(es.rows.length>1?' - same clot and centrifuge settings: ':': ')}),
@@ -515,7 +517,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
           const ll=t.llSettings;
           box.appendChild(el('div',{class:'fact small',text:'Clot time and centrifuge settings: BCCDC eLab Handbook ('+es.rows.map(r=>r.eb.title).join('; ')+'; BCCDC-bound tube).'+(ll?' LifeLabs SST pages differ: clot ≥ '+ll.clotMinutes+' min, centrifuge '+ll.spinMinutes+' min at '+ll.rcf+' RCF ('+t.handlingFrom.join(', ')+').':'')}));
           const oth=t.members.filter(m=>!elabOf(m.unit)).map(m=>m.unit.name);if(oth.length)box.appendChild(el('div',{class:'fact small',text:'No BCCDC eLab Handbook entry in the app yet for: '+oth.join(', ')+'.'}));}
-        else box.appendChild(el('div',{class:'fact small',text:t.handlingSettingsOk?'Clot time and centrifuge settings: LifeLabs Lab Test Information SST page for '+t.handlingFrom.join(', ')+'. No BCCDC eLab Handbook entry in the app yet for the tests in this tube.':'⚠ LifeLabs SST clot/centrifuge settings differ between pages - confirm settings with LifeLabs.'}));
+        else if(h.centrifuge)box.appendChild(el('div',{class:'fact small',text:t.handlingSettingsOk?'Clot time and centrifuge settings: LifeLabs Lab Test Information SST page for '+t.handlingFrom.join(', ')+'. No BCCDC eLab Handbook entry in the app yet for the tests in this tube.':'⚠ LifeLabs SST clot/centrifuge settings differ between pages - confirm settings with LifeLabs.'}));
         if(t.spinInfo&&t.llSpin)box.appendChild(el('div',{class:'fact small',text:'LifeLabs page text per test (see each test below): '+t.spinInfo+'.'}));}}
     if(t.elabPref&&!t.handling)for(const p of t.elabPref){const ss=[p.eb.invert,p.eb.transport,p.eb.noFreeze].concat(p.eb.timeLimits||[]).filter(Boolean);
       box.appendChild(el('div',{class:'fact elab'},el('b',{text:'BCCDC eLab Handbook - '+p.eb.title+' (Last Changed '+p.eb.lastChanged+'), '+p.sp.specimen+' (Preferred), '+p.sp.container+': '}),
@@ -698,7 +700,8 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
   for(const u of units){const e=u.entry;const d=el('div',{class:'test-line'+(e?'':' chart-only')});
     d.appendChild(el('div',{class:'tname'},srcLink(u,e?e.name:u.name),' ',unvTag(u)||''));
     const asked=uniq(u.items.map(i=>i.name));if(asked.some(a=>a!==(e?e.name:u.name)))d.appendChild(el('div',{class:'small',text:'Confirmed as: '+asked.join('; ')}));
-    if(u.excludedBy&&u.excludedBy.effect.severity==='red')d.appendChild(el('div',{class:'fact warn',text:'⛔ Not collected in community - see the red card above.'}));
+    if(u.excludedBy&&u.excludedBy.rule&&u.excludedBy.rule.redirect)d.appendChild(el('div',{class:'fact warn',text:'⛔ Redirect to LifeLabs - see the red card above.'})); /* turn 35: redirects red */
+    else if(u.excludedBy&&u.excludedBy.effect.severity==='red')d.appendChild(el('div',{class:'fact warn',text:'⛔ Not collected in community - see the red card above.'}));
     else if(u.excludedBy&&u.excludedBy.effect.severity==='amber')d.appendChild(el('div',{class:'fact warn',text:'⚠ Redirect to LifeLabs - see the amber card above.'}));
     else if(u.excludedBy)d.appendChild(el('div',{class:'fact caveat',text:'Answer the question above first.'}));
     if(u.localTube){const lt=P.blood.find(t=>t.members.some(m=>m.unit===u));

@@ -5,8 +5,8 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.4'; // must match version.json and VERSION in sw.js
-const APP_DATE='2026-10-13';
+const APP_VERSION='v3.8.5'; // must match version.json and VERSION in sw.js
+const APP_DATE='2026-10-14';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -80,7 +80,6 @@ function render(r){
   if(flagged.length){const g=el('div',{class:'grp flag'},el('h3',{text:'Check these ('+flagged.length+')'}));for(const it of flagged)g.appendChild(itemEl(it,r));list.appendChild(g);}
   const g=el('div',{class:'grp',id:'grpTests'},el('h3',{text:flagged.length?'Tests read':'Tests'}));for(const it of ok)g.appendChild(itemEl(it,r));list.appendChild(g);
   if(unt.length){const d=el('details',{class:'dx grp-unt'},el('summary',{text:unt.length+' line'+(unt.length>1?'s':'')+' not ticked on the form'}));const b=el('div',{class:'dx-body'});for(const it of unt)b.appendChild(itemEl(it,r));d.appendChild(b);list.appendChild(d);}
-  const dl=$('dict');dl.innerHTML='';for(const t of D.TESTS)dl.appendChild(el('option',{value:t[1]}));
   const nb=(r.info.columnBoxes!=null?r.info.columnBoxes:(r.info.boxesFound||0))+(r.info.looseMarks||0);
   $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
   updConfirm();
@@ -138,10 +137,31 @@ function reset(){ // wipe everything from memory and screen (incl. in-memory lin
 $('cam').addEventListener('change',e=>handleFile(e.target.files[0]));
 $('pick').addEventListener('change',e=>handleFile(e.target.files[0]));
 $('discard').addEventListener('click',reset);$('finish').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.replaceState(null,'');reset();});
-$('addBtn').addEventListener('click',()=>{const v=$('addTest').value.trim();if(!v||!current)return;const m=D.match(v);
-  const exact=D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
-  const it={id:e?e.id:null,testName:e?e.name:v,name:v,raw:'',category:e?e.category:'Other',status:e?'ok':'unrecognized',checked:true,notes:[],manual:true};
-  it.selected=true;current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';updConfirm();});
+function addManual(v,pickId){if(!v||!current)return;const m=pickId?null:D.match(v);
+  const exact=pickId?D.TESTS.find(t=>t[0]===pickId):D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
+  const it={id:e?e.id:null,testName:e?e.name:v,name:e&&pickId?e.name:v,raw:'',category:e?e.category:'Other',status:e?'ok':'unrecognized',checked:true,notes:[],manual:true};
+  it.selected=true;current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';taClose();updConfirm();}
+$('addBtn').addEventListener('click',()=>addManual($('addTest').value.trim()));
+/* ui2 turn 30: Add-test type-ahead (on-device; names + all aliases incl. held-back ones via ReqDict.suggest). Keyboard: arrows, Enter, Esc. */
+let taItems=[],taAct=-1;const taIn=$('addTest'),taList=$('addList');
+function taClose(){taList.classList.add('hidden');taList.innerHTML='';taItems=[];taAct=-1;taIn.setAttribute('aria-expanded','false');taIn.removeAttribute('aria-activedescendant');}
+function taFit(){const vv=window.visualViewport;const vh=vv?vv.height+vv.offsetTop:window.innerHeight;const r=taIn.getBoundingClientRect();taList.style.maxHeight=Math.max(150,vh-r.bottom-12)+'px';}
+function taMark(i){taAct=i;[...taList.children].forEach((li,k)=>{li.classList.toggle('act',k===i);li.setAttribute('aria-selected',String(k===i));});
+  if(i>=0){taIn.setAttribute('aria-activedescendant','ta'+i);taList.children[i].scrollIntoView({block:'nearest'});}else taIn.removeAttribute('aria-activedescendant');}
+function taOpen(){const q=taIn.value.trim();if(!q){taClose();return;}taItems=D.suggest(q,8);taList.innerHTML='';taAct=-1;
+  if(!taItems.length){taClose();return;}
+  taItems.forEach((s,i)=>{const li=el('li',{id:'ta'+i,role:'option','aria-selected':'false',class:'ta-item'},el('span',{class:'ta-name',text:s.name}),s.matched?el('span',{class:'ta-aka',text:'also called '+s.matched}):null);
+    li.addEventListener('mousedown',e=>e.preventDefault());li.addEventListener('click',()=>addManual(s.name,s.id));taList.appendChild(li);});
+  taList.classList.remove('hidden');taIn.setAttribute('aria-expanded','true');taFit();}
+taIn.addEventListener('input',taOpen);
+taIn.addEventListener('focus',()=>{setTimeout(()=>{const r=taIn.getBoundingClientRect();if(r.top>window.innerHeight*0.3)window.scrollBy({top:r.top-80,behavior:'smooth'});taOpen();},300);});
+taIn.addEventListener('keydown',e=>{const open=!taList.classList.contains('hidden');
+  if(e.key==='ArrowDown'){e.preventDefault();if(!open)taOpen();else taMark(Math.min(taAct+1,taItems.length-1));}
+  else if(e.key==='ArrowUp'){e.preventDefault();if(open)taMark(Math.max(taAct-1,0));}
+  else if(e.key==='Enter'){e.preventDefault();if(open&&taAct>=0)addManual(taItems[taAct].name,taItems[taAct].id);else if(open&&taItems.length===1)addManual(taItems[0].name,taItems[0].id);else addManual(taIn.value.trim());}
+  else if(e.key==='Escape'){taClose();}});
+document.addEventListener('pointerdown',e=>{if(!taList.classList.contains('hidden')&&!e.target.closest('.ta-wrap'))taClose();});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(!taList.classList.contains('hidden'))taFit();});
 let listY=0;
 $('confirm').addEventListener('click',()=>{if(!current)return;listY=window.scrollY;const sel=current.items.filter(i=>i.selected);
   // v3.2: Collection Summary from the on-device LifeLabs data file (js/collection_data.js); in memory only

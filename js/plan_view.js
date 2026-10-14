@@ -48,6 +48,8 @@ function thumbOf(t,nb){
   if(/urine/i.test(c)||(t.eb&&t.eb.local&&/urine/i.test(t.eb.local.container||'')))return ['urine_container_orange_cap','Urine container'];
   return null;}
 function thumb(t,nb){const m=thumbOf(t,nb);return m?el('img',{class:'tc-thumb',src:IMG_DIR+m[0]+'.webp',alt:m[1],width:'40',height:'64',loading:'lazy',decoding:'async'}):null;}
+const EDGE={gold:'#d4a017',lav:'#8e6bbf',lblue:'#5aa9e6',red:'#c62828',green:'#2e7d32',grey:'#8a8f98',yellow:'#e0b400'}; // turn 36: card left edge
+function edgeColour(t,nb){if(!nb&&EDGE[t.css])return EDGE[t.css];const l=(t.label||'')+' '+((t.c&&t.c.container)||'');return /urine/i.test(l)?'#e8a33a':/fecal|stool/i.test(l)?'#e8742a':/swab/i.test(l)?'#d0453a':'#9aa0a8';}
 function chip(css){return el('span',{class:'tchip '+(css||'none'),'aria-hidden':'true'});}
 function sizeText(t){const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);return m?(+m).toString().replace(/\.0+$/,'')+' mL':'';}
 function nonBloodName(o){const c=(o.label||'').toLowerCase();
@@ -61,12 +63,12 @@ function tempWord(t){const s=(t||'').toLowerCase();if(!s)return '';const r=/refr
 function clotWord(c){if(c.clotText){const m=H.clotMin(c.clotText);return m?(m%60===0?(m/60)+' h':m+' min'):'';}return c.clotMinutes?c.clotMinutes+' min':'';}
 /* ONE handling line per tube: clot/spin from the plan's tube settings, temperature from the lab entries */
 function handling(t){const c=t.c||{};const out=[];let cls='';
+  if(t.handling&&t.handling.centrifuge===false)return {text:'',cls:'',bccdc:true}; // turn 34: BCCDC serology SST
   if(c.centrifuge===true){const cw=clotWord(c);if(cw)out.push('Clot '+cw);out.push('spin'+(c.spinMinutes?' '+c.spinMinutes+' min':''));}
-  else if(c.centrifuge===false){out.push('Do not spin');cls='stop';}
+  // turn 33 (K. Williams): community never spins EDTA tubes and never opens tubes - no 'Do not spin' / 'do not open' on the cards (page wording stays in Details)
   else if(t.spinMixed||t.partialSpin){out.push('Spin: check Details');cls='check';}
   else if(t.elabSpinConflict){out.push('Spin: check first');cls='check';} // ui2: LifeLabs spin+separate vs BCCDC eLab whole blood
-  if(c.centrifuge!==true&&(t.members||[]).some(m=>(m.slots||[m.c]).some(x=>x&&(x.notes||[]).some(n=>/do not open tube/i.test(n)))))out.push('do not open');
-  const cupQ=!!t.cupRule;if(cupQ)out.push(t.cupRule.temp.toLowerCase()+' (local practice)'); // ui2: local practice - urine cups always refrigerated
+  const cupQ=!!t.cupRule;if(cupQ)out.push(t.cupRule.temp.toLowerCase()); /* turn 34: no '(local practice)' suffix */ // ui2: local practice - urine cups always refrigerated
   const temps=t.hTemp||cupQ?[]:t.local?uniq((t.members||[]).flatMap(m=>(m.slots||[]).map(x=>x.temp))):uniq([c.temp]);
   if(t.hTemp)out.push('room temp (2–30 °C)'); // ui2: BCCDC eLab storage
   const tw=uniq(temps.map(tempWord));if(tw.length)out.push(tw.join(' / '));
@@ -79,7 +81,7 @@ function otherBits(t){const out=[];
   if(t.kits)out.push(el('div',{class:'tc-kit'},el('b',{text:t.kits.some(k=>k.local)?'Container: ':'Kit: '}),t.kits.map(k=>k.name+(k.label?' ('+k.label+')':'')).join(' + '),
     t.kits.some(k=>k.local)?el('span',{class:'tc-local',text:t.cupOnly?t.cupOnly.short:'Local practice: send the cup, no Aptima transfer.'}):null));
   if(t.cupVol)out.push(el('div',{class:'tc-kit'},el('b',{text:'Volume: '}),t.cupVol.text)); // ui2 turn 10: cup volume (source in Details)
-  if((t.sharedWith||[]).some(x=>x.rule))out.push(el('div',{class:'tc-kit'},t.sharedWith.find(x=>x.rule).rule.short+' ',el('span',{class:'tc-local',text:'Local practice'})));
+  if((t.sharedWith||[]).some(x=>x.rule))out.push(el('div',{class:'tc-kit'},t.sharedWith.find(x=>x.rule).rule.short+' ',(r=>r.sourceUrl?el('a',{class:'tc-local',href:r.sourceUrl,target:'_blank',rel:'noopener',text:r.source}):el('span',{class:'tc-local',text:'Local practice'}))(t.sharedWith.find(x=>x.rule).rule)));
   else if((t.sharedWith||[]).length)out.push(el('div',{class:'tc-kit',text:'One cup for '+(t.members.length>2?'all '+t.members.length+' tests – put all the labels on it.':'both tests – put both labels on it.')})); // LifeLabs C&S page; quote in Details
   const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);const swab=/swab/i.test(t.label||'');
   if(t.keySteps)out.push(el('ol',{class:'tc-steps'},...t.keySteps.map(fr=>el('li',{text:cap(fr.reduce((a,x)=>a?a+(/\.$/.test(a)?' ':'; ')+x:x,'').replace(/\.?$/,'.'))})),swab?el('li',{text:'Label with the site.'}):null)); // ui2: essential eLab steps; full text in Details
@@ -130,11 +132,20 @@ function prepFacts(text,isReq){const out=[];let s=text.replace(/^“|”$/g,'').
   for(const f of frags){let hit=false;if(isReq&&NOVOID_FUZZY.test(f)&&!PREP_FACTS[1][1].test(f)){hit=true;out.push({k:'novoid',ph:PREP_FACTS[1][2],pp:null});}
     for(const [k,re,ph,pp] of PREP_FACTS){const m=f.match(re);if(!m)continue;
       if(k==='morning'&&PREP_FACTS[5][1].test(f))continue;hit=true;out.push({k,ph:typeof ph==='function'?ph(m):ph,pp:pp||null});}
-    if(!hit&&isReq&&!reqDistinct(f))continue; // garbled / leftover form-note text: Details only
+    if(!hit&&isReq&&!reqDistinct(f))continue;
+    if(!hit&&/\bSTAT\b|urgent|local hospital|Sunshine Coast|Gibsons|Sechelt/i.test(f))continue; // turn 37 (K. Williams): urgent/STAT/regional referral lines - review-mode Details only // garbled / leftover form-note text: Details only
     if(!hit&&!/^\s*\(?(?:see|refer)\b/i.test(f))out.push({k:'raw:'+f.toLowerCase().replace(/[.\s]+$/,''),ph:f.replace(/\.?$/,'.'),pp:null,raw:true});}
   return out;}
 function prepVolRules(){const LR=root.LocalRules||{rules:[]},GD=root.GuideData||{entries:[]};
   return LR.rules.filter(r=>r.kind==='prepVolume'&&(()=>{const g=GD.entries.find(g=>g.id===r.quoteFrom.guide);return g&&JSON.stringify(g).includes(r.quoteFrom.match);})());}
+/* ui2 turn 31: prep facts per unit (for the tube/cup cards; 'Before you start' removed) */
+function prepByUnit(U){const out=new Map();const unitByName=n=>U.units.find(x=>x.name===n)||U.units.find(x=>(x.items||[]).some(it=>it.name===n));
+  for(const [w,p] of U.prep){const isReq=/\(requisition\)$/.test(w);const who=w.replace(/ \(BCCDC eLab Handbook\)$/,'').replace(/ \(requisition\)$/,'');
+    const us=isReq?[unitByName(who)]:who.split(', ').map(unitByName);const fs=prepFacts(p,isReq);if(!fs.length)continue;
+    for(const u of us){if(!u)continue;if(!out.has(u))out.set(u,new Map());const m=out.get(u);for(const f of fs)if(!m.has(f.k)||f.ph.length>m.get(f.k).ph.length)m.set(f.k,f);}}
+  for(const r of prepVolRules())for(const [u,m] of out)if(u.ids.some(i=>r.appliesTo.includes(i))&&m.has('novoid'))m.set('firstvol',{k:'firstvol',ph:'Collect the first '+r.volume+'.'});
+  for(const m of out.values())for(const [k,sub] of Object.entries(SUPERSEDES))if(m.has(k))for(const x of sub)m.delete(x);
+  return out;}
 function prepLines(U){const tests=new Map();const unitByName=n=>U.units.find(x=>x.name===n)||U.units.find(x=>(x.items||[]).some(it=>it.name===n));
   for(const [w,p] of U.prep){const isReq=/\(requisition\)$/.test(w);const who=w.replace(/ \(BCCDC eLab Handbook\)$/,'').replace(/ \(requisition\)$/,'');
     const us=isReq?[unitByName(who)]:who.split(', ').map(unitByName);const fs=prepFacts(p,isReq);if(!fs.length)continue;
@@ -157,10 +168,12 @@ function prepLines(U){const tests=new Map();const unitByName=n=>U.units.find(x=>
 /* ui2 (2026-10-11): every test name links to its own source page (summary.js srcOf); opens in a new tab */
 const nameLink=(u,text)=>H.srcLink(u,text||shortName(u),'tn');
 function linkLead(text,us){for(const u of us){const n=shortName(u);if(text.startsWith(n))return [nameLink(u,n),text.slice(n.length)];}return [text];}
-const REFER_SHORT={hiv_vl_refer_psc:'Community does not separate plasma. Send the client to the nearest LifeLabs Patient Service Centre with the requisition.'};
+const REFER_SHORT={/* turn 34: no longer shown on the flag */hiv_vl_refer_psc:'LifeLabs page: “5. Separate plasma into a 13 x 75 mm BD non-additive Vacutainer.”'}; // turn 32: title carries the referral
 const STOP_SHORT={ptt_heparin_community:{yes:{title:'PTT: do not collect',text:'Needs double spin and freezing – not done in community. Send the client to a LifeLabs Patient Service Centre for the PTT.'}}};
 
-function details(label,kids,opts){opts=opts||{};const d=el('details',{class:'dx'+(opts.cls?' '+opts.cls:'')},
+/* turn 34 (K. Williams): 'Details & sources' expanders only in review mode (?review=1, read each load, nothing persisted) */
+const REVIEW=(()=>{try{return /[?&]review=1(&|$)/.test(root.location.search);}catch(e){return false;}})();
+function details(label,kids,opts){opts=opts||{};const d=el('details',{class:'dx'+(opts.cls?' '+opts.cls:'')+(REVIEW?'':' noreview')},
     el('summary',{},opts.dot?el('span',{class:'adot',title:'Something to check inside','aria-label':'Something to check inside'}):null,label));
   const body=el('div',{class:'dx-body'});for(const k of kids)if(k)body.appendChild(k);d.appendChild(body);return d;}
 const GLYPH=/^[\s]*(?:⚠️?|✔|ℹ|■|↻|🦋|⛔|⏱|🔁|📝)\s*/u;
@@ -171,6 +184,7 @@ const normC=t=>/not yet available/i.test(t)?'__notyet':t.replace(GLYPH,'').repla
 function moveCaveats(node,seen){const out=[];if(!node)return out;for(const c of [...node.children].filter(x=>x.classList.contains('caveat'))){
     const k=normC(c.textContent);if(seen){if([...seen].some(x=>x.includes(k)||k.includes(x))){c.classList.add('dup');continue;}seen.add(k);} // duplicate: stays in the test details
     out.push(c);c.remove();}return out;}
+function shortCav(t){t=t.replace(GLYPH,'').replace(/^(Chart vs per-test PDF|To check):\s*/,'').trim();const m=t.match(/^(.{20,160}?[.;])\s/);return m?m[1]:t.length>180?t.slice(0,177)+'…':t;} // turn 34
 function checkList(nodes){if(!nodes.length)return null;const box=el('div',{class:'tocheck'},el('div',{class:'tocheck-h',text:'To check'}));for(const n of nodes){n.classList.add('tocheck-i');box.appendChild(n);}return box;}
 function seg(st,rerender,opts){const r=st.rule;const g=el('div',{class:'seg2',role:'group','aria-label':r.question});
   for(const a of r.answers){const on=st.answer===a.v;const b=el('button',{type:'button',class:'seg2b'+(on?' on':''),'aria-pressed':String(on),'data-rule':r.id,'data-v':a.v,text:a.label});
@@ -192,13 +206,13 @@ function render(host,items,opts){
     el('div',{class:'stepsub',text:[blood.length?blood.length+' tube'+(blood.length>1?'s':''):'No blood tubes',nonBlood.length?nonBlood.length+' other sample'+(nonBlood.length>1?'s':''):null].filter(Boolean).join(' · ')})));
 
   const exLines=new Map();for(const [u,d] of testLine)if(u.excludedBy){if(!exLines.has(u.excludedBy.rule.id))exLines.set(u.excludedBy.rule.id,[]);exLines.get(u.excludedBy.rule.id).push(d);}
-  const bysDet=[];const qdet=(q,st)=>{bysDet.push(q,...(exLines.get(st.rule.id)||[]));return null;};
+  const bysDet=[],qDet=[];const qdet=(q,st)=>{qDet.push(q,...(exLines.get(st.rule.id)||[]));return null;};
   // ---- Before you start (only when needed) ----
-  const bys=el('section',{class:'blk'},el('h2',{text:'Before you start'}));let need=false;
+  const bys=el('section',{class:'blk alerts'});let need=false; // turn 31: 'Before you start' heading + prep list removed (prep is on the cards)
   for(const q of parts('question')){const st=q.__st,ef=st.effect;need=true;
     const names=st.rule.appliesTo.map(H.dictName).map(n=>n.replace(/\s*\(.*\)$/,'')).join(', ');
     const us=U.units.filter(u=>u.excludedBy===st||(u.localNotes||[]).includes(st)||u.ids.some(i=>st.rule.appliesTo.includes(i)));
-    if(st.refer){bys.appendChild(el('div',{class:'stop'+(ef.severity==='amber'?' amb':'')},el('div',{class:'stop-h'},...linkLead(ef.title,us)),el('div',{class:'stop-t',text:REFER_SHORT[st.rule.id]||ef.short||ef.text}),qdet(q,st)));continue;} // turn 28: amber redirect
+    if(st.refer){bys.appendChild(el('div',{class:'stop'+(ef.severity==='amber'?' amb':'')},el('div',{class:'stop-h'},...linkLead(ef.title,us)),qdet(q,st)));continue;} // turn 28: amber redirect; turn 34 (K. Williams): title only - page quote/steps stay in Details
     if(ef.severity==='red'){const sh=(STOP_SHORT[st.rule.id]||{})[st.answer]||(STOP_SHORT[st.rule.id]||{})[st.resolved]||{title:(ef.title||names+': do not collect'),text:ef.text};
       bys.appendChild(el('div',{class:'stop'},el('div',{class:'stop-h'},...linkLead(sh.title,us)),el('div',{class:'stop-t',text:sh.text}),
         el('div',{class:'qline',text:st.rule.question}),seg(st,rerender,opts),
@@ -208,53 +222,87 @@ function render(host,items,opts){
     else bys.appendChild(el('div',{class:'okq'},el('div',{class:'qline',text:st.rule.question}),seg(st,rerender,opts),el('div',{class:'ask-t',text:ef.text}),qdet(q,st)));}
   const tl=[];for(const {u,s} of U.crit)tl.push(el('li',{},el('b',{class:'red'},nameLink(u),' - time limit: '),s.text+(s.when?' (when '+s.when+')':'')));
   // ui2 (2026-10-12): condensed prep - one fact per meaning per test, tests with the same instruction merged; verbatim text stays in Details
-  { const lines=prepLines(U);for(const l of lines)tl.push(el('li',{},el('b',{text:l.label+': '}),l.text)); }
   { const p1=nonBlood.find(t=>t.pairNo===1),p2=nonBlood.find(t=>t.pairNo===2); // ui2: both LifeLabs urine pages number the two containers
-    if(p1&&p2)tl.push(el('li',{},el('b',{text:'Two urine cups: '}),'Mark the CT/GC cup #1 (first void, to the 30 mL line) and the culture cup #2 (midstream).'));}
+    if(p1&&p2){p1.pairLine='Label this cup #1.';p2.pairLine='Label this cup #2.';}}
   for(const r of prepVolRules())if(U.units.some(u=>u.ids.some(i=>r.appliesTo.includes(i)))){const g=(root.GuideData.entries.find(g=>g.id===r.quoteFrom.guide));
     bysDet.push(el('div',{class:'fact small'},el('b',{text:'Local decision ('+r.source+', '+r.date+'): '}),r.text+' Source: '+g.issuer+' '+g.docNumber+' (“'+g.title+'”): “'+r.quoteFrom.match+'”.'));}
   // patient instruction sheet references -> Details & sources (sheet text itself is in part('pinstr'))
   if((U.pdocs||[]).length)bysDet.push(el('ul',{class:'pdoc-refs small'},...U.pdocs.map(d=>el('li',{},el('b',{},...d.units.flatMap((u,i)=>i?[', ',nameLink(u)]:[nameLink(u)]),': '),
     'Patient instructions: '+(d.g.issuer||'LifeLabs')+' sheet '+(d.g.docNumber?d.g.docNumber+' ':'')+'(“'+d.g.title+'”).'))));
-  if(tl.length){need=true;bys.appendChild(el('ul',{class:'prep'},...tl));}
   // (HIV viral load spin/separation 'check with BCCDC' box removed 2026-10-11: it came from the eLab HIV-1 NAT page, a different test)
   bysDet.push(...[part('crit'),part('prep'),part('pinstr')].filter(Boolean));
-  if(need){if(bysDet.length)bys.appendChild(details('Details & sources',bysDet));host.appendChild(bys);}
-  const bysLeft=need?[]:bysDet;
+  if(need){if(qDet.length)bys.appendChild(details('Details & sources',qDet));host.appendChild(bys);}
+  const bysLeft=bysDet; // prep / time-limit / instruction-sheet source wording -> bottom Details
 
   // ---- Tubes in draw order ----
-  const tb=el('section',{class:'blk'},el('h2',{text:'Tubes'},el('span',{class:'h2sub',text:' in draw order'})));
+  const tb=el('section',{class:'blk'},el('h2',{class:'sr-only',text:'Tubes'},el('span',{class:'h2sub',text:' in draw order'})),el('div',{class:'order-line',text:'Tubes listed in order of draw'})); // turn 36
   for(const q of parts('unknown')){const nm=q.getAttribute('data-name');
     tb.appendChild(el('div',{class:'ask'},el('div',{class:'ask-h',text:nm+': no collection info in the app'}),
       el('div',{class:'ask-t'},'Check ',el('a',{href:H.DIR_URL,target:'_blank',rel:'noopener noreferrer',text:'tests.lifelabs.com'}),' for the tube or container. Not counted below.'),details('Details & sources',[q])));}
   const full=(U.full||[]).length>0;
   const numOf=new Map();blood.forEach((t,i)=>numOf.set(t,i+1));
+  const PBU=prepByUnit(U);
+  const cardPrep=t=>{const us=uniq(t.members.map(m=>m.unit)).filter(u=>!u.excludedBy);const out=[];
+    for(const {u,s} of U.crit)if(us.includes(u))out.push(el('div',{class:'tc-prep tl'},el('b',{text:(us.length>1?shortName(u)+' - ':'')+'time limit: '}),s.text+(s.when?' (when '+s.when+')':'')));
+    const facts=new Map();for(const u of us)for(const [k,f] of (PBU.get(u)||new Map())){if(!facts.has(k))facts.set(k,{f,us:[]});const x=facts.get(k);x.us.push(u);if(f.ph.length>x.f.ph.length)x.f=f;}
+    const ord=k=>{const i=PREP_FACTS.map(f=>f[0]).indexOf(k);return i<0?99:i;};
+    for(const [k,x] of [...facts.entries()].sort((a,b)=>ord(a[0])-ord(b[0])))out.push(el('div',{class:'tc-prep'},(us.length>1&&x.us.length<us.length?shortName(x.us[0])+(x.us.length>1?' +'+(x.us.length-1):'')+': ':''),x.f.ph));
+    if(t.pairLine)out.push(el('div',{class:'tc-prep'},t.pairLine));return out;};
+  /* turn 35 (K. Williams): urine cups - her exact one-line wording, shown only when a test in the cup carries the fact; no prefixes,
+     no step quotes, no label lines. Container / local-practice lines move to Details (review mode). */
+  const isCup=t=>!!t.cupRule||/urine cup/i.test(t.label||'');
+  const urineLines=t=>{const us=uniq(t.members.map(m=>m.unit)).filter(u=>!u.excludedBy);const k=new Set();for(const u of us)for(const x of (PBU.get(u)||new Map()).keys())k.add(x);
+    const txt=t.members.flatMap(m=>[...((m.c&&m.c.notes)||[]),...(((m.unit.entry||{}).patientPrep)||[])]).concat(t.keySteps?t.keySteps.flat():[]).concat(t.steps?t.steps.site.steps:[]).join(' ');
+    const L=[];L.push('Refrigerate');
+    if(k.has('midstream'))L.push('Midstream urine'+(k.has('morning')||k.has('morning_rand')?', first morning void preferred':''));else if(k.has('morning')||k.has('morning_rand'))L.push('First morning void preferred');
+    if(k.has('menses'))L.push('Do not collect during menses');
+    const v=t.cupVol&&(t.cupVol.text.match(/(\d+)\s*mL/)||[])[1];if(v)L.push('Collect at least '+v+' mL of urine');
+    if(k.has('novoid'))L.push('Do not void for 1 hour prior to collection');
+    if(k.has('firstvol'))L.push('Collect first 20–30 mL of urine');
+    if(/cleanse the labial/i.test(txt))L.push('Females: do not cleanse the labial area prior to urine collection');
+    for(const {u,s:x} of U.crit)if(us.includes(u))L.push('Time limit: '+x.text);
+    return L.map(x=>el('div',{class:'tc-prep'},x));};
   const card=(t,n,nb)=>{const box=tubeBox.get(t);const seen=new Set();const cav=moveCaveats(box,seen);
     const tests=t.members.map(m=>m.unit);const lines=tests.map(u=>testLine.get(u)).filter(Boolean);for(const d of lines)cav.push(...moveCaveats(d,seen));
     const warn=box?[...box.querySelectorAll('.fact.warn')].map(x=>x.textContent).filter(x=>!/NOT centrifuge/.test(x)):[];
     const h=handling(t);const bc=isBCCDC(t);
-    const head=el('div',{class:'tc-head'},n?el('span',{class:'tnum',text:String(n)}):null,chip(t.css),
+    const head=el('div',{class:'tc-head'},null /* turn 36: no tube numbers (layout B) */,chip(t.css),
       el('span',{class:'tc-name',text:nb?nonBloodName(t):(COLOUR[t.css]||t.label)}),!nb&&sizeText(t)?el('span',{class:'tc-size',text:sizeText(t)}):null,
       bc?el('span',{class:'dest',text:'BCCDC'}):null);
-    const meta=[];if(!nb&&t.kind==='blood'&&full)meta.push('Full tube');if(t.mix)meta.push('Mix '+t.mix.replace('-','–')+'×');
+    const meta=[];/* turn 34: 'Full tube' removed (implied) */if(t.mix)meta.push('Mix '+t.mix.replace('-','–')+'×');
     const th=thumb(t,nb);if(th){const cp=head.querySelector('.tchip');if(cp)cp.remove();}
-    const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
+    const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
       el('div',{class:'tc-tests'},...tests.flatMap((u,i)=>i?[' · ',nameLink(u)]:[nameLink(u)])),
-      h.text?el('div',{class:'tc-hand '+h.cls,text:h.text}):null,
+      h.bccdc?el('div',{class:'tc-hand'},'Do not centrifuge - clotted blood preferred as per ',el('a',{href:t.handling.elabUrl,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'})):null,h.bccdc?el('div',{class:'tc-hand',text:'Refrigerate'}):null, // turn 34
+      (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
+      ...(nb&&isCup(t)?urineLines(t):[h.text?el('div',{class:'tc-hand '+h.cls,text:h.text}):null,...cardPrep(t)]),
       ...t.members.filter(m=>m.c&&m.c.cardNote).map(m=>el('div',{class:'tc-hand',text:shortName(m.unit)+': '+m.c.cardNote.replace(/^\d+\.\s+/,'').replace(/^./,x=>x.toLowerCase())})), // turn 29: plain source-based card line (fibrinogen 8 h)
-      ...(nb?otherBits(t):[]),
+      ...(nb&&!isCup(t)?otherBits(t):[]),
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC
       t.drawLast?el('div',{class:'tc-kit'},'Draw last ',el('span',{class:'tc-local',text:'Local practice'})):null, // turn 14: ACD yellow
       ...warn.map(w=>el('div',{class:'tc-warn'+(/^(Kit|Volume) differs|not covered by|^Open question|^Check: |^Requires STI certified|^Confirm whether|^Site not stated|^BCCDC eLab accepts|^Not for asymptomatic|^CBC not on the requisition/.test(w)?' amb':''),text:w.replace(/^PTT is NOT in this tube - see the question above\.?$/,'PTT is not in this tube (see Before you start)')})),
-      details('Details & sources',[checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0}));
+      ...(REVIEW?[]:cav.map(n=>el('div',{class:'tc-warn amb tc-cav',text:shortCav(n.textContent)}))), // turn 34: amber notes on the card in normal mode
+      details('Details & sources',[nb&&isCup(t)?el('div',{class:'dx-sub',text:'Container'}):null,...(nb&&isCup(t)?otherBits(t):[]),checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0}));
     return c;};
-  for(const t of blood)tb.appendChild(card(t,numOf.get(t)));
+  /* turn 36 (K. Williams, layout B / group-B2-final mockup): one card per tube TYPE+size, in order of draw. N>1 -> '×N' badge on the
+     picture and lettered lines A/B/C, one per physical tube (tubes stay separate per existing rules), each with its tests, lab tag and
+     its own handling lines. Single-tube cards unchanged. */
+  const tkey=t=>(t.css||'')+'|'+(COLOUR[t.css]||t.label)+'|'+sizeText(t);const groups=[];
+  for(const t of blood){const k=tkey(t);const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
+  for(const g of groups){if(g.ts.length===1){tb.appendChild(card(g.ts[0],numOf.get(g.ts[0])));continue;}
+    const cs=g.ts.map(t=>card(t,numOf.get(t)));const c0=cs[0];const th=c0.querySelector('.tc-thumb'),hd=c0.querySelector('.tc-head');const ds=hd.querySelector('.dest');if(ds)ds.remove();
+    const ol=el('ol',{class:'tl-lines'});
+    cs.forEach((c,i)=>{const t=g.ts[i];const kids=[...c.children].filter(x=>x!==th&&!x.classList.contains('tc-head'));const tests=kids.find(x=>x.classList.contains('tc-tests'));
+      const mt=kids.find(x=>x.classList.contains('tc-meta'));if(mt&&tests){kids.splice(kids.indexOf(mt),1);kids.splice(kids.indexOf(tests)+1,0,mt);}
+      if(tests)tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));
+      ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:'ABCDEFGH'[i]||String(i+1)}),el('div',{class:'tl-body'},...kids)));});
+    tb.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0])},th?el('div',{class:'tc-badge'},th,el('b',{text:'×'+g.ts.length})):null,hd,ol));}
   const tbDet=[part('banner'),part('head'),part('order'),part('nospin'),part('conflicts'),part('proc'),part('fullnote'),part('collect')].filter(Boolean).concat(bysLeft);
   const confl=part('conflicts');
   if(blood.length)tb.appendChild(details('Draw order, processing & sources',tbDet,{dot:!!confl,cls:'secdx'}));
   if(blood.length||parts('unknown').length)host.appendChild(tb);
   else if(tbDet.length){/* no blood tubes: keep legacy blocks reachable */}
-  if(nonBlood.length){const ob=el('section',{class:'blk'},el('h2',{text:'Other samples'}));for(const o of nonBlood)ob.appendChild(card(o,null,true));host.appendChild(ob);}
+  if(nonBlood.length){const ob=el('section',{class:'blk'},el('h2',{text:'Other samples'}));const nbOrd=(()=>{const a=nonBlood.slice(),idx=a.map((t,i)=>t.pairNo?i:-1).filter(i=>i>=0),pr=idx.map(i=>a[i]).sort((x,y)=>x.pairNo-y.pairNo);idx.forEach((i,k)=>a[i]=pr[k]);return a;})(); /* turn 37: numbered cups in number order (#1 first catch before #2 midstream) */for(const o of nbOrd)ob.appendChild(card(o,null,true));host.appendChild(ob);}
   if(!blood.length&&tbDet.length)host.appendChild(el('section',{class:'blk'},details('Processing & sources',tbDet,{dot:!!confl,cls:'secdx'})));
 
   // ---- Paperwork ----
@@ -288,17 +336,23 @@ function render(host,items,opts){
   const reqRows=rows.filter(r=>r.classList&&r.classList.contains('pwrow'));
   const showPw=reqRows.length>1||rows.some(r=>r.querySelector&&r.querySelector('.pw-h.check'))||pwWarn.length>0;
   const planDet=[];
-  if(showPw){for(const r of rows)pw.appendChild(r);if(paper)pw.appendChild(details('Details & sources',[paper],{dot:pwCav.length>0}));host.appendChild(pw);}
-  else if(rows.length||paper)planDet.push(el('div',{class:'dx-sub',text:'Paperwork'}),...rows,paper);
+  /* turn 34 (K. Williams): Paperwork + 'Labelling & sources' hidden. Set SHOW_PAPERWORK=true to restore. Real warnings are not dropped:
+     'check' requisition rows, non-regional paperwork caveats and the plan banner are kept in a small amber 'Check requisition' block. */
+  const SHOW_PAPERWORK=false;
+  if(!SHOW_PAPERWORK){const chk=rows.filter(r=>r.querySelector&&r.querySelector('.pw-h.check'));const ban0=part('banner');const banW=ban0&&ban0.isConnected&&ban0.parentNode===L?[ban0]:[];
+    if(chk.length||pwWarn.length||banW.length){const w=el('section',{class:'blk'},el('h2',{text:'Check requisition'}));for(const r of chk)w.appendChild(r);for(const c of pwWarn)w.appendChild(c);for(const b of banW)w.appendChild(b);host.appendChild(w);}
+    const lb=part('label');if(paper||lb)host.appendChild(el('section',{class:'blk'},details('Paperwork, labelling & sources (review)',[paper,lb]))); /* review mode only (incl. regional Sunshine Coast STAT order notes) */}
+  if(SHOW_PAPERWORK&&showPw){for(const r of rows)pw.appendChild(r);if(paper)pw.appendChild(details('Details & sources',[paper],{dot:pwCav.length>0}));host.appendChild(pw);}
+  else if(SHOW_PAPERWORK&&(rows.length||paper))planDet.push(el('div',{class:'dx-sub',text:'Paperwork'}),...rows,paper);
   // ---- Labelling: removed from the plan view (turn 26); wording + sources live in the plan-level Details & sources ----
   const lab=part('label');const keys=Object.keys(U.L||{}).join(' ');
-  if(keys||lab){const bits=[];if(/full name/.test(keys))bits.push('full name');if(/identifier/.test(keys))bits.push('second ID (DOB or health number)');if(/test name/.test(keys))bits.push('test name');
+  if(SHOW_PAPERWORK&&(keys||lab)){const bits=[];if(/full name/.test(keys))bits.push('full name');if(/identifier/.test(keys))bits.push('second ID (DOB or health number)');if(/test name/.test(keys))bits.push('test name');
     let line=bits.length?'Every tube: '+bits.join(', ')+'.':'';const f=[...U.byForm.keys()];if(f.length)line+=(line?' ':'')+'BCCDC: 2 matching IDs on tube and requisition.';
     if(nonBlood.some(t=>/swab/i.test(t.label||'')&&t.steps))line+=(line?' ':'')+'Swabs: also the anatomic site and collection date/time (LifeLabs Doc#31847).';
     planDet.push(el('div',{class:'dx-sub',text:'Labelling'}),line?el('div',{class:'pw-t',text:line}):null,lab);}
-  const ban=part('banner');if(ban&&ban.isConnected&&ban.parentNode===L)planDet.push(ban);
+  const ban=part('banner');if(SHOW_PAPERWORK&&ban&&ban.isConnected&&ban.parentNode===L)planDet.push(ban);
   const pdk=planDet.filter(Boolean);if(pdk.length)host.appendChild(el('section',{class:'blk'},details((showPw?'Labelling':'Labelling, paperwork')+' & sources',pdk,{dot:!showPw&&pwCav.length>0})));
-  host.appendChild(el('div',{class:'foot',text:'Prototype - verify against LifeLabs/BCCDC. Sources: tap Details.'}));
+  host.appendChild(el('div',{class:'foot',text:'Prototype - verify against LifeLabs/BCCDC. Sources: tap a test name'+(REVIEW?' or Details.':'.')}));
   // anything the legacy renderer produced that has not been placed yet goes in a final expander (should be empty)
   const tcard=part('tests');if(tcard&&!tcard.querySelector('.test-line'))tcard.remove();
   const left=[...L.children];
