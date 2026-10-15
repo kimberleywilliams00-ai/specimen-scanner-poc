@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.7'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.8'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-15';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -64,13 +64,13 @@ function render(r){
   const warn=r.items.filter(i=>i.warn);const tests=r.items.filter(i=>!i.warn);
   const nv=tests.filter(i=>i.status!=='ok'&&i.checked!==false).length;
   if(warn.length)line('stop',`${warn.length} possible missed line${warn.length>1?'s':''} – a ticked box was seen but not read. Check the paper.`);
-  if(r.layout!=='list'&&r.layout!=='grid'){line('check','Form layout not recognised – tick the tests by hand.');if(r.reason)L.appendChild(el('div',{class:'small stat-sub',text:r.reason}));}
+  if(r.layout!=='list'&&r.layout!=='grid'&&!r.manual){line('check','Form layout not recognised – tick the tests by hand.');if(r.reason)L.appendChild(el('div',{class:'small stat-sub',text:r.reason}));}
   if(r.warning)line('check',r.warning);
   if(r.lowRes)line('check','Low-resolution photo – results are less reliable. Use the full camera and fill the frame.');
   if(r.standingOrder){const so=r.standingOrder;line('neutral so-banner','Standing order ('+(so.all?'all tests':so.count+' of '+so.total+' tests')+'): '+so.text);}
   const nt=tests.filter(i=>i.checked!==false).length;
   const form=r.layout==='list'?'Printed test list':r.layout==='grid'?'LifeLabs D2350'+(r.info.formVersion?' ('+r.info.formVersion+')':''):'';
-  $('stepsub1').textContent=`${nt} read${nv+warn.length?` · ${nv+warn.length} to check`:''} · tick each against the paper${form?' · '+form:''}`; // turn 48 (Confirm A)
+  $('stepsub1').textContent=r.manual?'Add each test from the requisition':`${nt} read${nv+warn.length?` · ${nv+warn.length} to check`:''} · tick each against the paper${form?' · '+form:''}`; // turn 48 (Confirm A)
   const list=$('list');list.innerHTML='';
   const frank=i=>i.warn?0:i.status==='unrecognized'?1:2; // red first (possible missed line, not recognised), then amber
   const flagged=r.items.filter(i=>i.warn||(i.checked!==false&&i.status!=='ok')).sort((a,b)=>frank(a)-frank(b));
@@ -82,7 +82,7 @@ function render(r){
   const g=el('div',{class:'ccard ok',id:'grpTests'});for(const it of ok)g.appendChild(itemEl(it,r));list.appendChild(g);
   if(unt.length){const d=el('details',{class:'dx grp-unt'},el('summary',{text:unt.length+' line'+(unt.length>1?'s':'')+' not ticked on the form'}));const b=el('div',{class:'dx-body'});for(const it of unt)b.appendChild(itemEl(it,r));d.appendChild(b);list.appendChild(d);}
   const nb=(r.info.columnBoxes!=null?r.info.columnBoxes:(r.info.boxesFound||0))+(r.info.looseMarks||0);
-  $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
+  $('timing').textContent=r.manual?'Manual entry (no photo) · app '+APP_VERSION:`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
   updConfirm();
   const ov=$('overlay');if(r.image){drawOverlay(r);ov.classList.remove('hidden');}else ov.classList.add('hidden');}
 
@@ -133,7 +133,7 @@ function drawOverlay(r){const cv=window.cv;const c=$('overlay');const m=r.image;
   const s=Math.min(1,1400/Math.max(rgba.cols,rgba.rows));const d=new cv.Mat();cv.resize(rgba,d,new cv.Size(Math.round(rgba.cols*s),Math.round(rgba.rows*s)),0,0,cv.INTER_AREA);
   cv.imshow(c,d);rgba.delete();d.delete();m.delete();r.image=null;}
 
-function reset(){ // wipe everything from memory and screen (incl. in-memory line crops)
+function reset(){ if(typeof liveStop==='function')liveStop(); // wipe everything from memory and screen (incl. in-memory line crops)
   if(current&&current.image){try{current.image.delete();}catch(e){}}if(current)for(const it of current.items||[])it.crop=null;current=null;
   for(const c of document.querySelectorAll('canvas.crop')){c.width=c.height=0;}
   $('list').innerHTML='';$('layout').innerHTML='';$('summary').innerHTML='';$('timing').textContent='';$('addTest').value='';
@@ -141,7 +141,33 @@ function reset(){ // wipe everything from memory and screen (incl. in-memory lin
 
 $('cam').addEventListener('change',e=>handleFile(e.target.files[0]));
 $('pick').addEventListener('change',e=>handleFile(e.target.files[0]));
-$('cam2').addEventListener('change',e=>handleFile(e.target.files[0])); // turn 48: round shutter button (same camera input as the viewfinder)
+$('cam2').addEventListener('change',e=>handleFile(e.target.files[0]));
+/* turn 52 (K. Williams, Option A): manual entry - straight to Confirm tests with an empty list; 'Add a test' is at the top (no focus/scroll code) */
+$('manual').addEventListener('click',()=>{if(typeof liveStop==='function')liveStop();current={items:[],layout:'manual',manual:true,info:{},ms:0};render(current);show('result');});
+/* ---- turn 51 prototype: in-app live camera (getUserMedia, rear camera) in a 1.2:1 frame ----
+   Tap the viewfinder -> live preview (object-fit:cover). Shutter -> grabs ONLY the framed region of the current video frame at the
+   stream's native resolution (no downscale beyond the pipeline's own 2500 px cap) and feeds handleFile(). Nothing leaves the device.
+   Fallbacks: no getUserMedia / not secure / permission denied / no camera -> the viewfinder and shutter keep using the native
+   camera file input (#cam / #cam2); Library (#pick) is unchanged. Stream is stopped on capture, discard, finish and when hidden. */
+const LIVE={stream:null,failed:false,on:()=>!!LIVE.stream};
+const liveOk=()=>!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.isSecureContext)&&!LIVE.failed;
+function liveMsg(t){const m=$('liveMsg');m.textContent=t||'';m.classList.toggle('hidden',!t);}
+function liveStop(){if(LIVE.stream){for(const tr of LIVE.stream.getTracks())tr.stop();LIVE.stream=null;}const v=$('live');v.srcObject=null;v.classList.add('hidden');$('vf').classList.remove('is-live');}
+async function liveStart(){
+  try{const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:3840},height:{ideal:2160}}});
+    LIVE.stream=s;const v=$('live');v.srcObject=s;v.classList.remove('hidden');$('vf').classList.add('is-live');liveMsg('');await v.play().catch(()=>{});
+    const tr=s.getVideoTracks()[0];const st=tr&&tr.getSettings?tr.getSettings():{};LIVE.info=(st.width||'?')+'×'+(st.height||'?');
+    $('vf').setAttribute('data-res',LIVE.info);}
+  catch(e){LIVE.failed=true;liveStop();liveMsg(e&&e.name==='NotAllowedError'?'Camera not allowed - tap again to use the camera app':'Live camera unavailable - tap again to use the camera app');}}
+function liveGrab(){const v=$('live'),vf=$('vf');const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh)return null;
+  // object-fit:cover mapping: the visible frame (vf box) is the centred crop of the video with the frame's aspect ratio
+  const r=vf.getBoundingClientRect();const fa=r.width/r.height;let cw=vw,ch=vh;if(vw/vh>fa)cw=Math.round(vh*fa);else ch=Math.round(vw/fa);
+  const c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(v,(vw-cw)/2,(vh-ch)/2,cw,ch,0,0,cw,ch);
+  return new Promise(res=>c.toBlob(b=>{c.width=c.height=0;res(b);},'image/jpeg',0.95));}
+$('vf').addEventListener('click',e=>{if(!liveOk())return; /* native input fallback */ e.preventDefault();if(!LIVE.on())liveStart();});
+document.querySelector('.photo .shut').addEventListener('click',async e=>{if(!LIVE.on())return; /* not live: native camera input */
+  e.preventDefault();const b=await liveGrab();liveStop();if(b){b.name='live.jpg';handleFile(b);}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')liveStop();}); // turn 48: round shutter button (same camera input as the viewfinder)
 $('discard').addEventListener('click',reset);$('finish').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.replaceState(null,'');reset();});
 function addManual(v,pickId){if(!v||!current)return;const m=pickId?null:D.match(v);
   const exact=pickId?D.TESTS.find(t=>t[0]===pickId):D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);

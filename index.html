@@ -19,8 +19,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Labbie">
 <meta name="format-detection" content="telephone=no">
-<link rel="stylesheet" href="css/app.css?v=3.8.7">
-<link rel="stylesheet" href="css/ui2.css?v=3.8.7">
+<link rel="stylesheet" href="css/app.css?v=3.8.8">
+<link rel="stylesheet" href="css/ui2.css?v=3.8.8">
 </head>
 <body>
 <header>
@@ -30,15 +30,15 @@
 <main>
   <section id="start" class="ui2 photo"><!-- turn 48: Photo B (viewfinder) -->
     <div class="stephead"><h2 class="step scr-h">Scan requisition</h2><div class="stepsub">Line up the test list inside the frame</div>
-    <label class="vf" aria-label="Take photo"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i>
+    <label class="vf" id="vf" aria-label="Take photo"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i>
       <span class="paper" aria-hidden="true"><b style="width:60%"></b><b class="hl"></b><b></b><b class="hl"></b><b style="width:70%"></b><b class="hl"></b><b></b><b style="width:50%"></b></span>
-      <span class="vf-t">Tap to take photo</span><input id="cam" type="file" accept="image/*" capture="environment" hidden></label>
-    <div class="shrow"><label class="lnk lib">Library<input id="pick" type="file" accept="image/*" hidden></label>
-      <label class="shut" aria-label="Take photo"><b></b><input id="cam2" type="file" accept="image/*" capture="environment" hidden></label><span class="shsp"></span></div>
+      <span class="vf-t">Tap to take photo</span><video id="live" class="hidden" playsinline muted autoplay></video><span id="liveMsg" class="vf-msg hidden"></span><input id="cam" type="file" accept="image/*" capture="environment" hidden></label>
+    <div class="shrow"><label class="lnk lib">Photo library<input id="pick" type="file" accept="image/*" hidden></label>
+      <label class="shut" aria-label="Take photo"><b></b><input id="cam2" type="file" accept="image/*" capture="environment" hidden></label><button id="manual" type="button" class="lnk man">Enter tests manually</button></div><!-- turn 52: manual entry (Option A) -->
     <div class="tip">🔒 De-identified only · avoid glare</div>
     <details class="dx tiny minor"><summary>Options &amp; version</summary><div class="dx-body">
       <label class="opt"><input type="checkbox" id="dbg"> Show debug overlay</label>
-      <p class="small ver-start">Version <b>v3.8.7</b> (2026-10-15)</p>
+      <p class="small ver-start">Version <b>v3.8.8</b> (2026-10-15)</p>
       <p id="engine" class="small">Engine: not loaded yet (loads from this site only, works offline after first visit).</p>
     </div></details>
   </section>
@@ -75,18 +75,18 @@
 <footer class="small">Not for clinical use. Always check the paper requisition. Done – clear wipes the photo and results. <span id="ver"></span></footer>
 <script src="vendor/opencv.js" async id="cvjs"></script>
 <script src="vendor/tesseract/tesseract.min.js"></script>
-<script src="js/dictionary.js?v=3.8.7"></script>
-<script src="js/template_d2350.js?v=3.8.7"></script>
-<script src="js/preprocess.js?v=3.8.7"></script>
-<script src="js/pipeline.js?v=3.8.7"></script>
-<script src="js/collection_data.js?v=3.8.7"></script>
-<script src="js/tube_rules.js?v=3.8.7"></script>
-<script src="js/local_rules.js?v=3.8.7"></script>
-<script src="js/requisition_forms.js?v=3.8.7"></script>
-<script src="js/elab_data.js?v=3.8.7"></script>
-<script src="js/guide_data.js?v=3.8.7"></script>
-<script src="js/summary.js?v=3.8.7"></script>
-<script src="js/plan_view.js?v=3.8.7"></script>
-<script src="js/app.js?v=3.8.7"></script>
+<script src="js/dictionary.js?v=3.8.8"></script>
+<script src="js/template_d2350.js?v=3.8.8"></script>
+<script src="js/preprocess.js?v=3.8.8"></script>
+<script src="js/pipeline.js?v=3.8.8"></script>
+<script src="js/collection_data.js?v=3.8.8"></script>
+<script src="js/tube_rules.js?v=3.8.8"></script>
+<script src="js/local_rules.js?v=3.8.8"></script>
+<script src="js/requisition_forms.js?v=3.8.8"></script>
+<script src="js/elab_data.js?v=3.8.8"></script>
+<script src="js/guide_data.js?v=3.8.8"></script>
+<script src="js/summary.js?v=3.8.8"></script>
+<script src="js/plan_view.js?v=3.8.8"></script>
+<script src="js/app.js?v=3.8.8"></script>
 </body>
 </html>
