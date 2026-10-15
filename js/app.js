@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.8'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.9'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-15';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -165,9 +165,14 @@ function liveGrab(){const v=$('live'),vf=$('vf');const vw=v.videoWidth,vh=v.vide
   const c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(v,(vw-cw)/2,(vh-ch)/2,cw,ch,0,0,cw,ch);
   return new Promise(res=>c.toBlob(b=>{c.width=c.height=0;res(b);},'image/jpeg',0.95));}
 $('vf').addEventListener('click',e=>{if(!liveOk())return; /* native input fallback */ e.preventDefault();if(!LIVE.on())liveStart();});
-document.querySelector('.photo .shut').addEventListener('click',async e=>{if(!LIVE.on())return; /* not live: native camera input */
-  e.preventDefault();const b=await liveGrab();liveStop();if(b){b.name='live.jpg';handleFile(b);}});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')liveStop();}); // turn 48: round shutter button (same camera input as the viewfinder)
+/* turn 53 (K. Williams iPhone bug, v3.8.9): the shutter was a <label> wrapping the camera file input, so a tap before the live camera ran
+   opened the native camera. Now a <button>: not live -> start the in-app camera (same as the viewfinder); live -> capture; only after the
+   in-app camera failed (or is unsupported) does it open the native camera, synchronously inside the tap so iOS allows the file picker. */
+$('shut').addEventListener('click',async e=>{e.preventDefault();
+  if(LIVE.on()){const b=await liveGrab();liveStop();if(b){b.name='live.jpg';handleFile(b);}return;}
+  if(liveOk()){liveStart();return;}
+  $('cam2').click();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')liveStop();});
 $('discard').addEventListener('click',reset);$('finish').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.replaceState(null,'');reset();});
 function addManual(v,pickId){if(!v||!current)return;const m=pickId?null:D.match(v);
   const exact=pickId?D.TESTS.find(t=>t[0]===pickId):D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
