@@ -13,8 +13,8 @@ const uniq=a=>[...new Set(a.filter(Boolean))];
 
 /* display short names (entry id first, then dictionary id); the full LifeLabs name is in Details */
 const ENTRY_SHORT={creatinine:'Creatinine',electrolytes_na_k:'Lytes (Na, K)',electrolytes_cl_co2:'Cl, CO2',free_t4:'Free T4',hemoglobin_a1c:'A1c',
-  hep_a_ab_igg_igm:'Hep A immune',hep_a_ab_igm:'Hep A IgM',hep_b_carrier:'Hep B carrier',hep_b_core_ab:'Anti-HBc',hep_b_screen:'Hep B screen',
-  hep_b_surface_ag:'HBsAg',hepatitis_acute:'Acute hepatitis',hepatitis_c:'Hep C antibody',hiv_serology:'HIV serology',lipid_profile_full:'Lipids',
+  hep_a_ab_igg_igm:'Hep A immune',hep_a_ab_igm:'Hep A IgM',hep_b_carrier:'Chronic hepatitis' /* turn 44: requisition panel name (Chronic viral hepatitis undefined etiology) */,hep_b_core_ab:'Anti-HBc',hep_b_screen:'Hep B screen',
+  hep_b_surface_ag:'HBsAg',hep_b_surface_ab:'Anti-HBs',hepatitis_acute:'Acute hepatitis',hepatitis_c:'Hep C antibody',hiv_serology:'HIV serology',lipid_profile_full:'Lipids',
   ptt:'PTT',hcv_rna_quant:'HCV RNA',hiv_viral_load:'HIV viral load',syphilis_screen:'Syphilis',tsh:'TSH',urine_micro_if_indicated:'Urinalysis',cs_vag_chronic:'Vaginal C&S',
   c_diff:'C. difficile',infectious_diarrhea_panel:'Diarrhea panel (stool)',nt_probnp:'NT-proBNP',pth:'PTH',cd4_sph:'CD4',heme_interp:'Smear review',afp:'AFP',ck:'CK',psa:'PSA',hfe_confirm:'HFE',urine_pregnancy:'Urine pregnancy',fit_ll:'FIT',urea:'Urea',sodium:'Sodium',potassium:'Potassium',magnesium:'Magnesium',iron:'Iron',prothrombin_time:'INR',phosphorus:'Phosphorus',glucose:'Glucose',calcium:'Calcium',albumin:'Albumin',valproic_acid:'Valproic acid',hcv_genotype_ll:'HCV genotype',bilirubin_total:'Bilirubin',bilirubin_direct:'Direct bilirubin',bilirubin_indirect:'Indirect bilirubin',ferritin:'Ferritin',vitamin_b12:'B12',ast:'AST',alt:'ALT',ggt:'GGT',alp:'ALP',acr_urine:'Urine ACR',ct_gc_urine:'Chlamydia/GC urine',cs_urine:'Urine culture',cs_urine_if_indicated:'Urine culture if indicated',urine_macroscopic:'Urinalysis (dipstick)',urine_microscopic:'Urine microscopic',ct_gc_trich_self_vag:'CT/GC/Trich self-swab'};
 const DICT_SHORT={cbc_diff:'CBC + diff',cbc:'CBC',alt_ast_ggt:'ALT, AST, GGT',hcv_rna_quant:'HCV RNA',hcv_genotype:'HCV genotype',hiv_vl:'HIV viral load',
@@ -64,6 +64,7 @@ function clotWord(c){if(c.clotText){const m=H.clotMin(c.clotText);return m?(m%60
 /* ONE handling line per tube: clot/spin from the plan's tube settings, temperature from the lab entries */
 function handling(t){const c=t.c||{};const out=[];let cls='';
   if(t.handling&&t.handling.centrifuge===false)return {text:'',cls:'',bccdc:true}; // turn 34: BCCDC serology SST
+  if(!t.handling&&c.centrifuge===false&&c.destGroup==='PHL'&&/sst/i.test(t.label||c.container||'')){const r=((root.LocalRules||{}).rules||[]).find(r=>r.id==='bccdc_serology_one_sst');if(r){t.handling=r.handling;return {text:'',cls:'',bccdc:true};}} // turn 44: BCCDC half of Hepatitis Acute/Chronic - same BCCDC serology SST lines
   if(c.centrifuge===true){const cw=clotWord(c);if(cw)out.push('Clot '+cw);out.push('spin'+(c.spinMinutes?' '+c.spinMinutes+' min':''));}
   // turn 33 (K. Williams): community never spins EDTA tubes and never opens tubes - no 'Do not spin' / 'do not open' on the cards (page wording stays in Details)
   else if(t.spinMixed||t.partialSpin){out.push('Spin: check Details');cls='check';}
@@ -88,7 +89,7 @@ function otherBits(t){const out=[];
   else if(t.steps){const st=t.steps.site;out.push(el('ol',{class:'tc-steps'},...st.steps.map(x=>el('li',{text:x}))));}
   for(const x of t.timeLimits||[])out.push(el('div',{class:'tc-time',text:'Time limit: '+x.text}));
   return out;}
-const isBCCDC=t=>t.dest==='BCCDC'||(t.local&&t.local.destination==='BCCDC')||(t.c&&t.c.destGroup==='PHL')||(t.kind==='blood'&&t.members.length&&t.members.every(m=>H.isComm(m.unit))&&!t.members.some(m=>m.c&&m.c.destination));
+const isBCCDC=t=>!(t.group&&t.group.lab==='LifeLabs')&&!(t.c&&t.c.centrifuge===true&&!t.local&&t.c.destGroup!=='PHL'&&t.members.some(m=>m.unit.entry&&m.unit.entry.collect.some(x=>x.destGroup==='PHL')))&&(/* turn 44: chart LifeLabs SST / LifeLabs half of a two-tube panel */t.dest==='BCCDC'||(t.local&&t.local.destination==='BCCDC')||(t.c&&t.c.destGroup==='PHL')||(t.kind==='blood'&&t.members.length&&t.members.every(m=>H.isComm(m.unit))&&!t.members.some(m=>m.c&&m.c.destination)));
 /* plain-language patient prep (display wording; verbatim text in Details) */
 function prepShort(p){const s=p.replace(/^“|”$/g,'').replace(/^\d+\.\s+/,''); /* turn 15: drop list numbers ('1. Usual collection...') - display only */
   // K. Williams 2026-10-11: only show prep that needs an action; 'not required' lines stay in Details only
@@ -184,7 +185,11 @@ const normC=t=>/not yet available/i.test(t)?'__notyet':t.replace(GLYPH,'').repla
 function moveCaveats(node,seen){const out=[];if(!node)return out;for(const c of [...node.children].filter(x=>x.classList.contains('caveat'))){
     const k=normC(c.textContent);if(seen){if([...seen].some(x=>x.includes(k)||k.includes(x))){c.classList.add('dup');continue;}seen.add(k);} // duplicate: stays in the test details
     out.push(c);c.remove();}return out;}
-function shortCav(t){t=t.replace(GLYPH,'').replace(/^(Chart vs per-test PDF|To check):\s*/,'').trim();const m=t.match(/^(.{20,160}?[.;])\s/);return m?m[1]:t.length>180?t.slice(0,177)+'…':t;} // turn 34
+/* turn 43 (K. Williams): 'not on the chart' note, short, with the chart linked */
+function cavEl(t){const m=t.match(/Not on the LifeLabs Quick Reference Chart: drawn as its own tube(?: \(same tube type and handling as the tube for (.+?) - the lab may allow combining\))?/);
+  if(!m)return el('div',{class:'tc-warn amb tc-cav',text:shortCav(t)});const TR=root.TubeRules||{};const w=m[1]?m[1].replace(/, ([^,]+)$/,' and $1'):null;
+  return el('div',{class:'tc-warn amb tc-cav'},'Confirm with lab - not on the ',TR.chartUrl?el('a',{href:TR.chartUrl,target:'_blank',rel:'noopener',text:'LifeLabs Quick Reference Chart'}):'LifeLabs Quick Reference Chart',w?'; may share the tube with '+w+'.':'; drawn as its own tube.');}
+function shortCav(t){if(/ELECTROLYTES EXTENDED PANEL page/.test(t))return 'Confirm with lab - Electrolytes: Na and K only; Chloride/CO2 only if requested separately.'; /* turn 42: full text in Details */ t=t.replace(GLYPH,'').replace(/^(Chart vs per-test PDF|To check):\s*/,'').trim();const m=t.match(/^(.{20,160}?[.;])\s/);return m?m[1]:t.length>180?t.slice(0,177)+'…':t;} // turn 34
 function checkList(nodes){if(!nodes.length)return null;const box=el('div',{class:'tocheck'},el('div',{class:'tocheck-h',text:'To check'}));for(const n of nodes){n.classList.add('tocheck-i');box.appendChild(n);}return box;}
 function seg(st,rerender,opts){const r=st.rule;const g=el('div',{class:'seg2',role:'group','aria-label':r.question});
   for(const a of r.answers){const on=st.answer===a.v;const b=el('button',{type:'button',class:'seg2b'+(on?' on':''),'aria-pressed':String(on),'data-rule':r.id,'data-v':a.v,text:a.label});
@@ -246,7 +251,7 @@ function render(host,items,opts){
     for(const {u,s} of U.crit)if(us.includes(u))out.push(el('div',{class:'tc-prep tl'},el('b',{text:(us.length>1?shortName(u)+' - ':'')+'time limit: '}),s.text+(s.when?' (when '+s.when+')':'')));
     const facts=new Map();for(const u of us)for(const [k,f] of (PBU.get(u)||new Map())){if(!facts.has(k))facts.set(k,{f,us:[]});const x=facts.get(k);x.us.push(u);if(f.ph.length>x.f.ph.length)x.f=f;}
     const ord=k=>{const i=PREP_FACTS.map(f=>f[0]).indexOf(k);return i<0?99:i;};
-    for(const [k,x] of [...facts.entries()].sort((a,b)=>ord(a[0])-ord(b[0])))out.push(el('div',{class:'tc-prep'},(us.length>1&&x.us.length<us.length?shortName(x.us[0])+(x.us.length>1?' +'+(x.us.length-1):'')+': ':''),x.f.ph));
+    for(const [k,x] of [...facts.entries()].sort((a,b)=>ord(a[0])-ord(b[0])))out.push(el('div',{class:'tc-prep'},x.f.ph)); // turn 42 (K. Williams): no test-name prefix - guidance applies to the whole tube
     if(t.pairLine)out.push(el('div',{class:'tc-prep'},t.pairLine));return out;};
   /* turn 35 (K. Williams): urine cups - her exact one-line wording, shown only when a test in the cup carries the fact; no prefixes,
      no step quotes, no label lines. Container / local-practice lines move to Details (review mode). */
@@ -262,6 +267,12 @@ function render(host,items,opts){
     if(/cleanse the labial/i.test(txt))L.push('Females: do not cleanse the labial area prior to urine collection');
     for(const {u,s:x} of U.crit)if(us.includes(u))L.push('Time limit: '+x.text);
     return L.map(x=>el('div',{class:'tc-prep'},x));};
+  /* turn 47 (K. Williams, Option A): grey line listing a panel tube's component tests (requisition names), combined when panels share */
+  const COMP={hav_igm:'anti-HAV IgM',hbsag:'HBsAg',hbc_ab:'anti-HBc',hbv_immune:'anti-HBs',hcv_screen:'anti-HCV'},COMP_BCCDC=new Set(['hcv_screen']),COMP_PM={}; /* turn 49: no ± - Acute follows the BCCDC requisition (anti-HBc total) */
+  const compLine=t=>{const ps=t.members.filter(m=>m.unit.entry&&(m.unit.entry.includesDictIds||[]).length);if(!ps.length)return null;const bc=isBCCDC(t);const out=[];
+    for(const m of ps)for(const d of m.unit.entry.includesDictIds){if(COMP_BCCDC.has(d)!==bc||!COMP[d])continue;const pm=((COMP_PM[m.unit.entry.id]||{})[d])||'';const prev=out.find(x=>x.d===d);if(prev){if(!pm)prev.pm='';}else out.push({d,pm});}
+    const names=out.map(x=>x.pm+COMP[x.d]).concat(t.members.filter(m=>!ps.includes(m)).map(m=>shortName(m.unit)));
+    return names.length?el('div',{class:'tc-comp',text:uniq(names).join(' · ')}):null;};
   const card=(t,n,nb)=>{const box=tubeBox.get(t);const seen=new Set();const cav=moveCaveats(box,seen);
     const tests=t.members.map(m=>m.unit);const lines=tests.map(u=>testLine.get(u)).filter(Boolean);for(const d of lines)cav.push(...moveCaveats(d,seen));
     const warn=box?[...box.querySelectorAll('.fact.warn')].map(x=>x.textContent).filter(x=>!/NOT centrifuge/.test(x)):[];
@@ -272,7 +283,8 @@ function render(host,items,opts){
     const meta=[];/* turn 34: 'Full tube' removed (implied) */if(t.mix)meta.push('Mix '+t.mix.replace('-','–')+'×');
     const th=thumb(t,nb);if(th){const cp=head.querySelector('.tchip');if(cp)cp.remove();}
     const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
-      el('div',{class:'tc-tests'},...tests.flatMap((u,i)=>i?[' · ',nameLink(u)]:[nameLink(u)])),
+      el('div',{class:'tc-tests'},...(us=>us.flatMap((u,i)=>i?[' · ',nameLink(u)]:[nameLink(u)]))(tests.filter(u=>!tests.some(v=>v!==u&&shortName(v).startsWith(shortName(u)+' '))))), // turn 42: 'Urinalysis' hidden when 'Urinalysis (dipstick)' is in the same cup (one requested test)
+      compLine(t),
       h.bccdc?el('div',{class:'tc-hand'},'Do not centrifuge - clotted blood preferred as per ',el('a',{href:t.handling.elabUrl,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'})):null,h.bccdc?el('div',{class:'tc-hand',text:'Refrigerate'}):null, // turn 34
       (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
       ...(nb&&isCup(t)?urineLines(t):[h.text?el('div',{class:'tc-hand '+h.cls,text:h.text}):null,...cardPrep(t)]),
@@ -280,29 +292,34 @@ function render(host,items,opts){
       ...(nb&&!isCup(t)?otherBits(t):[]),
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC
       t.drawLast?el('div',{class:'tc-kit'},'Draw last ',el('span',{class:'tc-local',text:'Local practice'})):null, // turn 14: ACD yellow
-      ...warn.map(w=>el('div',{class:'tc-warn'+(/^(Kit|Volume) differs|not covered by|^Open question|^Check: |^Requires STI certified|^Confirm whether|^Site not stated|^BCCDC eLab accepts|^Not for asymptomatic|^CBC not on the requisition/.test(w)?' amb':''),text:w.replace(/^PTT is NOT in this tube - see the question above\.?$/,'PTT is not in this tube (see Before you start)')})),
-      ...(REVIEW?[]:cav.map(n=>el('div',{class:'tc-warn amb tc-cav',text:shortCav(n.textContent)}))), // turn 34: amber notes on the card in normal mode
+      ...warn.map(w=>el('div',{class:'tc-warn'+(/^(Kit|Volume) differs|not covered by|^Open question|^Check: |^Requires STI certified|^Confirm whether|^Site not stated|^BCCDC eLab accepts|^Not for asymptomatic|^CBC not on the requisition/.test(w)?' amb':''),text:w.replace(/^PTT is NOT in this tube - see the question above\.?$/,'PTT is not in this tube (see the heparin question above)')})),
+      ...(REVIEW?[]:cav.map(n=>cavEl(n.textContent))), // turn 34: amber notes on the card in normal mode
       details('Details & sources',[nb&&isCup(t)?el('div',{class:'dx-sub',text:'Container'}):null,...(nb&&isCup(t)?otherBits(t):[]),checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0}));
     return c;};
   /* turn 36 (K. Williams, layout B / group-B2-final mockup): one card per tube TYPE+size, in order of draw. N>1 -> '×N' badge on the
      picture and lettered lines A/B/C, one per physical tube (tubes stay separate per existing rules), each with its tests, lab tag and
      its own handling lines. Single-tube cards unchanged. */
-  const tkey=t=>(t.css||'')+'|'+(COLOUR[t.css]||t.label)+'|'+sizeText(t);const groups=[];
-  for(const t of blood){const k=tkey(t);const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
-  for(const g of groups){if(g.ts.length===1){tb.appendChild(card(g.ts[0],numOf.get(g.ts[0])));continue;}
-    const cs=g.ts.map(t=>card(t,numOf.get(t)));const c0=cs[0];const th=c0.querySelector('.tc-thumb'),hd=c0.querySelector('.tc-head');const ds=hd.querySelector('.dest');if(ds)ds.remove();
-    const ol=el('ol',{class:'tl-lines'});
-    cs.forEach((c,i)=>{const t=g.ts[i];const kids=[...c.children].filter(x=>x!==th&&!x.classList.contains('tc-head'));const tests=kids.find(x=>x.classList.contains('tc-tests'));
-      const mt=kids.find(x=>x.classList.contains('tc-meta'));if(mt&&tests){kids.splice(kids.indexOf(mt),1);kids.splice(kids.indexOf(tests)+1,0,mt);}
-      if(tests)tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));
-      ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:'ABCDEFGH'[i]||String(i+1)}),el('div',{class:'tl-body'},...kids)));});
-    tb.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0])},th?el('div',{class:'tc-badge'},th,el('b',{text:'×'+g.ts.length})):null,hd,ol));}
+  /* turn 36 layout B; turn 42 (K. Williams): count as a navy '×N' pill next to the title (not on the picture), lines numbered 1/2/3.
+     groupCards also groups urine cups (and other repeated sample types with the same name); cup type stays on each line. */
+  const groupCards=(list,keyOf,nb,dst)=>{const groups=[];for(const t of list){const k=keyOf(t);const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
+    for(const g of groups){if(g.ts.length===1){dst.appendChild(card(g.ts[0],nb?null:numOf.get(g.ts[0]),nb));continue;}
+      const cs=g.ts.map(t=>card(t,nb?null:numOf.get(t),nb));const c0=cs[0];const th=c0.querySelector('.tc-thumb'),hd=c0.querySelector('.tc-head');const ds=hd.querySelector('.dest');if(ds)ds.remove();
+      if(nb&&g.ts.some(t=>t.pairNo)){const nm=hd.querySelector('.tc-name');if(nm)nm.textContent='Urine cup';}
+      hd.appendChild(el('span',{class:'xpill',text:'×'+g.ts.length}));
+      const ol=el('ol',{class:'tl-lines'});
+      cs.forEach((c,i)=>{const t=g.ts[i];const kids=[...c.children].filter(x=>!x.classList.contains('tc-thumb')&&!x.classList.contains('tc-head'));const tests=kids.find(x=>x.classList.contains('tc-tests'));
+        const mt=kids.find(x=>x.classList.contains('tc-meta'));if(mt&&tests){kids.splice(kids.indexOf(mt),1);const cp=kids.find(x=>x.classList.contains('tc-comp'));kids.splice((cp?kids.indexOf(cp):kids.indexOf(tests))+1,0,mt);}
+        if(tests)tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));
+        const kind=t.pairNo?(t.pairNo===1?'First catch':'Midstream'):null;
+        ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:String(i+1)}),el('div',{class:'tl-body'},kind?el('div',{class:'tl-kind',text:kind}):null,...kids)));});
+      dst.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0],nb)},th,hd,ol));}};
+  groupCards(blood,t=>(t.css||'')+'|'+(COLOUR[t.css]||t.label)+'|'+sizeText(t),false,tb);
   const tbDet=[part('banner'),part('head'),part('order'),part('nospin'),part('conflicts'),part('proc'),part('fullnote'),part('collect')].filter(Boolean).concat(bysLeft);
   const confl=part('conflicts');
   if(blood.length)tb.appendChild(details('Draw order, processing & sources',tbDet,{dot:!!confl,cls:'secdx'}));
   if(blood.length||parts('unknown').length)host.appendChild(tb);
   else if(tbDet.length){/* no blood tubes: keep legacy blocks reachable */}
-  if(nonBlood.length){const ob=el('section',{class:'blk'},el('h2',{text:'Other samples'}));const nbOrd=(()=>{const a=nonBlood.slice(),idx=a.map((t,i)=>t.pairNo?i:-1).filter(i=>i>=0),pr=idx.map(i=>a[i]).sort((x,y)=>x.pairNo-y.pairNo);idx.forEach((i,k)=>a[i]=pr[k]);return a;})(); /* turn 37: numbered cups in number order (#1 first catch before #2 midstream) */for(const o of nbOrd)ob.appendChild(card(o,null,true));host.appendChild(ob);}
+  if(nonBlood.length){const ob=el('section',{class:'blk'},el('h2',{text:'Other samples'}));const nbOrd=(()=>{const a=nonBlood.slice(),idx=a.map((t,i)=>t.pairNo?i:-1).filter(i=>i>=0),pr=idx.map(i=>a[i]).sort((x,y)=>x.pairNo-y.pairNo);idx.forEach((i,k)=>a[i]=pr[k]);return a;})(); /* turn 37: numbered cups in number order (#1 first catch before #2 midstream) */groupCards(nbOrd,t=>t.pairNo||/urine cup/i.test(nonBloodName(t))?'urinecup':nonBloodName(t),true,ob); /* turn 42 */host.appendChild(ob);}
   if(!blood.length&&tbDet.length)host.appendChild(el('section',{class:'blk'},details('Processing & sources',tbDet,{dot:!!confl,cls:'secdx'})));
 
   // ---- Paperwork ----
@@ -352,6 +369,8 @@ function render(host,items,opts){
     planDet.push(el('div',{class:'dx-sub',text:'Labelling'}),line?el('div',{class:'pw-t',text:line}):null,lab);}
   const ban=part('banner');if(SHOW_PAPERWORK&&ban&&ban.isConnected&&ban.parentNode===L)planDet.push(ban);
   const pdk=planDet.filter(Boolean);if(pdk.length)host.appendChild(el('section',{class:'blk'},details((showPw?'Labelling':'Labelling, paperwork')+' & sources',pdk,{dot:!showPw&&pwCav.length>0})));
+  { const TR=root.TubeRules||{};const lk=(u,t)=>u?el('li',{},el('a',{href:u,target:'_blank',rel:'noopener',text:t})):null; // turn 43: References (always shown)
+    host.appendChild(el('section',{class:'blk refs'},el('div',{class:'refs-h',text:'References'}),el('ul',{class:'refs-l'},lk(TR.chartUrl,'LifeLabs Quick Reference Collection Chart (tube sharing)'),lk(TR.orderOfDrawUrl,'LifeLabs Order of Draw and Fill Level')))); }
   host.appendChild(el('div',{class:'foot',text:'Prototype - verify against LifeLabs/BCCDC. Sources: tap a test name'+(REVIEW?' or Details.':'.')}));
   // anything the legacy renderer produced that has not been placed yet goes in a final expander (should be empty)
   const tcard=part('tests');if(tcard&&!tcard.querySelector('.test-line'))tcard.remove();

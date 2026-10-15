@@ -5,8 +5,8 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.6'; // must match version.json and VERSION in sw.js
-const APP_DATE='2026-10-14';
+const APP_VERSION='v3.8.7'; // must match version.json and VERSION in sw.js
+const APP_DATE='2026-10-15';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -52,7 +52,7 @@ async function handleFile(file){
     const res=await ReqPipeline.scan(cv,src,wrapped,{keepImage:$('dbg').checked,crops:true});
     src.delete();src=null;res.ms=Math.round(performance.now()-t0);res.lowRes=lowRes;current=res;render(res);show('result');
   }catch(e){console.error(e);if(src)src.delete();alert('Could not process this photo: '+e.message);reset();}
-  finally{$('cam').value='';$('pick').value='';}}
+  finally{$('cam').value='';$('cam2').value='';$('pick').value='';}}
 
 function el(tag,attrs,...kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='class')e.className=attrs[k];else if(k==='text')e.textContent=attrs[k];else e.setAttribute(k,attrs[k]);}for(const k of kids)if(k)e.appendChild(typeof k==='string'?document.createTextNode(k):k);return e;}
 
@@ -70,15 +70,16 @@ function render(r){
   if(r.standingOrder){const so=r.standingOrder;line('neutral so-banner','Standing order ('+(so.all?'all tests':so.count+' of '+so.total+' tests')+'): '+so.text);}
   const nt=tests.filter(i=>i.checked!==false).length;
   const form=r.layout==='list'?'Printed test list':r.layout==='grid'?'LifeLabs D2350'+(r.info.formVersion?' ('+r.info.formVersion+')':''):'';
-  $('stepsub1').textContent=`${nt} test${nt===1?'':'s'} read${nv+warn.length?` · ${nv+warn.length} to check`:''}${form?' · '+form:''}`;
+  $('stepsub1').textContent=`${nt} read${nv+warn.length?` · ${nv+warn.length} to check`:''} · tick each against the paper${form?' · '+form:''}`; // turn 48 (Confirm A)
   const list=$('list');list.innerHTML='';
   const frank=i=>i.warn?0:i.status==='unrecognized'?1:2; // red first (possible missed line, not recognised), then amber
   const flagged=r.items.filter(i=>i.warn||(i.checked!==false&&i.status!=='ok')).sort((a,b)=>frank(a)-frank(b));
   const ok=r.items.filter(i=>!i.warn&&i.checked!==false&&i.status==='ok');
   const unt=r.items.filter(i=>!i.warn&&i.checked===false);
   r.items.forEach((it,i)=>{it._i=i;});
-  if(flagged.length){const g=el('div',{class:'grp flag'},el('h3',{text:'Check these ('+flagged.length+')'}));for(const it of flagged)g.appendChild(itemEl(it,r));list.appendChild(g);}
-  const g=el('div',{class:'grp',id:'grpTests'},el('h3',{text:flagged.length?'Tests read':'Tests'}));for(const it of ok)g.appendChild(itemEl(it,r));list.appendChild(g);
+  /* turn 48 (Confirm A): each flagged line is its own card (red: possible missed / not recognised, amber: check); confirmed lines share one green-edged card */
+  for(const it of flagged)list.appendChild(el('div',{class:'ccard '+(it.warn||it.status==='unrecognized'?'red':'amb')},itemEl(it,r)));
+  const g=el('div',{class:'ccard ok',id:'grpTests'});for(const it of ok)g.appendChild(itemEl(it,r));list.appendChild(g);
   if(unt.length){const d=el('details',{class:'dx grp-unt'},el('summary',{text:unt.length+' line'+(unt.length>1?'s':'')+' not ticked on the form'}));const b=el('div',{class:'dx-body'});for(const it of unt)b.appendChild(itemEl(it,r));d.appendChild(b);list.appendChild(d);}
   const nb=(r.info.columnBoxes!=null?r.info.columnBoxes:(r.info.boxesFound||0))+(r.info.looseMarks||0);
   $('timing').textContent=`Processed on device in ${(r.ms/1000).toFixed(1)} s · rotation ${Math.round(r.info.rotation||0)}° · ${nb} checkbox(es) seen${r.info.looseMarks?` (${r.info.looseMarks} faint)`:''} · ${tests.length} test line(s) read${warn.length?` · ${warn.length} unread`:''} · app ${APP_VERSION}`;
@@ -115,12 +116,16 @@ function itemEl(it,r){
     for(const t of D.TESTS.slice().sort((a,b)=>a[1].localeCompare(b[1])))sel.appendChild(el('option',{value:t[0],text:t[1]}));
     sel.addEventListener('change',()=>{if(!sel.value)return;const e=D.BYID[sel.value];it.id=e.id;it.testName=e.name;it.category=e.category;it.status='ok';it.manual=true;cb.checked=true;it.selected=true;updConfirm();nameTxt.textContent=e.name;});
     body.appendChild(sel);}
-  return el('div',{class:cls+(flag?' flagged':'')},body,tog);}
+  const row=el('div',{class:cls+(flag?' flagged':'')},body,tog);
+  /* turn 48: round ✕ removes the line from the list (and from the plan) */
+  const x=el('button',{type:'button',class:'xrm','aria-label':'Remove '+nameTxt.textContent,text:'✕'});
+  x.addEventListener('click',()=>{it.removed=true;it.selected=false;const card=row.closest('.ccard');row.remove();if(card&&card.id!=='grpTests'&&!card.querySelector('.item'))card.remove();updConfirm();});
+  row.appendChild(x);return row;}
 
 /* ui2: Build plan stays disabled until at least one test is ticked */
 function updConfirm(){const n=current?current.items.filter(i=>i.selected).length:0;const b=$('confirm');b.disabled=!n;
-  b.textContent=n?'Build plan ('+n+' test'+(n>1?'s':'')+')':'Tick tests to build the plan';
-  $('confirmHint').hidden=!!n;}
+  b.textContent='Build plan · '+n+' ticked'; // turn 48 (Confirm A)
+  $('confirmHint').hidden=true;} // turn 48: hint now in the subtitle ('tick each against the paper')
 function drawOverlay(r){const cv=window.cv;const c=$('overlay');const m=r.image;const rgba=new cv.Mat();cv.cvtColor(m,rgba,cv.COLOR_GRAY2RGBA);
   for(const it of r.items){const col=it.checked===false?[150,150,150,255]:it.status==='ok'?[0,160,0,255]:it.status==='verify'?[230,140,0,255]:[220,0,0,255];
     const b=it.bbox;if(b)cv.rectangle(rgba,new cv.Point(b.x-4,b.y-4),new cv.Point(b.x+b.w+4,b.y+b.h+4),col,4);
@@ -132,15 +137,16 @@ function reset(){ // wipe everything from memory and screen (incl. in-memory lin
   if(current&&current.image){try{current.image.delete();}catch(e){}}if(current)for(const it of current.items||[])it.crop=null;current=null;
   for(const c of document.querySelectorAll('canvas.crop')){c.width=c.height=0;}
   $('list').innerHTML='';$('layout').innerHTML='';$('summary').innerHTML='';$('timing').textContent='';$('addTest').value='';
-  const c=$('overlay');c.width=c.height=0;c.classList.add('hidden');$('cam').value='';$('pick').value='';show('start');}
+  const c=$('overlay');c.width=c.height=0;c.classList.add('hidden');$('cam').value='';$('cam2').value='';$('pick').value='';show('start');}
 
 $('cam').addEventListener('change',e=>handleFile(e.target.files[0]));
 $('pick').addEventListener('change',e=>handleFile(e.target.files[0]));
+$('cam2').addEventListener('change',e=>handleFile(e.target.files[0])); // turn 48: round shutter button (same camera input as the viewfinder)
 $('discard').addEventListener('click',reset);$('finish').addEventListener('click',()=>{if(history.state&&history.state.ui2==='plan')history.replaceState(null,'');reset();});
 function addManual(v,pickId){if(!v||!current)return;const m=pickId?null:D.match(v);
   const exact=pickId?D.TESTS.find(t=>t[0]===pickId):D.TESTS.find(t=>t[1]===v);const e=exact?D.BYID[exact[0]]:(m&&m.score>0.7?m:null);
   const it={id:e?e.id:null,testName:e?e.name:v,name:e&&pickId?e.name:v,raw:'',category:e?e.category:'Other',status:e?'ok':'unrecognized',checked:true,notes:[],manual:true};
-  it.selected=true;current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'grp'},el('h3',{text:'Added manually'}),itemEl(it)));$('addTest').value='';taClose();updConfirm();}
+  it.selected=true;current.items.push(it);const g=$('grpTests');if(g)g.appendChild(itemEl(it));else $('list').appendChild(el('div',{class:'ccard ok',id:'grpTests'},itemEl(it)));$('addTest').value='';taClose();updConfirm();}
 $('addBtn').addEventListener('click',()=>addManual($('addTest').value.trim()));
 /* ui2 turn 30: Add-test type-ahead (on-device; names + all aliases incl. held-back ones via ReqDict.suggest). Keyboard: arrows, Enter, Esc. */
 /* ui2 turn 40 (K. Williams iPhone recording, v3.8.5): the field now sits at the TOP of Confirm tests, so there is NO scroll/resize logic

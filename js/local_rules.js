@@ -76,9 +76,9 @@ const L={rules:[
   text:'HCV RNA (Hep C viral load / PCR) and HIV Viral Load each need their OWN 6.0 mL EDTA lavender tube.',
   shareText:'HCV genotyping shares the HCV RNA tube per the BCCDC PHL Serology Screening Requisition (“For HCV RNA and HCV genotyping requests, please provide 1 EDTA plasma (lavender-top) tube.”).'},
  {id:'bccdc_serology_one_sst', kind:'tube', source:'VCH community practice (K. Williams)', date:'2026-10-11', overrides:'LifeLabs Quick Reference Chart',
-  appliesTo:['syphilis','hiv_serology','hcv_screen','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbv_serology','hep_acute','hep_chronic'], /* turn 28: hbeag removed (rule hep_b_lifelabs) */
+  appliesTo:['syphilis','hiv_serology','hcv_screen','hav_immune'], /* turn 44 (BCCDC reply to K. Williams 2026-10-14): tube sharing follows the LifeLabs Quick Reference Chart - Hep A IgM/Hep B tests use the chart's LifeLabs SST; Hepatitis Acute/Chronic get the chart's two SSTs each (one LifeLabs, one BCCDC, per their pages). Was: all hepatitis serology in this one SST. */
   tube:{type:'SST',sizeMl:5.0,colour:'gold',css:'gold',rank:3,label:'SST gold top 5.0 mL'}, mix:null, /* turn 34: 'Mix 5-6x' dropped - no BCCDC source */
-  shareSets:'all', destination:'BCCDC', form:'PHL_SER', formSpec:'serum',
+  shareSets:[['hcv_screen','hiv_serology','syphilis']] /* turn 49 K. Williams: syphilis shares (BCCDC Serology Screening Req section 7) */ /* turn 44: chart SST50_HCV_HIV; syphilis / Hep A immune (not on the chart) own tube */, destination:'BCCDC', form:'PHL_SER', formSpec:'serum',
   text:'BCCDC serology tube: any combination of syphilis, HIV, hepatitis A/B/C serology and other serology goes in ONE SST, following the BCCDC PHL Serology Screening Requisition guidance (LifeLabs sends all of these to BCCDC). Overrides the LifeLabs chart’s separate Hep A IgM / Hep B tube and two tubes per hepatitis profile.',
   prenatal:'Prenatal panel: 2 SSTs (BCCDC PHL Serology Screening Requisition: “Prenatal Testing -Please provide 2 serum separator tubes.”) - no prenatal panel test in the scanner dictionary yet.',
   pcr:'HCV RNA / genotyping: EDTA, see the viral-load rule.',
@@ -140,11 +140,13 @@ const L={rules:[
  {id:'page_vs_chart_date', kind:'precedence', source:'K. Williams decision', date:'2026-10-13', chartDate:'2024-04-08',
   text:'When a LifeLabs directory page conflicts with the Quick Reference Chart (Doc#49141, effective 2024-04-08), the more recent source wins (page Last Published date vs chart date). Chart newer or page date missing: chart kept and the conflict stays flagged.'},
  {id:'sst_size_alone_shared', kind:'sstSize', source:'K. Williams decision (generalises afp_tube)', date:'2026-10-13', alone:3.5, shared:5.0,
+  exceptIds:['hav_igm','hav_immune','hbsag','hbeag','hbv_serology','hbv_immune','hbc_ab','hcv_screen','hep_acute','hep_chronic'], /* turn 46 K. Williams: hepatitis serology always Gold SST 5 mL (every LifeLabs page + chart Doc#49141) */
   text:'SST gold: 3.5 mL when the test is alone in its SST, 5 mL when the SST is shared.'},
  {id:'communicable_separate', kind:'constraint', source:'VCH community practice (K. Williams)', date:'2026-10-11',
   ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbv_serology','hep_acute','hep_chronic'], /* turn 28: hbeag, hbv_dna removed - LifeLabs-processed (hep_b_lifelabs) */
   text:'All communicable disease tests (HIV, hepatitis, syphilis) go to BCCDC and never share a tube with non-communicable tests (lipids, chemistry, etc.).'}
 ]};
+L.commShareOnly=['hbeag']; /* turn 46: HBeAg + HBsAg share one LifeLabs SST (identical page handling; chart Doc#49141 hepatitis SST block) */
 L.communicable=new Set([].concat(...L.rules.filter(r=>r.kind==='constraint').map(r=>r.ids)));
 if(typeof module!=='undefined'&&module.exports)module.exports=L;else root.LocalRules=L;
 })(typeof self!=='undefined'?self:this);

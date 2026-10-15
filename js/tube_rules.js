@@ -12,6 +12,8 @@ const R={
  source:'LifeLabs Quick Reference Collection Chart Doc#49141, effective 2024-04-08',
  shortSource:'LifeLabs Quick Reference Chart (Doc#49141, eff. 2024-04-08)',
  region:'Lower Mainland', lastChecked:'2026-10-10', directoryUrl:'https://www.lifelabs.com',
+ orderOfDrawUrl:'https://lifelabs.azureedge.net/lifelabs-wp-cdn/2023/07/08-CLIENT-ORDER-OF-DRAW-AND-FILL-LEVEL.pdf', // turn 43: LifeLabs Client Order of Draw and Fill Level (QRA Doc #23759), verified 200 2026-10-14
+ chartUrl:'https://lifelabs.azureedge.net/lifelabs-wp-cdn/2020/03/Quick-Reference-Collection-Chart_Lower-Mainland-and-BC-Region.pdf', // turn 43: verified 2026-10-14 (200, PDF prints Doc#49141 Effective 4/8/2024)
  chartFootnote:'This document does not include requirements for all tests. For tests not listed, and complete processing and handling instructions, consult the online Test Information Directory at www.lifelabs.com',
  groups:[
  {id:'CIT27', page:1, tube:{type:'Sodium Citrate',sizeMl:2.7,colour:'light blue',label:'Sodium Citrate light blue top 2.7 mL'}, mix:'3-4', mode:'combined',
@@ -55,11 +57,11 @@ const R={
   heading:'The following tests must be collected in a 5.0 mL SST gold top tube as follows',
   tests:['Hep C','HIV'], map:{hcv_screen:['Hep C'],hiv_serology:['HIV']},
   interpretation:'Second column of the hepatitis row: Hep C and HIV in one cell with ONE tube pictured: one shared tube, separate from the Hep A/B column.'},
- {id:'SST50_HEP_PROFILES', page:2, tube:{type:'SST',sizeMl:5.0,colour:'gold',label:'SST gold top 5.0 mL'}, mix:'5-6', mode:'perTest', tubesPerTest:2,
+ {id:'SST50_HEP_PROFILES', page:2, tube:{type:'SST',sizeMl:5.0,colour:'gold',label:'SST gold top 5.0 mL'}, mix:'5-6', shareAcross:true /* turn 46 K. Williams: Acute+Chronic together = 2 SSTs (one spun LifeLabs, one unspun BCCDC); chart groups the LifeLabs hep markers in one tube (SST50_HEPB) and Hep C with HIV (SST50_HCV_HIV) */, mode:'perTest', tubesPerTest:2,
   heading:'The following tests must be collected in a 5.0 mL SST gold top tube as follows',
   tests:['Hepatitis Acute','Hepatitis Chronic'], map:{hep_acute:['Hepatitis Acute'],hep_chronic:['Hepatitis Chronic']},
   interpretation:'Third column: Hepatitis Acute and Hepatitis Chronic with TWO tubes pictured: read as two tubes per profile (agrees with both per-test PDFs: "Collect two 5 mL SST Gold top tubes").',
-  confirmWhenMulti:true, confirm:'The chart pictures two tubes for the Hepatitis Acute / Chronic cell; read as two tubes per profile. Whether Acute and Chronic ordered together can share tubes is not shown - kept separate.'},
+  /* turn 45: confirm note removed (Kimberley) - was: The chart pictures two tubes for the Hepatitis Acute / Chronic cell; read as two tubes per profile. Whether Acute and Chronic ordered together can share tubes is not shown - kept separate. */},
  {id:'SST50_SEP', page:2, tube:{type:'SST',sizeMl:5.0,colour:'gold',label:'SST gold top 5.0 mL'}, mix:'5-6', mode:'separate',
   heading:'Each of the following tests must be collected in a separate 5.0mL SST gold top tubes',
   tests:['Anti-Mullerian Hormone','βHCG','C-Telopeptide','Carotene','Lipoprotein A','Specific Allergen IgE (SAIGE)'], map:{amh:['Anti-Mullerian Hormone'],ctx:['C-Telopeptide'],carotene:['Carotene'],lpa:['Lipoprotein A'],allergen_ige:['Specific Allergen IgE (SAIGE)'],bhcg:['βHCG']}},

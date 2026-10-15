@@ -19,8 +19,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Labbie">
 <meta name="format-detection" content="telephone=no">
-<link rel="stylesheet" href="css/app.css?v=3.8.6">
-<link rel="stylesheet" href="css/ui2.css?v=3.8.6">
+<link rel="stylesheet" href="css/app.css?v=3.8.7">
+<link rel="stylesheet" href="css/ui2.css?v=3.8.7">
 </head>
 <body>
 <header>
@@ -28,15 +28,17 @@
   <div class="privacy" role="note">On-device · nothing saved</div>
 </header>
 <main>
-  <section id="start" class="card">
-    <p class="hint">Photograph the <b>test list</b> on a de-identified requisition. Fill the frame and avoid glare.</p>
-    <div class="btns col">
-      <label class="btn primary big">Take photo<input id="cam" type="file" accept="image/*" capture="environment" hidden></label>
-      <label class="btn">Choose photo<input id="pick" type="file" accept="image/*" hidden></label>
-    </div>
-    <details class="dx tiny"><summary>Options & version</summary><div class="dx-body">
+  <section id="start" class="ui2 photo"><!-- turn 48: Photo B (viewfinder) -->
+    <div class="stephead"><h2 class="step scr-h">Scan requisition</h2><div class="stepsub">Line up the test list inside the frame</div>
+    <label class="vf" aria-label="Take photo"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i>
+      <span class="paper" aria-hidden="true"><b style="width:60%"></b><b class="hl"></b><b></b><b class="hl"></b><b style="width:70%"></b><b class="hl"></b><b></b><b style="width:50%"></b></span>
+      <span class="vf-t">Tap to take photo</span><input id="cam" type="file" accept="image/*" capture="environment" hidden></label>
+    <div class="shrow"><label class="lnk lib">Library<input id="pick" type="file" accept="image/*" hidden></label>
+      <label class="shut" aria-label="Take photo"><b></b><input id="cam2" type="file" accept="image/*" capture="environment" hidden></label><span class="shsp"></span></div>
+    <div class="tip">🔒 De-identified only · avoid glare</div>
+    <details class="dx tiny minor"><summary>Options &amp; version</summary><div class="dx-body">
       <label class="opt"><input type="checkbox" id="dbg"> Show debug overlay</label>
-      <p class="small ver-start">Version <b>v3.8.6</b> (2026-10-14)</p>
+      <p class="small ver-start">Version <b>v3.8.7</b> (2026-10-15)</p>
       <p id="engine" class="small">Engine: not loaded yet (loads from this site only, works offline after first visit).</p>
     </div></details>
   </section>
@@ -44,7 +46,7 @@
   <section id="busy" class="card hidden"><div class="spinner"></div><p id="stage">Working…</p></section>
 
   <section id="result" class="hidden ui2">
-    <div class="stephead"><div class="step"><span class="stepn">1</span>Confirm tests</div><div id="stepsub1" class="stepsub"></div></div>
+    <div class="stephead"><div class="step"><span class="stepn">1</span>Confirm tests</div><div id="stepsub1" class="stepsub"></div></div><!-- turn 48: Confirm A (step head kept to match the plan page) -->
     <div class="addrow addtop">
       <label for="addTest" class="addlbl">Add a test</label>
       <div class="row ta-wrap"><input id="addTest" name="labtest_lookup" type="search" inputmode="search" placeholder="Start typing a test name…" autocomplete="off" data-lpignore="true" data-form-type="other" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addList"><button id="addBtn" class="btn">Add</button>
@@ -53,12 +55,12 @@
     <div id="layout"></div>
     <div id="list"></div>
     <canvas id="overlay" class="hidden"></canvas>
-    <details class="dx tiny"><summary>Scan info</summary><div class="dx-body"><p id="timing" class="small"></p></div></details>
-    <div class="btns sticky">
-      <p id="confirmHint" class="small confirm-hint">Tick each test you have checked against the paper.</p>
-      <button id="confirm" class="btn primary big" disabled>Tick tests to build the plan</button>
-      <button id="discard" class="btn ghost">Discard</button>
+    <div class="btns sticky cbar">
+      <p id="confirmHint" class="small confirm-hint" hidden>Tick each test you have checked against the paper.</p>
+      <button id="confirm" class="btn primary big" disabled>Build plan · 0 ticked</button>
     </div>
+    <div class="minorrow"><button id="discard" type="button" class="lnk minor">Discard &amp; start over</button><span aria-hidden="true">·</span>
+      <details class="dx tiny minor"><summary>Scan info</summary><div class="dx-body"><p id="timing" class="small"></p></div></details></div>
   </section>
 
   <section id="done" class="hidden">
@@ -73,18 +75,18 @@
 <footer class="small">Not for clinical use. Always check the paper requisition. Done – clear wipes the photo and results. <span id="ver"></span></footer>
 <script src="vendor/opencv.js" async id="cvjs"></script>
 <script src="vendor/tesseract/tesseract.min.js"></script>
-<script src="js/dictionary.js?v=3.8.6"></script>
-<script src="js/template_d2350.js?v=3.8.6"></script>
-<script src="js/preprocess.js?v=3.8.6"></script>
-<script src="js/pipeline.js?v=3.8.6"></script>
-<script src="js/collection_data.js?v=3.8.6"></script>
-<script src="js/tube_rules.js?v=3.8.6"></script>
-<script src="js/local_rules.js?v=3.8.6"></script>
-<script src="js/requisition_forms.js?v=3.8.6"></script>
-<script src="js/elab_data.js?v=3.8.6"></script>
-<script src="js/guide_data.js?v=3.8.6"></script>
-<script src="js/summary.js?v=3.8.6"></script>
-<script src="js/plan_view.js?v=3.8.6"></script>
-<script src="js/app.js?v=3.8.6"></script>
+<script src="js/dictionary.js?v=3.8.7"></script>
+<script src="js/template_d2350.js?v=3.8.7"></script>
+<script src="js/preprocess.js?v=3.8.7"></script>
+<script src="js/pipeline.js?v=3.8.7"></script>
+<script src="js/collection_data.js?v=3.8.7"></script>
+<script src="js/tube_rules.js?v=3.8.7"></script>
+<script src="js/local_rules.js?v=3.8.7"></script>
+<script src="js/requisition_forms.js?v=3.8.7"></script>
+<script src="js/elab_data.js?v=3.8.7"></script>
+<script src="js/guide_data.js?v=3.8.7"></script>
+<script src="js/summary.js?v=3.8.7"></script>
+<script src="js/plan_view.js?v=3.8.7"></script>
+<script src="js/app.js?v=3.8.7"></script>
 </body>
 </html>

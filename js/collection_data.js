@@ -6643,7 +6643,7 @@ const DATA={
 "additionalInfo": [],
 "reflex": "",
 "patientInstructionDocs": [],
-"patientPrep": [],
+"patientPrep": ["Collect approximately 7 mL of venous blood (at least one hour after a meal)."], "patientPrepSource": "turn 50 K. Williams: BCCDC eLab Handbook - Hepatitis A Serology (immunity), last changed 2025-05-22 (Drive: BCCDC_eLab_Hepatitis_A_Serology_immunity.pdf)",
 "stability": [],
 "orderNotes": [],
 "ambiguities": [
@@ -6894,7 +6894,6 @@ const DATA={
 "Note: do not centrifuge the SST Gold top tube for HEP C to BCCDC."
 ],
 "noShare": false,
-"clotNote": "Step 4 \"Allow to clot upright for a minimum of 30 minutes\" comes before the centrifuge step and may apply to both tubes - confirm.",
 "temp": "Refrigerated (2-8°C)",
 "destGroup": "PHL",
 "bag": ""
@@ -7110,6 +7109,112 @@ const DATA={
 "sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-B-SCREEN-Lower-Mainland",
 "sourceUrlVerified": false,
 "sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "hep_b_surface_ab",
+"title": "HEPATITIS B SURFACE ANTIBODY",
+"name": "Hepatitis B Surface Antibody (anti-HBs)",
+"region": "Lower Mainland",
+"aka": [
+"ANTI BsAb",
+"ANTI HBs",
+"ANTI HBS AB",
+"ANTI HBVS AB",
+"ANTI HEP B SURFACE AB",
+"ANTI HEPATITIS B SURFACE AB",
+"HBS AB",
+"HBSAB",
+"HBV SAB",
+"HEP B IMMUNE STATUS",
+"HEP B SURFACE AB",
+"HEP B TITRE",
+"HEPATITIS B IMMUNE STATUS",
+"HEPATITIS B SURFACE AB",
+"HEPATITIS B SURFACE ANTIBODY",
+"HEPATITIS B TITRE",
+"HEPATITIS B VIRUS SURFACE ANTIBODY",
+"HEPTAVAX SCREEN",
+"POST HEPTAVAX SCREEN",
+"PRE HEPTAVAX SCREEN",
+"VACCINATION STATUS HEP B",
+"HEP B TWINRIX"
+],
+"dictIds": [
+"hbv_immune"
+],
+"discipline": "Chemistry",
+"methodology": "Chemiluminescent Microparticle Immunoassay (CMIA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "2 mL",
+"preTestPrep": [
+"Ensure requisition is completed with patient and physician demographic information."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-11-18",
+"lastChecked": "2026-10-14",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "2 mL",
+"volumeMl": 2,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": false,
+"temp": "Refrigerated (2-8°C)",
+"destGroup": "",
+"bag": ""
+}
+],
+"requisitionNotes": [
+"Ensure requisition is completed with patient and physician demographic information."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-B-SURFACE-ANTIBODY-Lower-Mainland",
+"sourceUrlVerified": false,
+"sourceUrlNote": "pattern-based, unverified; page PDF supplied by K. Williams 2026-10-14 (turn 46)"
 },
 {
 "id": "hep_b_surface_ag",
@@ -7330,18 +7435,12 @@ const DATA={
 "Note: do not centrifuge the 5 mL SST Gold top tube for BCCDC."
 ],
 "noShare": false,
-"clotNote": "Step 4 \"Allow to clot upright for a minimum of 30 minutes\" comes before the centrifuge step and may apply to both tubes - confirm.",
 "temp": "Refrigerated (2-8°C)",
 "destGroup": "PHL",
 "bag": ""
 }
 ],
-"includesDictIds": [
-"hav_igm",
-"hbsag",
-"hcv_screen",
-"hbc_ab"
-],
+"includesDictIds": ["hav_igm","hbsag","hcv_screen","hbc_ab","hbv_immune"], "includesNote": "turn 49 K. Williams: BCCDC Serology Screening Requisition (PHRQ_HVS_0001F v1.0 Aug 2026) Acute-undefined etiology = HBsAg, Anti-HBc Total, Anti-HBs, Anti-HCV, Anti-HAV IgM (broader than the LifeLabs requisition)",
 "requisitionNotes": [],
 "sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-ACUTE-Lower-Mainland",
 "sourceUrlVerified": false,

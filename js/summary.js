@@ -80,6 +80,8 @@ const TUBE_RULES=()=>LR.rules.filter(r=>r.kind==='tube');
 const COMM=LR.communicable||new Set();
 function localTubeRule(u){return TUBE_RULES().find(r=>u.ids.some(i=>r.appliesTo.includes(i)))||null;}
 const isComm=u=>u.ids.some(i=>COMM.has(i));
+const COMM_SHARE=new Set([...COMM,...(LR.commShareOnly||[])]); /* turn 46: HBeAg shares the hepatitis SST (not routed to BCCDC) */
+const isCommShare=u=>u.ids.some(i=>COMM_SHARE.has(i));
 function formRoute(u){for(const id of u.ids){const r=RF.byId[id];if(!r)continue;const e=u.entry;
     if(u.localTube&&u.localTube.destination==='BCCDC')return Object.assign({how:(e&&(e.collect.some(c=>RF.formOfName(c.form)===r.form)||RF.formOfName(e.form)===r.form))?'named':'local'},r);
     if(e){if(e.collect.some(c=>RF.formOfName(c.form)===r.form)||RF.formOfName(e.form)===r.form)return Object.assign({how:'named'},r);
@@ -126,10 +128,13 @@ function plan(units){
   const tubes=[],others=[],conflicts=[];
   const mk=o=>{const t=Object.assign({members:[],caveats:[],infos:[],kind:'blood'},o);tubes.push(t);return t;};
   // local constraint: communicable disease tests never share a tube with non-communicable tests
-  const commOk=(t,u)=>t.members.every(m=>isComm(m.unit)===isComm(u));
+  const commOk=(t,u)=>t.members.every(m=>isCommShare(m.unit)===isCommShare(u));
   const compatible=(t,c,u)=>{if(u&&!commOk(t,u))return false;const h=t.members.map(m=>m.c).filter(Boolean);if(!c||!h.length)return true;
     return h.every(x=>x.centrifuge===c.centrifuge&&(x.destGroup||'')===(c.destGroup||''));};
-  const live=units.filter(u=>!u.excludedBy);
+  const live0=units.filter(u=>!u.excludedBy);
+  /* turn 46 (K. Williams): a test already covered by an ordered hepatitis panel (entry.includesDictIds) gets no separate tube */
+  for(const u of live0){u.coveredBy=null;const p=live0.find(x=>x!==u&&x.entry&&(x.entry.includesDictIds||[]).length&&u.ids.every(i=>x.entry.includesDictIds.includes(i))&&!u.ids.every(i=>x.ids.includes(i)));if(p)u.coveredBy=p;}
+  const live=live0.filter(u=>!u.coveredBy);
   // (L) local practice tube rules (priority over the chart and per-test entries)
   for(const u of live.filter(u=>u.localTube)){const r=u.localTube;
     if(u.entry)for(const c of u.entry.collect)if(c.kind!=='blood')others.push({c,members:[{unit:u,c}],kind:c.kind,caveats:[],infos:[]});
@@ -145,13 +150,20 @@ function plan(units){
     const list=slots.length?slots.flatMap(c=>Array(c.count||1).fill(c)):[null];
     if(g.mode==='perTest'){const n=Math.max(list.length,g.tubesPerTest||1);
       if(slots.length&&list.length!==(g.tubesPerTest||1))conflicts.push(u.name+': per-test PDF gives '+list.length+' tube(s), chart pictures '+g.tubesPerTest+' - the larger number is shown.');
-      for(let i=0;i<n;i++)mk({group:g,source:'chart',members:[{unit:u,c:list[i]||null}]});}
+      for(let i=0;i<n;i++){const c=list[i]||null; /* turn 46 (K. Williams): g.shareAcross - Acute + Chronic share the spun LifeLabs SST and the unspun BCCDC SST */
+        const t=g.shareAcross&&tubes.find(t=>t.group===g&&!t.members.some(m=>m.unit===u)&&compatible(t,c,u));
+        if(t)t.members.push({unit:u,c});else mk({group:g,source:'chart',members:[{unit:u,c}]});}}
     else if(g.mode==='separate'){for(const c of list)mk({group:g,source:'chart',members:[{unit:u,c}]});}
     else for(const c of list){let t=tubes.find(t=>t.group===g&&!t.members.some(m=>m.unit===u)&&compatible(t,c,u));
       if(!t){const sib=tubes.filter(t=>t.group===g);t=mk({group:g,source:'chart'});
         if(sib.some(x=>!x.members.some(m=>m.unit===u))){for(const x of sib.concat(t))x.split=true; /* turn 27: a 2nd tube of the SAME test (count 2, e.g. Malaria) is not a handling split */
           conflicts.push('Chart shows one '+g.tube.label+' for '+uniq(sib.flatMap(x=>x.members.map(m=>m.unit.name)).concat(u.name)).join(', ')+', but the per-test PDFs give different handling (centrifuged vs not / destination) - kept in separate tubes.');}}
       t.members.push({unit:u,c});}}
+  /* turn 47 (K. Williams): HIV serology joins a hepatitis panel's unspun BCCDC SST (BCCDC Serology Screening Req: "Combinations of Syphilis, HIV,
+     Hepatitis Serology and Other Serology - Please provide 1 serum separator tube"; chart Doc#49141 pairs HIV with Hep C). Syphilis not moved: not on the chart. */
+  { const ph=tubes.find(t=>t.group&&t.group.id==='SST50_HEP_PROFILES'&&t.members.some(m=>m.c&&m.c.centrifuge===false&&m.c.destGroup==='PHL'));
+    if(ph)for(const t of tubes.slice()){if(t===ph||!t.local||!t.members.length||!t.members.every(m=>m.unit.ids.every(i=>i==='hiv_serology'||i==='syphilis') /* turn 49: + syphilis */))continue;
+      for(const m of t.members)ph.members.push({unit:m.unit,c:m.c,slots:m.slots,joined:'hep_bccdc'});tubes.splice(tubes.indexOf(t),1);} }
   // (a2) tests not on the chart that go on a requisition form with a combined-tube instruction (BCCDC PHL Serology Screening
   // Requisition: "Combinations of Syphilis, HIV, Hepatitis Serology and Other Serology -Please provide 1 serum separator tube.")
   const phlish=m=>m.unit.route&&m.unit.route.how!=='lifelabs';
@@ -281,14 +293,14 @@ function plan(units){
       if(g.confirm&&(!g.confirmWhenAlso||tubes.some(x=>x.group&&x.group.id===g.confirmWhenAlso))&&(!g.confirmWhenMulti||uniq(tubes.filter(x=>x.group===g).flatMap(x=>x.members.map(m=>m.unit.key))).length>1))t.caveats.push('Chart interpretation: '+g.confirm);
       if(t.split)t.caveats.push('Chart shows one tube for these tests but the per-test handling differs (centrifuged vs not / destination), so they are kept apart.');}
     { const SR=LR.rules.find(r=>r.kind==='sstSize'); // ui2 turn 28: SST 3.5 mL alone / 5 mL shared (generalises afp_tube); newer page size for other tubes
-      if(SR&&/sst/i.test(t.label)&&!t.sizeLocal){const n=uniq(t.members.map(m=>m.unit.key)).length,ml=n>1?SR.shared:SR.alone;t.label='SST gold top '+ml.toFixed(1)+' mL';t.sstSize={ml,n};
+      if(SR&&/sst/i.test(t.label)&&!t.sizeLocal&&!(t.group&&t.group.mode==='perTest'&&t.group.tubesPerTest>1)&&!t.members.some(m=>(SR.exceptIds||[]).some(i=>m.unit.ids.includes(i)))){ /* turn 46: hepatitis serology always 5 mL SST */ /* turn 44: chart two-tube panels (Hepatitis Acute/Chronic) keep the chart/page 5 mL */const n=uniq(t.members.map(m=>m.unit.key)).length,ml=n>1?SR.shared:SR.alone;t.label='SST gold top '+ml.toFixed(1)+' mL';t.sstSize={ml,n};
         if(!t.sizeRule)t.infos.push('Tube size: local rule - '+SR.text+' ('+SR.source+', '+SR.date+')');}
       else if(t.pageSize&&/[\d.]+ mL/.test(t.label))t.label=t.label.replace(/[\d.]+ mL/,(+t.pageSize).toFixed(1)+' mL'); }
     t.chartOnly=t.members.filter(m=>!m.c).map(m=>m.unit.name);t.typeKey=t.css+'|'+(g?(nominalMl(t.label)||g.tube.sizeMl):(nominalMl(t.label)||(t.css==='gold'?5:null)));}
   for(const t of tubes)if(t.own){const same=tubes.filter(x=>x!==t&&x.typeKey===t.typeKey&&x.c.centrifuge===t.c.centrifuge&&(x.c.destGroup||'')===(t.c.destGroup||''));
     t.caveats.push('Not on the LifeLabs Quick Reference Chart: drawn as its own tube'+(same.length?' (same tube type and handling as the tube for '+uniq(same.flatMap(x=>x.members.map(m=>m.unit.name))).join(', ')+' - the lab may allow combining)':'')+'.');}
   if(live.some(u=>u.chart&&!u.localTube&&u.chart.group.mode==='perTest'&&u.route))conflicts.push('Hepatitis Acute / Chronic profiles: the '+(RF.forms[0]||{}).display+' says “'+((RF.forms[0]||{specimens:{serum:{}}}).specimens.serum.combine)+'”, but the LifeLabs chart and LifeLabs pages say two SST tubes per profile (one centrifuged for LifeLabs, one unspun for BCCDC) - LifeLabs used for LifeLabs collection.');
-  for(const t of tubes){const k=uniq(t.members.map(m=>isComm(m.unit)?'c':'n'));if(k.length>1)throw new Error('communicable/non-communicable tests in one tube');}
+  for(const t of tubes){const k=uniq(t.members.map(m=>isCommShare(m.unit)?'c':'n'));if(k.length>1)throw new Error('communicable/non-communicable tests in one tube');}
   const spinRank=t=>t.c.centrifuge===true?0:t.c.centrifuge===false?1:2;
   const gi=t=>t.group?TR.groups.indexOf(t.group):99;
   { const dl=LR.rules.find(r=>r.kind==='drawLast');if(dl)for(const t of tubes)if(new RegExp(dl.match).test((t.c&&t.c.container)||t.label||'')){t.rank=99;t.drawLast=dl;} } // ui2 turn 14: local practice

@@ -82,6 +82,7 @@ b.red{color:var(--red)}
 .tc-name{flex:0 1 auto}.tc-size{font-weight:600;color:var(--mute);font-size:16px}
 .dest{margin-left:auto;font-size:12px;font-weight:800;letter-spacing:.03em;border:1.5px solid var(--ink);border-radius:6px;padding:1px 6px}
 .tc-meta{color:var(--mute);font-size:15px;margin:4px 0 0 36px}
+.tc-comp{color:#6b7280;font-size:13px;line-height:1.3;margin:1px 0 0 36px} /* turn 47: panel components (Option A) */
 .tc-tests{font-size:17px;font-weight:600;margin:6px 0 0 36px;line-height:1.35}
 .tc-hand{font-size:16px;margin:4px 0 0 36px}.tc-hand.stop{color:var(--red);font-weight:800}.tc-hand.check{color:var(--amb);font-weight:600}
 .tc-warn{color:var(--red);font-weight:700;font-size:15px;margin:4px 0 0 36px}
@@ -187,3 +188,44 @@ header{background:#0b2a4a}
 .addrow.addtop{margin:4px 0 12px}
 #addTest[type=search]{-webkit-appearance:none;appearance:none}#addTest::-webkit-search-cancel-button{-webkit-appearance:none}
 .ta-list{max-height:170px} /* ~3.5 rows visible, scrolls inside: stays above the iPhone keyboard + accessory bar (~330 px) when the field is near the top */
+
+/* turn 42: count pill next to the title; numbered lines; cup type per line */
+.xpill{flex:none;font-size:13px;font-weight:800;background:#0b2a4a;color:#fff;border-radius:12px;padding:1px 8px;margin-left:2px}
+.tl-kind{font-size:14px;font-weight:700;color:#5b6068;text-transform:uppercase;letter-spacing:.03em;margin:0 0 2px}
+
+/* turn 43: References */
+.refs{margin:8px 2px 4px}.refs-h{font-size:14px;font-weight:700;color:#5b6068;margin-bottom:4px}.refs-l{list-style:none;padding:0;margin:0}.refs-l li{margin:4px 0;font-size:15px}.refs-l a{color:#0b5394;font-weight:600}
+
+/* ---- turn 48: Photo screen (mockup screens-photo-B) ---- */
+.photo .scr-h{margin:0;font-size:22px}
+.photo .vf{position:relative;height:380px;margin:4px 0 14px;border-radius:16px;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mute);cursor:pointer}
+.photo .vf i{position:absolute;width:34px;height:34px;border:4px solid #d4a017}
+.photo .vf .a{top:16px;left:16px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}.photo .vf .b{top:16px;right:16px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
+.photo .vf .c{bottom:16px;left:16px;border-right:0;border-top:0;border-radius:0 0 0 8px}.photo .vf .d{bottom:16px;right:16px;border-left:0;border-top:0;border-radius:0 0 8px 0}
+.photo .paper{width:150px;height:200px;border-radius:6px;background:#f6f7f9;border:1px solid var(--line);padding:14px 12px;display:block}
+.photo .paper b{display:block;height:7px;border-radius:4px;background:#dfe2e7;margin:8px 0}.photo .paper b.hl{background:#0b2a4a33}
+.photo .vf-t{margin-top:12px;font-size:14px}
+.photo .shrow{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.photo .shut{width:76px;height:76px;border-radius:50%;border:5px solid #0b2a4a;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.photo .shut b{width:58px;height:58px;border-radius:50%;background:#0b2a4a;display:block}
+.photo .shsp{width:60px}
+.lnk{color:#0b5394;font-weight:600;font-size:16px;background:none;border:0;padding:12px 0;cursor:pointer;text-decoration:none;font-family:inherit}
+.photo .lib{width:60px}
+.photo .tip{font-size:14px;color:var(--mute);text-align:center;margin-top:10px}
+details.minor{margin-top:14px;text-align:center}details.minor summary{font-size:12px;color:var(--mute)}details.minor .dx-body{text-align:left}
+
+/* ---- turn 48: Confirm tests (mockup screens-confirm-A) ---- */
+.ui2 .ccard{background:#fff;border:1px solid var(--line);border-left:5px solid var(--cc,#9aa0a8);border-radius:14px;margin:0 0 10px;overflow:hidden}
+.ui2 .ccard.red{--cc:#b3261e}.ui2 .ccard.amb{--cc:#e0a800}.ui2 .ccard.ok{--cc:#1e6b34}.ui2 .ccard.ok:empty{display:none}
+.ui2 .ccard .item{border-top:1px solid var(--line);background:#fff;border-left:0;display:flex;align-items:flex-start}
+.ui2 .ccard .item:first-child{border-top:0}
+.ui2 .ccard .item.verify,.ui2 .ccard .item.unrecognized,.ui2 .ccard .item.missed{background:#fff;border-left:0}
+.ui2 .ccard .item.flagged{padding-bottom:4px}
+.xrm{flex:none;width:36px;height:36px;margin:8px 8px 0 0;border-radius:50%;border:0;background:#f0f1f3;color:#5b6068;font-size:16px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.ui2 .ccard .moreb{min-height:52px;width:36px}
+.ui2 .cbar{display:block}
+.ui2 .cbar #confirm{width:100%}
+.minorrow{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--mute);font-size:12px;margin:4px 0 6px}
+.minorrow .lnk.minor{font-size:13px;font-weight:600;color:var(--mute);padding:8px 0;text-decoration:underline}
+.minorrow details.minor{margin:0}.minorrow details.minor[open]{flex-basis:100%}
+.photo .stephead{text-align:left;margin-bottom:8px}.photo .stepsub{text-align:left}
