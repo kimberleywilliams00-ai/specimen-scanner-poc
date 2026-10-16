@@ -47,7 +47,10 @@ function thumbOf(t,nb){
   if(/Copan Fecal/i.test(c))return ['copan_fecalswab_orange_cap','Copan FecalSwab container']; // LifeLabs 'Swab (Copan Fecal)'
   if(/urine/i.test(c)||(t.eb&&t.eb.local&&/urine/i.test(t.eb.local.container||'')))return ['urine_container_orange_cap','Urine container'];
   return null;}
-function thumb(t,nb){const m=thumbOf(t,nb);return m?el('img',{class:'tc-thumb',src:IMG_DIR+m[0]+'.webp',alt:m[1],width:'40',height:'64',loading:'lazy',decoding:'async'}):null;}
+/* turn 56 (K. Williams): every blood tube shows the same body width as the 4 mL lavender EDTA (34 of 200 px art -> 14.1 px at 83 px tall).
+   Box height per image = 83 * 34 / body px (measured alpha body width), so narrower art is drawn taller, never stretched. Non-tubes stay 83. */
+const TUBE_H={sst_gold_5ml:97,edta_lavender_6ml:97,red_top_serum_6ml:97,acd_a_yellow_8_5ml:101};
+function thumb(t,nb){const m=thumbOf(t,nb);if(!m)return null;const im=el('img',{class:'tc-thumb',src:IMG_DIR+m[0]+'.webp',alt:m[1],width:'52',height:String(TUBE_H[m[0]]||83),loading:'lazy',decoding:'async'});if(TUBE_H[m[0]])im.dataset.th=TUBE_H[m[0]];return im;}
 const EDGE={gold:'#d4a017',lav:'#8e6bbf',lblue:'#5aa9e6',red:'#c62828',green:'#2e7d32',grey:'#8a8f98',yellow:'#e0b400'}; // turn 36: card left edge
 function edgeColour(t,nb){if(!nb&&EDGE[t.css])return EDGE[t.css];const l=(t.label||'')+' '+((t.c&&t.c.container)||'');return /urine/i.test(l)?'#e8a33a':/fecal|stool/i.test(l)?'#e8742a':/swab/i.test(l)?'#d0453a':'#9aa0a8';}
 function chip(css){return el('span',{class:'tchip '+(css||'none'),'aria-hidden':'true'});}
@@ -282,7 +285,7 @@ function render(host,items,opts){
       bc?el('span',{class:'dest',text:'BCCDC'}):null);
     const meta=[];/* turn 34: 'Full tube' removed (implied) */if(t.mix)meta.push('Mix '+t.mix.replace('-','–')+'×');
     const th=thumb(t,nb);if(th){const cp=head.querySelector('.tchip');if(cp)cp.remove();}
-    const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
+    const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
       el('div',{class:'tc-tests'},...(us=>us.flatMap((u,i)=>i?[' · ',nameLink(u)]:[nameLink(u)]))(tests.filter(u=>!tests.some(v=>v!==u&&shortName(v).startsWith(shortName(u)+' '))))), // turn 42: 'Urinalysis' hidden when 'Urinalysis (dipstick)' is in the same cup (one requested test)
       compLine(t),
       h.bccdc?el('div',{class:'tc-hand'},'Do not centrifuge - clotted blood preferred as per ',el('a',{href:t.handling.elabUrl,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'})):null,h.bccdc?el('div',{class:'tc-hand',text:'Refrigerate'}):null, // turn 34
@@ -293,7 +296,7 @@ function render(host,items,opts){
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC
       t.drawLast?el('div',{class:'tc-kit'},'Draw last ',el('span',{class:'tc-local',text:'Local practice'})):null, // turn 14: ACD yellow
       ...warn.map(w=>el('div',{class:'tc-warn'+(/^(Kit|Volume) differs|not covered by|^Open question|^Check: |^Requires STI certified|^Confirm whether|^Site not stated|^BCCDC eLab accepts|^Not for asymptomatic|^CBC not on the requisition/.test(w)?' amb':''),text:w.replace(/^PTT is NOT in this tube - see the question above\.?$/,'PTT is not in this tube (see the heparin question above)')})),
-      ...(REVIEW?[]:cav.map(n=>cavEl(n.textContent))), // turn 34: amber notes on the card in normal mode
+      ...(REVIEW?[]:cav.filter(n=>!/ELECTROLYTES EXTENDED PANEL page/.test(n.textContent)).map(n=>cavEl(n.textContent))), /* turn 55 (K. Williams): Na/K-only electrolytes note is result scope, not collection - Details only */ // turn 34: amber notes on the card in normal mode
       details('Details & sources',[nb&&isCup(t)?el('div',{class:'dx-sub',text:'Container'}):null,...(nb&&isCup(t)?otherBits(t):[]),checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0}));
     return c;};
   /* turn 36 (K. Williams, layout B / group-B2-final mockup): one card per tube TYPE+size, in order of draw. N>1 -> '×N' badge on the
@@ -312,7 +315,7 @@ function render(host,items,opts){
         if(tests)tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));
         const kind=t.pairNo?(t.pairNo===1?'First catch':'Midstream'):null;
         ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:String(i+1)}),el('div',{class:'tl-body'},kind?el('div',{class:'tl-kind',text:kind}):null,...kids)));});
-      dst.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0],nb)},th,hd,ol));}};
+      dst.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0],nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,hd,ol));}};
   groupCards(blood,t=>(t.css||'')+'|'+(COLOUR[t.css]||t.label)+'|'+sizeText(t),false,tb);
   const tbDet=[part('banner'),part('head'),part('order'),part('nospin'),part('conflicts'),part('proc'),part('fullnote'),part('collect')].filter(Boolean).concat(bysLeft);
   const confl=part('conflicts');

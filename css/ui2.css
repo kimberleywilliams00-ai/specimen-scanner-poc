@@ -143,8 +143,9 @@ a.tn:active{color:var(--b)}
 .tc-local{display:block;font-size:14px;color:var(--muted,#555)}
 
 /* ui2 2026-10-11: container illustrations (K. Williams' originals) - compact, left side of the card */
-.tcard.has-thumb{position:relative;padding-left:60px}
-.tc-thumb{position:absolute;left:10px;top:12px;width:40px;height:64px;object-fit:contain;object-position:center top}
+/* turn 55 (K. Williams): tube pictures 30% larger (40x64 -> 52x83); font sizes unchanged */
+.tcard.has-thumb{position:relative;padding-left:68px;min-height:calc(var(--th,83px) + 24px)}
+.tc-thumb{position:absolute;left:8px;top:12px;width:52px;height:var(--th,83px);object-fit:contain;object-position:center top}
 .tcard.has-thumb>.dx{margin-left:0}
 
 /* ui2 (2026-10-12): Back to tests + confirm hint */
@@ -172,7 +173,7 @@ header{background:#0b2a4a}
 .tcard{border-left:5px solid var(--c,#9aa0a8)}
 .order-line{font-size:14px;color:#5b6068;font-weight:600;margin:0 2px 8px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.tc-badge{position:absolute;left:10px;top:12px;width:40px;height:64px}.tc-badge .tc-thumb{left:0;top:0}
+.tc-badge{position:absolute;left:8px;top:12px;width:52px;height:var(--th,83px)}.tc-badge .tc-thumb{left:0;top:0}
 .tc-badge b{position:absolute;right:-6px;top:-8px;background:#0b2a4a;color:#fff;border-radius:12px;font-size:13px;padding:1px 7px;font-weight:800}
 .tl-lines{list-style:none;padding:0;margin:6px 0 4px}
 .tl-line{display:flex;gap:8px;align-items:flex-start;margin:8px 0}
