@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.9'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.10'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-15';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -144,7 +144,7 @@ $('pick').addEventListener('change',e=>handleFile(e.target.files[0]));
 $('cam2').addEventListener('change',e=>handleFile(e.target.files[0]));
 /* turn 52 (K. Williams, Option A): manual entry - straight to Confirm tests with an empty list; 'Add a test' is at the top (no focus/scroll code) */
 $('manual').addEventListener('click',()=>{if(typeof liveStop==='function')liveStop();current={items:[],layout:'manual',manual:true,info:{},ms:0};render(current);show('result');});
-/* ---- turn 51 prototype: in-app live camera (getUserMedia, rear camera) in a 1.2:1 frame ----
+/* ---- turn 51 prototype: in-app live camera (getUserMedia, rear camera) in a 1.3:1 frame (width 30% longer than height) ----
    Tap the viewfinder -> live preview (object-fit:cover). Shutter -> grabs ONLY the framed region of the current video frame at the
    stream's native resolution (no downscale beyond the pipeline's own 2500 px cap) and feeds handleFile(). Nothing leaves the device.
    Fallbacks: no getUserMedia / not secure / permission denied / no camera -> the viewfinder and shutter keep using the native

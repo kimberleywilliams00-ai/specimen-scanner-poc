@@ -230,8 +230,8 @@ details.minor{margin-top:14px;text-align:center}details.minor summary{font-size:
 .minorrow details.minor{margin:0}.minorrow details.minor[open]{flex-basis:100%}
 .photo .stephead{text-align:left;margin-bottom:8px}.photo .stepsub{text-align:left;margin-left:0} /* turn 51: subtitle was indented 40px (step-number indent), looked centred */
 
-/* ---- turn 51: 1.2:1 viewfinder + live camera prototype ---- */
-.photo .vf{height:auto;aspect-ratio:1.2/1;overflow:hidden}
+/* ---- turn 54: 1.3:1 viewfinder (width 30% longer than height) + live camera ---- */
+.photo .vf{height:auto;aspect-ratio:1.3/1;overflow:hidden}
 .photo .vf video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#000}
 .photo .vf i{z-index:2}
 .photo .vf.is-live .paper,.photo .vf.is-live .vf-t{display:none}
