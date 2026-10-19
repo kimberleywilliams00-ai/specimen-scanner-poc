@@ -246,7 +246,9 @@ async function listMode(lines,boxes,boxOcr,fillAt,ctx){
     const nb=bs.slice().sort((a,b)=>Math.abs(a.y-l.cy)-Math.abs(b.y-l.cy)).slice(0,2);const locX=nb.length?nb.reduce((a,b)=>a+b.x,0)/nb.length:boxX;
     const atBox=boxes.length?Math.abs(l.bbox.x0-locX)<0.9*s:false;const atText=Math.abs(l.bbox.x0-(locX+1.4*s))<1.5*s;
     const cont=above&&continuationLikely(above.raw,txt,l,above,s)&&!atBox&&!glyph&&(above.cont||0)<2;
-    if(m&&((m.score>=0.8&&(glyph||atBox||atText))||(m.score>=0.9&&!cont))){
+    // t193: a line with no checkbox of its own is not taken as a test on the strength of a 1-2 letter synonym at its start ('FE ...' -> Iron)
+    const tiny=!!m&&m.matched.length<=2&&D.norm(D.splitNotes(txt).name)!==m.matched;
+    if(m&&!tiny&&((m.score>=0.8&&(glyph||atBox||atText))||(m.score>=0.9&&!cont))){
       // checkbox glyph seen by OCR but not by the box detector: measure its ink directly
       let fill=null;const g=l.words[0];if(glyph&&fillAt){const gw=g.bbox.x1-g.bbox.x0,gh=g.bbox.y1-g.bbox.y0;if(gw>0.5*s&&gh>0.5*s&&gw<1.6*s){const ins=0.25*Math.min(gw,gh);fill=fillAt({x:g.bbox.x0+ins,y:g.bbox.y0+ins,w:gw-2*ins,h:gh-2*ins});}}
       items.push({box:null,line:l,y:l.cy,x:l.bbox.x0,raw:txt,checked:fill==null?null:fill>=CHECK_THR,fill:fill==null?null:+fill.toFixed(3),boxDetected:false});l.used=true;continue;}
@@ -318,12 +320,16 @@ async function listMode(lines,boxes,boxOcr,fillAt,ctx){
   // one checkbox row -> one item: drop loose/suspect/unboxed reads on a row that already has a strict checkbox item, and a
   // repeated test id from a non-strict read next to a strict one (e.g. a wrapped line or a letter read as a second box)
   const strict=it=>it.box&&!it.loose&&!it.suspect;
+  // t193: an unboxed page-OCR line that is its own strongly matched test, read as a separate line from every nearby boxed line
+  // (a small-font row squeezed between two boxed rows, whose own box was missed) is not a duplicate read of that row
+  const ownLine=(it,near)=>{if(it.box||!it.line||!near.length)return false;const mi=D.match(D.splitNotes(it.raw||'').name);if(!mi||mi.score<0.95)return false;
+    return near.every(o=>{if(!o.line||o.line===it.line)return false;const mo=D.match(D.splitNotes(o.raw||'').name);return !!mo&&mo.id!==mi.id&&mo.score>=0.9&&Math.abs((o.line.bbox.y0+o.line.bbox.y1)/2-it.line.cy)>0.6*s;});};
   for(let k=items.length-1;k>=0;k--){const it=items[k];if(strict(it))continue;
-    const sameRow=items.some(o=>o!==it&&strict(o)&&Math.abs(o.y-it.y)<0.7*s);
+    const rowMates=items.filter(o=>o!==it&&strict(o)&&Math.abs(o.y-it.y)<0.7*s);const sameRow=rowMates.length>0&&!ownLine(it,rowMates);
     const mi=D.match(D.splitNotes(it.raw||'').name);const dupId=mi&&mi.score>=VERIFY_SCORE&&items.some(o=>o!==it&&strict(o)&&Math.abs(o.y-it.y)<2*s&&(()=>{const mo=D.match(D.splitNotes(o.raw||'').name);return mo&&mo.id===mi.id;})());
     if(sameRow||dupId)items.splice(k,1);}
   // an unboxed line on the same row as a checkbox line is a duplicate read of that row
-  for(let k=items.length-1;k>=0;k--){const it=items[k];if(it.box)continue;if(items.some(o=>o.box&&Math.abs(o.y-it.y)<0.75*s))items.splice(k,1);}
+  for(let k=items.length-1;k>=0;k--){const it=items[k];if(it.box)continue;const near=items.filter(o=>o.box&&Math.abs(o.y-it.y)<0.75*s);if(near.length&&!ownLine(it,near))items.splice(k,1);}
   items.sort((a,b)=>a.y-b.y);headers.sort((a,b)=>a.y-b.y);
   const outItems=[];
   // a 'box' indented under the previous item's text (the first letters of a wrapped line) whose text is not a test name is

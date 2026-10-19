@@ -109,6 +109,8 @@ function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m)return n;i
 function sim(a,b){if(!a.length&&!b.length)return 1;return 1-lev(a,b)/Math.max(a.length,b.length);}
 const ENTRIES=[];for(const r of T){for(const syn of r.slice(3)){ENTRIES.push({id:r[0],syn:norm(syn)});}}
 for(const [id,syn] of AKA){const n=norm(syn);if(!ENTRIES.some(e=>e.id===id&&e.syn===n))ENTRIES.push({id,syn:n,aka:true});}
+// t193: synonyms that another test's synonym extends with ' + ...' (CBC -> CBC + Diff): a line continuing with '+' gets no prefix credit for them
+const PLUS_EXT=new Set(ENTRIES.filter(e=>ENTRIES.some(o=>o.id!==e.id&&o.syn.startsWith(e.syn+' +'))).map(e=>e.syn));
 const BYID={};for(const r of T)BYID[r[0]]={id:r[0],name:r[1],category:r[2]};
 
 /* ui2 turn 30: Add-test type-ahead. Matches display names, synonyms, fed AKAs AND held-back AKAs (AKA_PICK: a deliberate user pick,
@@ -131,7 +133,8 @@ function match(text,restrictIds){
     let s=sim(t,e.syn);
     // prefix match: OCR line may carry trailing qualifiers not captured as notes
     const k=e.syn.split(' ').length;
-    if(tt.length>k){const pre=tt.slice(0,k).join(' ');const ps=sim(pre,e.syn)*(e.syn.length>=6?0.96:0.9);if(ps>s)s=ps;}
+    // t193: no prefix credit when the line continues with '+' into a longer test name (PLUS_EXT)
+    if(tt.length>k&&!(tt[k]==='+'&&PLUS_EXT.has(e.syn))){const pre=tt.slice(0,k).join(' ');const ps=sim(pre,e.syn)*(e.syn.length>=6?0.96:0.9);if(ps>s)s=ps;}
     if(!best||s>best.score){if(best&&best.id!==e.id)second=best;best={id:e.id,score:s,matched:e.syn};}
     else if((!second||s>second.score)&&e.id!==best.id)second={id:e.id,score:s,matched:e.syn};}
   if(!best)return null;
