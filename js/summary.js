@@ -197,7 +197,7 @@ function plan(units){
     for(const t of tubes.slice()){if(!t.group||t.group.id!==r.fromGroup||!t.members.every(m=>m.unit.ids.some(i=>r.ids.includes(i))))continue;
       const j=tubes.find(x=>x!==t&&x.group&&x.group.id===r.joinGroup&&!x.split&&t.members.every(m=>commOk(x,m.unit)&&compatible(x,m.c,m.unit)));
       if(j){j.members.push(...t.members);(j.joined=j.joined||[]).push({rule:r,names:t.members.map(m=>m.unit.name)});tubes.splice(tubes.indexOf(t),1);}
-      else{t.group=Object.assign({},t.group,{tube:Object.assign({},t.group.tube,r.alone)});t.sizeRule=r;}}}
+      /* t207: AFP alone keeps its own tube; size from its LifeLabs page (was r.alone 3.5 mL local size) */}}
   // ui2 turn 28: LifeLabs page says one tube for two tests (collect.shareTubeWith, verbatim) - used when the page is newer than the chart (page_vs_chart_date)
   { const PR=LR.rules.find(r=>r.kind==='precedence');
     for(const t of tubes.slice()){if(!tubes.includes(t))continue;const m0=t.members.find(m=>m.c&&m.c.shareTubeWith);if(!m0)continue;const sw=m0.c.shareTubeWith,pd=m0.unit.entry.lastPublished;
@@ -285,20 +285,35 @@ function plan(units){
         const win=s=>pageWins?s.replace(/ - chart (size )?used\.$/,' - page used (page published '+pd+', newer than the chart '+PR.chartDate+'; rule page_vs_chart_date).'):s.replace(/\.$/,' (chart effective '+(PR?PR.chartDate:'')+' is newer than the page'+(pd?' published '+pd:' - page date missing')+').');
         const isSST=/sst/i.test(g.tube.type||g.tube.label);
         if(pc&&pc!==t.css){const s=win(nm+': per-test PDF container "'+m.c.container+'" differs from the chart ('+g.tube.label+') - chart used.');if(pageWins)t.infos.push('Chart vs per-test PDF: '+s);else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
-        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6&&!(isSST&&LR.rules.some(r=>r.kind==='sstSize'))){const s=win(nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - chart size used.');const jr=LR.rules.find(r=>r.kind==='chartJoin'&&m.unit.ids.some(i=>r.ids.includes(i)));if(jr)t.infos.push(s+' Local practice: '+jr.text);else if(pageWins){t.infos.push('Chart vs per-test PDF: '+s);t.pageSize=pm;}else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
-        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6)t.infos.push(nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - SST size by local rule sst_size_alone_shared (3.5 mL alone, 5 mL shared).');
+        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6&&!isSST){const s=win(nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - chart size used.');const jr=LR.rules.find(r=>r.kind==='chartJoin'&&m.unit.ids.some(i=>r.ids.includes(i)));if(jr)t.infos.push(s+' Local practice: '+jr.text);else if(pageWins){t.infos.push('Chart vs per-test PDF: '+s);t.pageSize=pm;}else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
+        else if(pm!=null&&Math.abs(pm-g.tube.sizeMl)>1e-6)t.infos.push(nm+': per-test PDF says "'+m.c.container+'", chart says '+g.tube.label+' - SST size from the LifeLabs page; a 3.5 mL page size is used only when the test is alone in its tube (t207/t211, K. Williams 2026-10-20).');
         else if(pm==null)t.infos.push(nm+': tube size not stated in the per-test PDF ("'+m.c.container+'"); '+g.tube.sizeMl.toFixed(1)+' mL from the chart.');
         const px=parseMix(m.unit.entry);if(px&&px!==g.mix){const s=win(nm+': per-test PDF says mix '+px+' times, chart says '+g.mix+' times - chart used.');if(pageWins){t.infos.push('Chart vs per-test PDF: '+s);t.mix=px;}else{t.caveats.push('Chart vs per-test PDF: '+s);conflicts.push(s);}}
         if(m.c.noShare&&!m.c.shareGroup&&t.members.length>1)t.infos.push(nm+': per-test PDF describes its own tube ("'+(m.c.notes||[])[0]+'"); the chart shares this tube with '+t.members.filter(x=>x!==m).map(x=>x.unit.name).join(', ')+'.');}
       if(g.confirm&&(!g.confirmWhenAlso||tubes.some(x=>x.group&&x.group.id===g.confirmWhenAlso))&&(!g.confirmWhenMulti||uniq(tubes.filter(x=>x.group===g).flatMap(x=>x.members.map(m=>m.unit.key))).length>1))t.caveats.push('Chart interpretation: '+g.confirm);
       if(t.split)t.caveats.push('Chart shows one tube for these tests but the per-test handling differs (centrifuged vs not / destination), so they are kept apart.');}
-    { const SR=LR.rules.find(r=>r.kind==='sstSize'); // ui2 turn 28: SST 3.5 mL alone / 5 mL shared (generalises afp_tube); newer page size for other tubes
-      if(SR&&/sst/i.test(t.label)&&!t.sizeLocal&&!(t.group&&t.group.mode==='perTest'&&t.group.tubesPerTest>1)&&!t.members.some(m=>(SR.exceptIds||[]).some(i=>m.unit.ids.includes(i)))){ /* turn 46: hepatitis serology always 5 mL SST */ /* turn 44: chart two-tube panels (Hepatitis Acute/Chronic) keep the chart/page 5 mL */const n=uniq(t.members.map(m=>m.unit.key)).length,ml=n>1?SR.shared:SR.alone;t.label='SST gold top '+ml.toFixed(1)+' mL';t.sstSize={ml,n};
-        if(!t.sizeRule)t.infos.push('Tube size: local rule - '+SR.text+' ('+SR.source+', '+SR.date+')');}
+    { /* t207 (K. Williams 2026-10-20): "follow the lifelabs test directory page. a 3.5mL is only appropriate if specified on the lifelabs test directory page or eLab handbook page".
+         SST size comes only from the member tests' source pages (local rule sst_size_alone_shared removed). One size on every page that states one -> that size;
+         pages state different sizes -> amber source conflict, no size chosen; no page states a size -> no size shown. */
+      if(/sst/i.test(t.label)&&!t.sizeLocal){
+        const per=t.members.map(m=>({nm:m.unit.name,ml:m.c?nominalMl(m.c.container):null,pg:m.c?m.c.container:null}));
+        const known=uniq(per.filter(x=>x.ml!=null).map(x=>x.ml)).sort((a,b)=>a-b),none=uniq(per.filter(x=>x.ml==null).map(x=>x.nm)),chartMl=g&&g.tube&&g.tube.sizeMl;
+        /* t211 (K. Williams 2026-10-20): "for any test that shows 3.5mL SST on its test directory page and 5mL when tube sharing, only use 3.5mL when in its own tube" -
+           page 5.0 mL -> 5.0 mL always; page 3.5 mL -> 3.5 mL only when alone in its tube, 5.0 mL whenever the tube is shared. */
+        const shared=uniq(t.members.map(m=>m.unit.key)).length>1;
+        if(shared&&known.length&&known.every(v=>v===3.5||v===5)){const was=known.includes(3.5);known.length=0;known.push(5);
+          if(was)t.infos.push('Tube size 5.0 mL: shared tube - the LifeLabs page'+(per.filter(x=>x.ml===3.5).length>1?'s':'')+' of '+uniq(per.filter(x=>x.ml===3.5).map(x=>x.nm)).join(', ')+' give 3.5 mL, used only when the test is alone in its own tube (K. Williams 2026-10-20).');}
+        if(known.length===1){t.label='SST gold top '+known[0].toFixed(1)+' mL';t.sstSize={ml:known[0],from:'page'};
+          if(none.length)t.infos.push('Tube size '+known[0].toFixed(1)+' mL from the LifeLabs page of '+uniq(per.filter(x=>x.ml!=null).map(x=>x.nm)).join(', ')+'; no size on the page for '+none.join(', ')+'.');}
+        else if(known.length>1){t.label='SST gold top (size: pages differ)';t.sstSize={ml:null,conflict:known};
+          const s='Tube size: the LifeLabs pages differ - '+known.map(v=>v.toFixed(1)+' mL ('+uniq(per.filter(x=>x.ml===v).map(x=>x.nm)).join(', ')+')').join(' vs ')+'. Confirm the tube size.';
+          t.caveats.push(s);conflicts.push(s);}
+        else{t.label='SST gold top (size not stated on the LifeLabs page)';t.sstSize={ml:null,none:true};
+          t.infos.push('Tube size not stated on the LifeLabs page'+(per.some(x=>x.pg)?'':' (no LifeLabs page in the app)')+' for '+none.join(', ')+(chartMl?'; the Quick Reference chart shows '+(+chartMl).toFixed(1)+' mL':'')+' - size not shown.');}}
       else if(t.pageSize&&/[\d.]+ mL/.test(t.label))t.label=t.label.replace(/[\d.]+ mL/,(+t.pageSize).toFixed(1)+' mL'); }
-    t.chartOnly=t.members.filter(m=>!m.c).map(m=>m.unit.name);t.typeKey=t.css+'|'+(g?(nominalMl(t.label)||g.tube.sizeMl):(nominalMl(t.label)||(t.css==='gold'?5:null)));}
-  for(const t of tubes)if(t.own){const same=tubes.filter(x=>x!==t&&x.typeKey===t.typeKey&&x.c.centrifuge===t.c.centrifuge&&(x.c.destGroup||'')===(t.c.destGroup||''));
-    t.caveats.push('Not on the LifeLabs Quick Reference Chart: drawn as its own tube'+(same.length?' (same tube type and handling as the tube for '+uniq(same.flatMap(x=>x.members.map(m=>m.unit.name))).join(', ')+' - the lab may allow combining)':'')+'.');}
+    t.chartOnly=t.members.filter(m=>!m.c).map(m=>m.unit.name);t.typeKey=t.css+'|'+(t.sstSize&&t.sstSize.ml==null?(t.sstSize.conflict?'mixed':'nosize'):g?(nominalMl(t.label)||g.tube.sizeMl):(nominalMl(t.label)||(t.css==='gold'?5:null)));}
+  // t205 (K. Williams 2026-10-20): a test not on the LifeLabs Quick Reference chart needs its own tube - it never shares, and no 'may share' hint is shown
+  /* t211 (K. Williams 2026-10-20): "A 'confirm with lab' alert is not required if it is just alerting the user that the test is not on the quick reference guide." - own tube card, no alert */
   if(live.some(u=>u.chart&&!u.localTube&&u.chart.group.mode==='perTest'&&u.route))conflicts.push('Hepatitis Acute / Chronic profiles: the '+(RF.forms[0]||{}).display+' says “'+((RF.forms[0]||{specimens:{serum:{}}}).specimens.serum.combine)+'”, but the LifeLabs chart and LifeLabs pages say two SST tubes per profile (one centrifuged for LifeLabs, one unspun for BCCDC) - LifeLabs used for LifeLabs collection.');
   for(const t of tubes){const k=uniq(t.members.map(m=>isCommShare(m.unit)?'c':'n'));if(k.length>1)throw new Error('communicable/non-communicable tests in one tube');}
   const spinRank=t=>t.c.centrifuge===true?0:t.c.centrifuge===false?1:2;

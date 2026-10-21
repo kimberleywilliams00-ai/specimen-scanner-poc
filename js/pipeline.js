@@ -198,6 +198,45 @@ function segments(words,gap){const segs=[];let cur=[];for(const w of words){if(c
 const sgPos=sg=>({x:(sg[0].bbox.x0+sg[sg.length-1].bbox.x1)/2,yw:sg.reduce((a,w)=>a+(w.bbox.y0+w.bbox.y1)/2,0)/sg.length});
 const segText=ws=>ws.map(w=>w.text).join(' ').replace(/\s+/g,' ').trim();
 
+/* t219 (proposal P5, K. Williams approved for the draft): comma-list splitting. A bundle line such as 'ANA, anti-dsDNA, ENA, C3, C4,
+   rheumatoid factor, CK & CRP' yields one item per test. Guards: split only at top-level ',' / '&' (never inside brackets, so
+   'Electrolytes (Na, K, Cl)' stays whole); a strong whole-line match wins first (names/aliases containing commas such as
+   '1,25 Dihydroxy Vitamin D' or 'TSH, fT4 +/- fT3 (...)'); every fragment must strong-match (score >= 0.95, no close runner-up),
+   allowing at most one unmatched fragment in five, which stays as a 'missed' card. LIST_ABBR: bare abbreviations accepted only as
+   an exact whole fragment inside such a list (bare ANA / ENA are not dictionary aliases). */
+const LIST_ABBR={ana:'ana',ena:'ena'};
+function splitTop(name){const out=[];let d=0,cur='';for(const ch of name){if(ch==='('||ch==='[')d++;else if(ch===')'||ch===']')d=Math.max(0,d-1);
+  if(d===0&&(ch===','||ch==='&')){out.push(cur);cur='';continue;}cur+=ch;}out.push(cur);return out.map(x=>x.replace(/^\s*and\s+/i,'').trim()).filter(Boolean);}
+function listSplit(name,whole){
+  if(!name||!/[,&]/.test(name))return null;const fr=splitTop(name);if(fr.length<2)return null;
+  const res=fr.map(f=>{const n=D.norm(f);if(LIST_ABBR[n]&&D.BYID[LIST_ABBR[n]])return {f,id:LIST_ABBR[n],score:1};
+    const m=D.match(f);return m&&m.score>=0.95&&!(m.runnerUp&&m.runnerUp.score>m.score-0.04)?{f,id:m.id,score:m.score}:{f,id:null};});
+  const ids=res.filter(r=>r.id).map(r=>r.id);
+  if(whole&&whole.score>=0.85&&!ids.includes(whole.id))return null;   // a whole-line match that is not just one of the fragments wins
+  if(whole&&whole.score>=0.95)return null;
+  if(new Set(ids).size<2)return null;
+  if(res.filter(r=>!r.id).length>Math.floor(fr.length/5))return null;
+  return res;}
+/* t221 (K. Williams approved, draft): two narrow extra-test rules on top of the t219 splitter. Each can be switched off on its own.
+   (a) PARENT_QUAL: 'Bilirubin - total, direct & indirect' - parent (strong whole match) + ' - ' + qualifier fragments that are not
+       tests on their own; each 'Parent qualifier' phrase must match a dictionary entry exactly (score 1.0); all fragments must resolve
+       or nothing is added. 'total' -> the parent entry itself (no extra item).
+   (b) AND_TEST: 'Insulin (Fasting) - and Fasting Glucose' - main test, a separator (- : ; , /), then 'and <Test>'; the text after
+       'and' (cut at any '*' / NOTE marker; splitNotes already removed *NOTE TO PATIENT / NOTE TO LAB text) must strong-match
+       (>= 0.95, runner-up >= 0.04 behind) a different test. */
+const T221_PARENT_QUAL=true,T221_AND_TEST=true;
+function strongM(t,min){const m=D.match(t);return m&&m.score>=min&&!(min<1&&m.runnerUp&&m.runnerUp.score>m.score-0.04)?m:null;}
+function extraTests(name,whole){
+  if(!name||!whole||whole.score<0.85)return [];const out=[];
+  if(T221_PARENT_QUAL){const mm=name.match(/^([^,&\-–—:]+?)\s+[-–—:]\s+(.+)$/);
+    if(mm){const par=strongM(mm[1],0.95);const fr=splitTop(mm[2]);
+      if(par&&par.id===whole.id&&fr.length>=2&&fr.every(f=>f.split(/\s+/).length<=2&&!strongM(f,0.85))){
+        const ids=fr.map(f=>{const c=D.match(mm[1].trim()+' '+f);return c&&c.score>=0.999?c.id:null;});
+        if(ids.every(Boolean))for(const id of ids)if(id!==whole.id&&!out.includes(id))out.push(id);}}}
+  if(T221_AND_TEST){const mm=name.match(/^(.*\S)\s*[-–—:;,/]\s*and\s+(.+)$/i);
+    if(mm){const right=mm[2].split(/\*|\bnote\b/i)[0].trim();const left=strongM(mm[1],0.95),r=right?strongM(right,0.95):null;
+      if(left&&left.id===whole.id&&r&&r.id!==whole.id&&!out.includes(r.id))out.push(r.id);}}
+  return out;}
 async function listMode(lines,boxes,boxOcr,fillAt,ctx){
   const s=boxes.med||median(lines.flatMap(l=>l.words.map(w=>w.bbox.y1-w.bbox.y0)))||30;
   const L=lines.map((l,i)=>({i,text:l.text.trim(),bbox:l.bbox,words:l.words.slice().sort((a,b)=>a.bbox.x0-b.bbox.x0),cy:(l.bbox.y0+l.bbox.y1)/2,used:false}));
@@ -352,7 +391,14 @@ async function listMode(lines,boxes,boxOcr,fillAt,ctx){
     if(!sp.name&&!it.raw){o.status='unrecognized';}
     // a checkbox (strict or loose) whose line could not be read as a test: never drop it silently
     if(it.box&&!o.id&&o.checked!==false){o.status='missed';o.warn='Possible missed line - check paper';}
-    outItems.push(o);}
+    { const ls=listSplit(sp.name,m);if(ls){ // t219
+        for(const r of ls){const e=r.id?D.BYID[r.id]:null;
+          outItems.push(Object.assign({},o,r.id?{name:r.f,id:r.id,testName:e?e.name:r.id,category:e?e.category:null,score:r.score,runnerUp:null,status:o.boxDetected?'ok':'verify',warn:undefined,listSplit:true}
+            :{name:r.f,id:null,testName:null,score:0,status:o.checked!==false&&o.bbox?'missed':'unrecognized',warn:o.checked!==false&&o.bbox?'Possible missed line - check paper':undefined,listSplit:true}));}
+        continue;} }
+    outItems.push(o);
+    if(o.id&&o.status!=='missed')for(const id of extraTests(sp.name,m)){const e=D.BYID[id];   // t221
+      outItems.push(Object.assign({},o,{id,testName:e?e.name:id,category:e?e.category:null,score:1,runnerUp:null,extraFrom:o.id,status:o.boxDetected?'ok':'verify'}));}}
   return {layout:'list',items:outItems,headers,looseMarks:loose.length,columnBoxes:bs.length,standingOrder:standingConsensus(outItems)};}
 /* If the same bracketed standing order is on most lines, report it once ('Standing order (all tests)') and flag the per-line
    copies as common so the UI does not repeat it. Unparseable copies stay as 'Standing order noted - check paper'. */

@@ -62,6 +62,16 @@ const T=[
 ['a1c','Hemoglobin A1c','Chemistry','Hemoglobin A1c','HgbA1c','HbA1c','Hgb A1c','A1c'],
 ['lipids','Lipid Profile','Chemistry','Lipids','Lipid Profile','Full Lipid Profile','Lipid Profile Non Fasting- MSP (Total, HDL & LDL Cholesterol, Triglycerides)','Lipid Profile-MSP (Total, HDL & LDL Cholesterol, Triglycerides)','Lipid Profile Non Fasting','Lipid Profile MSP'],
 ['lipids_followup','Follow-up Lipid Profile','Chemistry','Follow-up Lipid Profile'],
+// t199 (K. Williams 2026-10-20): own entry; LifeLabs LDL CHOLESTEROL page routes to Full Lipid Profile (collection_data lipid_profile_full). Synonyms need the word 'ldl' (NEED_TOKEN)
+['ldl','LDL Cholesterol','Chemistry','LDL Cholesterol','LDL-C'],
+// t205 (K. Williams 2026-10-20): six LifeLabs Lower Mainland pages (collection_data alpha_1_antitrypsin, ttg_iga, anti_nuclear_antibody, anti_dna_antibody, ena,
+// anti_dnase_b). Full names + distinctive AKAs only: no bare ANA / ENA / TTG (short-alias rule, v3.8.12). anti-dsDNA vs Anti DNase B kept apart by NEED_TOKEN.
+['a1at','Alpha-1 Antitrypsin','Chemistry','Alpha 1 Antitrypsin','A1 Antitrypsin','A-1 Antitrypsin','A1AT'],
+['ttg_iga','Tissue Transglutaminase IgA (celiac screen)','Immunology','Tissue Transglutaminase IgA','Celiac Screen','tTG IgA','Anti Tissue Transglutaminase IgA','Tissue Transglutaminase Antibody IgA'],
+['ana','Anti Nuclear Antibody (ANA)','Immunology','Anti Nuclear Antibody','Antinuclear Antibody','ANA Titre','Antinuclear Factor'],
+['anti_dsdna','Anti DNA Antibody (anti-dsDNA)','Immunology','Anti DNA Antibody','Anti-dsDNA','Anti Double Stranded DNA','Double Stranded DNA Antibody','DS DNA Antibody','Anti Native DNA'],
+['ena','ENA (extractable nuclear antigen antibodies)','Immunology','Extractable Nuclear Antigen Antibody','Extractable Nuclear Antigen','Antibodies to ENA'],
+['anti_dnase_b','Anti DNase B','Serology','Anti DNase B','Anti DNase B Antibody','DNase B Antibody'],
 ['apob','Apo B','Chemistry','Apo B','Apolipoprotein B'],
 ['tsh_hypo','TSH +/- fT4 (suspected hypothyroidism)','Chemistry','Thyroid: Suspected hypothyroidism (TSH +/- fT4)','Thyroid: Suspected hypothyroidism','TSH +/- fT4 (suspected hypothyroidism)','TSH=/- fTS/T4 (suspected hypothyroidism)','Suspected Hypothyroidism','TSH +/- fT4'],
 ['tsh_hyper','TSH, fT4 +/- fT3 (suspected hyperthyroidism)','Chemistry','Suspected Hyperthyroidism','Thyroid: Suspected hyperthyroidism'],
@@ -74,7 +84,8 @@ const T=[
 ['total_protein','Total Protein','Chemistry','T. Protein','Total Protein'],
 ['psa','PSA','Chemistry','PSA','PSA - Known or suspected prostate cancer','PSA screening (self-pay)'],
 ['bhcg','Beta-hCG quantitative','Chemistry','B-HCG - quantitative','Beta HCG','hCG quantitative'],
-['pregnancy','Pregnancy Test','Chemistry','Pregnancy Test'],
+// t199 (K. Williams 2026-10-20): beta HCG urine = urine pregnancy test; plain 'Beta HCG' stays serum bhcg (the beta-HCG aliases need the word 'urine': NEED_TOKEN)
+['pregnancy','Pregnancy Test','Chemistry','Pregnancy Test','beta HCG urine','urine beta HCG','urine HCG'],
 ['acr','Urine Albumin/Creatinine Ratio (ACR)','Urine','Urine ACR','Urine ACR (Albumin Creatinine Ratio)','Albumin/creatinine ratio (ACR) - Urine','Urine Albumin Creatinine Ratio','ACR'],
 ['urine_macro_micro','Urinalysis: Macroscopic +/- Microscopic','Urine','Urine - Macro +/- Micro (if Macroscopic positive)','Urine Macro Micro','Macroscopic microscopic if dipstick positive'],
 ['urine_macro_culture','Urinalysis: Macroscopic -> Urine Culture if pyuria/nitrite','Urine','Urine: Macroscopic--Urine Culture if pyria or nitrite present','Urine Macroscopic Urine Culture','Macroscopic urine culture if pyuria or nitrite present','Urine Culture'],
@@ -111,6 +122,10 @@ const ENTRIES=[];for(const r of T){for(const syn of r.slice(3)){ENTRIES.push({id
 for(const [id,syn] of AKA){const n=norm(syn);if(!ENTRIES.some(e=>e.id===id&&e.syn===n))ENTRIES.push({id,syn:n,aka:true});}
 // t193: synonyms that another test's synonym extends with ' + ...' (CBC -> CBC + Diff): a line continuing with '+' gets no prefix credit for them
 const PLUS_EXT=new Set(ENTRIES.filter(e=>ENTRIES.some(o=>o.id!==e.id&&o.syn.startsWith(e.syn+' +'))).map(e=>e.syn));
+// t199: synonyms that differ from another test's wording by one word or letter (LDL vs HDL Cholesterol; urine vs serum beta HCG) only match a
+// line containing their key word. syn: only these synonyms (normalised); none = every synonym of the test
+// not: never match a line containing this word (t205: Anti DNA Antibody vs Anti DNase B)
+const NEED_TOKEN={ldl:{tok:'ldl'},pregnancy:{tok:'urine',syn:['beta hcg urine','urine beta hcg']},anti_dnase_b:{tok:'dnase'},anti_dsdna:{not:'dnase'}};
 const BYID={};for(const r of T)BYID[r[0]]={id:r[0],name:r[1],category:r[2]};
 
 /* ui2 turn 30: Add-test type-ahead. Matches display names, synonyms, fed AKAs AND held-back AKAs (AKA_PICK: a deliberate user pick,
@@ -129,7 +144,7 @@ function suggest(q,limit){const qn=norm(q);if(!qn)return [];const qc=qn.replace(
 function match(text,restrictIds){
   const t=norm(text);if(!t)return null;const tt=t.split(' ');
   let best=null,second=null;
-  for(const e of ENTRIES){if(restrictIds&&!restrictIds.has(e.id))continue;
+  for(const e of ENTRIES){if(restrictIds&&!restrictIds.has(e.id))continue;{const g=NEED_TOKEN[e.id];if(g&&(!g.syn||g.syn.includes(e.syn))&&((g.tok&&!tt.includes(g.tok))||(g.not&&tt.includes(g.not))))continue;} // t199/t205
     let s=sim(t,e.syn);
     // prefix match: OCR line may carry trailing qualifiers not captured as notes
     const k=e.syn.split(' ').length;

@@ -88,5 +88,7 @@ const R={
   confirm:'Chart wording "Each of the following tests must be collected in one 6.0mL EDTA" is read as one tube per test; whether one tube can serve several of these is not stated.'}
  ]};
 R.byId={};for(const g of R.groups)for(const id in g.map)if(!R.byId[id])R.byId[id]={group:g,chartNames:g.map[id],partial:(g.partial||{})[id]||null,coverageNote:(g.coverageNote||{})[id]||null};
+// t205 (K. Williams 2026-10-20): LDL is ordered as Full Lipid Profile (LifeLabs LDL CHOLESTEROL page) and Lipids is on the chart -> LDL goes in the lipid profile's tube
+if(R.byId.lipids&&!R.byId.ldl)R.byId.ldl=Object.assign({},R.byId.lipids,{coverageNote:'LDL Cholesterol = Full Lipid Profile (LifeLabs LDL CHOLESTEROL page: \u201cLDL is no longer available, enter FLIP for Full Lipid Profile.\u201d); chart Cholesterol, HDL, Triglycerides (LDL is calculated, not listed)'});
 if(typeof module!=='undefined'&&module.exports)module.exports=R;else root.TubeRules=R;
 })(typeof self!=='undefined'?self:this);

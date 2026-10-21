@@ -38,7 +38,7 @@ const IMG_DIR='img/containers/';
 const TUBE_IMG={'gold|5':['sst_gold_5ml','Gold SST 5 mL tube'],'gold|3.5':['sst_gold_3_5ml','Gold SST 3.5 mL tube'],'lav|6':['edta_lavender_6ml','Lavender EDTA 6 mL tube'],
   'lav|4':['edta_lavender_4ml','Lavender EDTA 4 mL tube'],'lblue|2.7':['citrate_light_blue_2_7ml','Light blue citrate 2.7 mL tube'],'red|6':['red_top_serum_6ml','Red top serum 6 mL tube'],'yellow|8.5':['acd_a_yellow_8_5ml','ACD-A yellow 8.5 mL tube']};
 function thumbOf(t,nb){
-  if(!nb){const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);const k=t.css+'|'+(m?(+m).toString():'');return TUBE_IMG[k]||null;}
+  if(!nb){if(t.sstSize&&t.sstSize.ml==null)return null; /* t207 */const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);const k=t.css+'|'+(m?(+m).toString():'');return TUBE_IMG[k]||null;}
   if(t.kitRule&&t.kitRule.img)return [t.kitRule.img,'COPAN green-top eSwab'];
   { const LRr=(typeof root.LocalRules&&root.LocalRules)||{rules:[]};const ho=LRr.rules.find(r=>r.kind==='handOut'&&(t.members||[]).some(m=>m.unit.entry&&r.entries.includes(m.unit.entry.id)));if(ho)return [ho.img,ho.alt]; } // turn 19: FIT Eiken (local practice)
   const kit=t.eb&&!t.eb.local?t.eb.sp.kit:'';const c=(t.label||'');
@@ -54,7 +54,7 @@ function thumb(t,nb){const m=thumbOf(t,nb);if(!m)return null;const im=el('img',{
 const EDGE={gold:'#d4a017',lav:'#8e6bbf',lblue:'#5aa9e6',red:'#c62828',green:'#2e7d32',grey:'#8a8f98',yellow:'#e0b400'}; // turn 36: card left edge
 function edgeColour(t,nb){if(!nb&&EDGE[t.css])return EDGE[t.css];const l=(t.label||'')+' '+((t.c&&t.c.container)||'');return /urine/i.test(l)?'#e8a33a':/fecal|stool/i.test(l)?'#e8742a':/swab/i.test(l)?'#d0453a':'#9aa0a8';}
 function chip(css){return el('span',{class:'tchip '+(css||'none'),'aria-hidden':'true'});}
-function sizeText(t){const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);return m?(+m).toString().replace(/\.0+$/,'')+' mL':'';}
+function sizeText(t){if(t.sstSize&&t.sstSize.ml==null)return ''; /* t207: no page size -> none shown */const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);return m?(+m).toString().replace(/\.0+$/,'')+' mL':'';}
 function nonBloodName(o){const c=(o.label||'').toLowerCase();
   if(o.eb&&!o.eb.local){const k=o.eb.sp.kit;return (/Multitest/.test(k)?'Multitest swab':/Unisex/.test(k)?'Unisex swab':/Urine/.test(k)?'Aptima urine kit':k)+' ('+o.eb.sp.label+')';} /* ui2: BCCDC eLab kit */
   if(/urine/.test(c))return 'Urine cup'+(o.pairNo?' #'+o.pairNo+(o.pairNo===1?' - first catch':' - midstream'):'')+(/preservative/.test(c)&&!o.cupOnly?' + boric acid tube':'');if(o.kitRule)return o.kitRule.short; /* turn 11: local kit rule (GC culture eSwab) */
@@ -171,6 +171,11 @@ function prepLines(U){const tests=new Map();const unitByName=n=>U.units.find(x=>
 /* short wording for red local-practice stoppers (display only; the full rule text is shown in Details) */
 /* ui2 (2026-10-11): every test name links to its own source page (summary.js srcOf); opens in a new tab */
 const nameLink=(u,text)=>H.srcLink(u,text||shortName(u),'tn');
+/* t199 (K. Williams 2026-10-20): a LifeLabs ordering-rule page linked to the entry (relatedEntries) that names the test asked for (routesDictIds),
+   e.g. LDL CHOLESTEROL -> Full Lipid Profile: its own sentence on the card, verbatim, with the page link. Not shown for a plain Lipid Profile order. */
+function routeLines(t){const CD=root.CollectionData||{entries:[]};return uniq(t.members.map(m=>m.unit)).flatMap(u=>{const e=u.entry;if(!e)return [];
+  return (e.relatedEntries||[]).map(id=>CD.entries.find(x=>x.id===id)).filter(r=>r&&(r.routesDictIds||[]).some(i=>u.ids.includes(i))).map(r=>
+    el('div',{class:'tc-hand'},r.routesDictIds.filter(i=>u.ids.includes(i)).map(i=>H.dictName(i)).join(', ')+': ',el('a',{class:'tc-local',href:r.sourceUrl,target:'_blank',rel:'noopener',text:'LifeLabs'}),' “'+(r.preTestPrep||[]).join(' ')+'”'));});}
 function linkLead(text,us){for(const u of us){const n=shortName(u);if(text.startsWith(n))return [nameLink(u,n),text.slice(n.length)];}return [text];}
 const REFER_SHORT={/* turn 34: no longer shown on the flag */hiv_vl_refer_psc:'LifeLabs page: “5. Separate plasma into a 13 x 75 mm BD non-additive Vacutainer.”'}; // turn 32: title carries the referral
 const STOP_SHORT={ptt_heparin_community:{yes:{title:'PTT: do not collect',text:'Needs double spin and freezing – not done in community. Send the client to a LifeLabs Patient Service Centre for the PTT.'}}};
@@ -292,6 +297,7 @@ function render(host,items,opts){
       (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
       ...(nb&&isCup(t)?urineLines(t):[h.text?el('div',{class:'tc-hand '+h.cls,text:h.text}):null,...cardPrep(t)]),
       ...t.members.filter(m=>m.c&&m.c.cardNote).map(m=>el('div',{class:'tc-hand',text:shortName(m.unit)+': '+m.c.cardNote.replace(/^\d+\.\s+/,'').replace(/^./,x=>x.toLowerCase())})), // turn 29: plain source-based card line (fibrinogen 8 h)
+      ...routeLines(t), // t199: e.g. LDL -> Full Lipid Profile (LifeLabs LDL CHOLESTEROL page)
       ...(nb&&!isCup(t)?otherBits(t):[]),
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC
       t.drawLast?el('div',{class:'tc-kit'},'Draw last ',el('span',{class:'tc-local',text:'Local practice'})):null, // turn 14: ACD yellow
@@ -304,7 +310,7 @@ function render(host,items,opts){
      its own handling lines. Single-tube cards unchanged. */
   /* turn 36 layout B; turn 42 (K. Williams): count as a navy '×N' pill next to the title (not on the picture), lines numbered 1/2/3.
      groupCards also groups urine cups (and other repeated sample types with the same name); cup type stays on each line. */
-  const groupCards=(list,keyOf,nb,dst)=>{const groups=[];for(const t of list){const k=keyOf(t);const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
+  const groupCards=(list,keyOf,nb,dst)=>{const groups=[];for(const t of list){const k=t.own?{}:keyOf(t); /* t205 (K. Williams): a test not on the chart = own tube card, never grouped */const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
     for(const g of groups){if(g.ts.length===1){dst.appendChild(card(g.ts[0],nb?null:numOf.get(g.ts[0]),nb));continue;}
       const cs=g.ts.map(t=>card(t,nb?null:numOf.get(t),nb));const c0=cs[0];const th=c0.querySelector('.tc-thumb'),hd=c0.querySelector('.tc-head');const ds=hd.querySelector('.dest');if(ds)ds.remove();
       if(nb&&g.ts.some(t=>t.pairNo)){const nm=hd.querySelector('.tc-name');if(nm)nm.textContent='Urine cup';}

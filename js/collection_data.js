@@ -500,6 +500,97 @@ const DATA={
 "sourceUrlNote": "pattern-based, unverified"
 },
 {
+"id": "alpha_1_antitrypsin",
+"title": "ALPHA-1 ANTITRYPSIN",
+"name": "Alpha-1 Antitrypsin",
+"region": "Lower Mainland",
+"aka": [
+"A1 ANTITRYPSIN",
+"A-1 ANTITRYPSIN",
+"A1AT",
+"SERUM PROTEASE INHIBITOR"
+],
+"dictIds": [
+"a1at"
+],
+"discipline": "Chemistry",
+"methodology": "Turbidimetric/Immunoturbidimetric",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "1 tube",
+"preTestPrep": [
+"A1AT (Alpha-1-Antitrypsin) Genotyping (A1AP) cannot be ordered in conjunction with the A1AT as reflexive testing is not available."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"reflex": "",
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Collection volume printed as \"1 tube\".",
+"Performing laboratory not named."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-03-19",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/ALPHA-1-ANTITRYPSIN-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 tube",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": null,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceNote": "t205: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/), printed 2026-10-20 from tests.lifelabs.com (URL printed in the page footer).",
+"patientInstructionDocs": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ALPHA-1-ANTITRYPSIN-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
+},
+{
 "id": "alt",
 "title": "ALANINE AMINOTRANSFERASE",
 "name": "ALT",
@@ -766,6 +857,301 @@ const DATA={
 "sourceUrl": "https://tests.lifelabs.com/s/article/AMYLASE-Lower-Mainland",
 "sourceUrlVerified": true,
 "sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-13"
+},
+{
+"id": "anti_dna_antibody",
+"title": "ANTI DNA ANTIBODY",
+"name": "Anti DNA Antibody (anti-dsDNA)",
+"region": "Lower Mainland",
+"aka": [
+"ANTI NATIVE DNA",
+"ANTI DNA AB",
+"ANTI DOUBLE STRANDED DNA",
+"ANTI NDNA",
+"ANTI-NATIVE DNA",
+"ANTI-NDNA",
+"DNA ANTIBODIES",
+"DNA BINDING CAPACITY",
+"DOUBLE STRANDED DNA AB",
+"DS DNA AB",
+"DSDNA"
+],
+"dictIds": [
+"anti_dsdna"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay: Multiplex Bead Assay",
+"specimenType": "Blood (Serum)",
+"frequency": "1x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"1. Complete LifeLabs requisition.",
+"2. Do NOT confuse this test with: ANTI DNASE B"
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 3.5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"reflex": "",
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Page warns: Do NOT confuse this test with ANTI DNASE B (a separate entry, anti_dnase_b)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-05-28",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/ANTI-DNA-ANTIBODY-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"Complete LifeLabs requisition."
+],
+"includesDictIds": [],
+"sourceNote": "t205: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/), printed 2026-10-20 from tests.lifelabs.com (URL printed in the page footer).",
+"patientInstructionDocs": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ANTI-DNA-ANTIBODY-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
+},
+{
+"id": "anti_dnase_b",
+"title": "ANTI DNASE B",
+"name": "Anti DNase B",
+"region": "Lower Mainland",
+"aka": [
+"ANTI DNASE ANTIBODY",
+"ANTI DNASE B",
+"ANTI DNASE B ANTIBODY",
+"ANTI DNASE B LEVEL",
+"DNASE AB",
+"DNASE B ANTIBODY"
+],
+"dictIds": [
+"anti_dnase_b"
+],
+"discipline": "Chemistry",
+"methodology": "",
+"specimenType": "Blood (Clotted Blood)",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "3 days",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "2 mL",
+"preTestPrep": [
+"Medical Practitioner:",
+"Complete the PHSA Zoonotics & Emerging Pathogens requisition."
+],
+"includes": [],
+"handling": [
+"1. Collect a 5 mL SST Gold top tube.",
+"2. Gently invert tube 5 - 6 times.",
+"3. Label the tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number).",
+"test name.",
+"4. Do NOT centrifuge.",
+"5. Place specimen in BCCDC Biohazard specimen transport bag.",
+"6. Seal bag.",
+"7. Fold the requisition and place in sleeve of specimen transport bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number).",
+"test name."
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"The page does not name the performing laboratory; BCCDC is inferred from the PHSA requisition named and the BCCDC Biohazard bag.",
+"Strep antibody - NOT anti-dsDNA (ANTI DNA ANTIBODY page: \"Do NOT confuse this test with: ANTI DNASE B\").",
+"Frequency not stated."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-05-28",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/ANTI-DNASE-B-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": false,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "2 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"4. Do NOT centrifuge."
+],
+"volumeMl": 2,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "PHL",
+"bag": "BCCDC Biohazard specimen transport bag",
+"destinationInferred": true
+}
+],
+"requisitionNotes": [
+"Complete the PHSA Zoonotics & Emerging Pathogens requisition."
+],
+"includesDictIds": [],
+"sourceNote": "t205: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/), printed 2026-10-20 from tests.lifelabs.com (URL printed in the page footer).",
+"patientInstructionDocs": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ANTI-DNASE-B-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
+},
+{
+"id": "anti_nuclear_antibody",
+"title": "ANTI NUCLEAR ANTIBODY",
+"name": "Anti Nuclear Antibody (ANA)",
+"region": "Lower Mainland",
+"aka": [
+"ANA TITRE",
+"ANTI CENTROMERE AB",
+"ANTI-NUCLEAR ANTIBODY",
+"ANTICENTROMERE ANTIBODY",
+"ANTINUCLEAR ANTIBODY",
+"ANTINUCLEAR FACTOR",
+"FLUORESCENT ANTINUCLEAR ANTIBODY",
+"HEP 2 CELLS",
+"HUMAN EPITHELIAL CELLS",
+"SLE ABS",
+"SLE ANTIBODIES",
+"SLE SCREEN"
+],
+"dictIds": [
+"ana"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay: Immunofluorescence assay (IFA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"ANA can only be ordered once every 12 months and ENA can only be ordered if a positive ANA has been resulted under MSP, unless a request is received from a specialist physician or the patient is pregnant or planning pregnancy.",
+"For patients with known connective tissue disease who are pregnant or planning pregnancy, ordering physicians are asked to clearly indicate “pregnant” or “planning pregnancy” on the requisition form."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 3.5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-02-23",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/ANTI-NUCLEAR-ANTIBODY-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceNote": "t205: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/), printed 2026-10-20 from tests.lifelabs.com (URL printed in the page footer).",
+"patientInstructionDocs": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ANTI-NUCLEAR-ANTIBODY-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
 },
 {
 "id": "apo_a1",
@@ -4609,6 +4995,132 @@ const DATA={
 "sourceUrlNote": "verified by K. Williams 2026-10-11"
 },
 {
+"id": "ena",
+"title": "ENA",
+"name": "ENA (extractable nuclear antigen antibodies)",
+"region": "Lower Mainland",
+"aka": [
+"ANA BY MULTIPLEX",
+"ANTI JO-1",
+"ANTI LA AB",
+"ANTI RIBONULEOPROTEIN ANTIBODY",
+"ANTI-RIBONULEOPROTEIN ANTIBODY",
+"ANTI RNP AB",
+"ANTI RO AB",
+"ANTI SM AB",
+"ANTI SMITH AB",
+"ANTI SS-A AB",
+"ANTI SS-B AB",
+"ANTIBODIES TO ENA",
+"ANTI- TOPOISOMERASE",
+"ENA AB",
+"EXTRACTABLE NUCLEAR ANTIGEN AB",
+"JO AB",
+"JO1",
+"JO-1",
+"JO-1 AB",
+"JO-1 ANTIBODY",
+"LA ANTIBODIES",
+"RNP AB",
+"RNP ANTIBODIES",
+"RO ANTIBODIES",
+"SCL 70",
+"SCL-70",
+"SCL-100",
+"SCL100",
+"SJROGEN'S AB",
+"SJROGENS AB",
+"SJROGEN'S ANTIBODY",
+"SJROGENS ANTIBODY",
+"SJOGREN SELECTIVE ANTIBODY",
+"SM ANTIBODY",
+"SMITH ANTIBODY",
+"SSA AB",
+"SS-A AB",
+"SS-A ANTIBODY",
+"SSB AB",
+"SS-B AB",
+"SS-B ANTIBODY"
+],
+"dictIds": [
+"ena"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay: Immunofluorescence assay (IFA)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"ANA can only be ordered once every 12 months and ENA can only be ordered if a positive ANA has been resulted under MSP, unless a request is received from a specialist physician or the patient is pregnant or planning pregnancy.",
+"For patients with known connective tissue disease who are pregnant or planning pregnancy, ordering physicians are asked to clearly indicate “pregnant” or “planning pregnancy” on the requisition form."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 3.5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-02-24",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/ENA-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceNote": "t205: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/), printed 2026-10-20 from tests.lifelabs.com (URL printed in the page footer).",
+"patientInstructionDocs": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/ENA-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
+},
+{
 "id": "esr",
 "title": "SEDIMENTATION RATE",
 "name": "ESR (sedimentation rate)",
@@ -5207,7 +5719,8 @@ const DATA={
 "FT3"
 ],
 "dictIds": [
-"free_t3"
+"free_t3",
+"tsh_hyper"
 ],
 "discipline": "Chemistry",
 "methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
@@ -5309,7 +5822,8 @@ const DATA={
 ],
 "dictIds": [
 "free_t4",
-"tsh_hypo"
+"tsh_hypo",
+"tsh_hyper"
 ],
 "discipline": "Chemistry",
 "methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
@@ -8894,7 +9408,11 @@ const DATA={
 "SELF-PAY LIPID PROFILE FULL"
 ],
 "dictIds": [
-"lipids"
+"lipids",
+"ldl"
+],
+"relatedEntries": [
+"ldl_cholesterol"
 ],
 "discipline": "Chemistry",
 "methodology": "Various",
@@ -8982,6 +9500,56 @@ const DATA={
 "sourceUrl": "https://tests.lifelabs.com/s/article/LIPID-PROFILE-FULL-Lower-Mainland",
 "sourceUrlVerified": false,
 "sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ldl_cholesterol",
+"title": "LDL CHOLESTEROL",
+"name": "LDL Cholesterol",
+"region": "Lower Mainland",
+"aka": [],
+"dictIds": [],
+"discipline": "Chemistry",
+"methodology": "Calculation",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"LDL is no longer available, enter FLIP for Full Lipid Profile."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Page has no collection, container or handling details (ordering rule only): LDL is routed to LIPID PROFILE FULL, whose LifeLabs page gives the tube and prep.",
+"Page AKAs (LDL, LIPID PROFILE, LDL PROFILE, LOW DENSITY LIPOPROTEIN, HDL PROFILE) deliberately NOT used as scanner aliases (K. Williams 2026-10-20: Lipid Profile and HDL lines must not become LDL)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-05-14",
+"lastChecked": "2026-10-20",
+"collect": [],
+"includesDictIds": [],
+"requisitionNotes": [],
+"infoOnly": true,
+"routesDictIds": [
+"ldl"
+],
+"printedUrl": "https://tests.lifelabs.com/s/article/LDL-CHOLESTEROL-Lower-Mainland",
+"sourceNote": "t199: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/LDL CHOLESTEROL.pdf); printed 2026-10-20 12:28 PDT from tests.lifelabs.com (URL printed in the page footer with ?searchedValue=ldl).",
+"sourceUrl": "https://tests.lifelabs.com/s/article/LDL-CHOLESTEROL-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
 },
 {
 "id": "lithium",
@@ -9698,17 +10266,18 @@ const DATA={
 "stability": [],
 "orderNotes": [],
 "ambiguities": [
+"Tube volumes are given in the collection steps, not the Container line: \"1. Collect one 3.5 mL SST Gold top tube.\" / \"1. Collect one 4 mL Red top tube.\" (t211, 2026-10-20)",
 "Performing laboratory and destination are not named on the page (LifeLabs requisition).",
 "Container \"Red top or SST Gold top\": SST branch shown (Red top: clot 60 minutes, aliquot within 2 hours)."
 ],
 "source": "LifeLabs Lab Test Information (Lower Mainland)",
 "lastPublished": "2025-01-25",
-"lastChecked": "2026-10-13",
+"lastChecked": "2026-10-20",
 "printedUrl": "https://tests.lifelabs.com/s/article/PHENYTOIN-Lower-Mainland",
 "collect": [
 {
 "kind": "blood",
-"container": "SST Gold top",
+"container": "3.5 mL SST Gold top tube",
 "count": 1,
 "centrifuge": true,
 "clotMinutes": null,
@@ -9724,7 +10293,7 @@ const DATA={
 "temp": "Refrigerated (2-8°C)",
 "destGroup": "",
 "bag": "specimen transport bag",
-"altContainer": "Red top",
+"altContainer": "4 mL Red top tube",
 "clotText": "4. Clot for 30 minutes.",
 "redirect": {
 "reason": "serum aliquoting required",
@@ -9739,7 +10308,7 @@ const DATA={
 "includesDictIds": [],
 "sourceUrl": "https://tests.lifelabs.com/s/article/PHENYTOIN-Lower-Mainland",
 "sourceUrlVerified": true,
-"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-13"
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
 },
 {
 "id": "phosphorus",
@@ -11507,7 +12076,8 @@ const DATA={
 ],
 "dictIds": [
 "tsh_monitor",
-"tsh_hypo"
+"tsh_hypo",
+"tsh_hyper"
 ],
 "discipline": "Chemistry",
 "methodology": "Immunoassay, Chemiluminescent Microparticle Immunoassay (CMIA)",
@@ -11592,6 +12162,232 @@ const DATA={
 "sourceUrl": "https://tests.lifelabs.com/s/article/TSH-Lower-Mainland",
 "sourceUrlVerified": false,
 "sourceUrlNote": "pattern-based, unverified"
+},
+{
+"id": "ttg_iga",
+"title": "TISSUE TRANSGLUTAMINASE IgA",
+"name": "Tissue Transglutaminase IgA (celiac screen)",
+"region": "Lower Mainland",
+"aka": [
+"ANTI GLIADIN AB",
+"ANTI RETICULIN AB",
+"ANTI TISSUE Tg IgA",
+"ANTI TISSUE TRANSGLUTAMINASE IgA",
+"CELIAC SCREEN",
+"GLIADIN AB",
+"IgA AB FOR GLUTEN ENTEROPATHY",
+"RETICULIN AB",
+"TISSUE TRANSGLUTAMINASE ANTIBODY IGA",
+"TISSUE TRANSGLUTAMINASE IgA AB",
+"TTG",
+"tTg AB",
+"tTg IgA",
+"tTG IgA",
+"+TG (tTG)"
+],
+"dictIds": [
+"ttg_iga"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay: Multiplex Bead Assay",
+"specimenType": "Blood (Serum)",
+"frequency": "3x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "SST Gold top 3.5 mL",
+"collectionVolume": "1 mL",
+"preTestPrep": [
+"Patients who are being tested to confirm an initial diagnosis of Celiac Disease should NOT be on a gluten-free diet prior to testing as this may lead to false negative results.",
+"If patient is performing Celiac Disease for diagnosis, confirm with patient that they are on gluten-containing diet.",
+"For more information, see Celiac testing overview.",
+"1. Complete LifeLabs requisition.",
+"2. If deamidated gliadin antibodies or IgG specific tissue transglutaminase antibodies/gliadin antibodies are required see: DEAMIDATED GLIADIN AB",
+"3. When claim type is MSP or Other Provincial payer and TTG is ordered in combination with:",
+"IGA & TTG",
+"IGA will be cancelled/replaced with NOIGA",
+"IGA & IGG & TTG",
+"IGA will be cancelled/replaced with NOIGA",
+"IGA & IGM & TTG",
+"IGA will be cancelled/replaced with NOIGA",
+"IGA & IGG & IGM & TTG",
+"IGA is a valid order"
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 3.5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Note: if unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed lab requisition."
+],
+"reflex": "",
+"patientPrep": [
+"Patients who are being tested to confirm an initial diagnosis of Celiac Disease should NOT be on a gluten-free diet prior to testing as this may lead to false negative results.",
+"If patient is performing Celiac Disease for diagnosis, confirm with patient that they are on gluten-containing diet."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"MSP rule: IGA ordered with TTG is cancelled/replaced with NOIGA (unless IGA & IGG & IGM & TTG) - the IgA line on a celiac screen may not be run as a separate test."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-08-09",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/TISSUE-TRANSGLUTAMINASE-IgA-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 3.5 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "1 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 1,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"requisitionNotes": [
+"Complete LifeLabs requisition."
+],
+"includesDictIds": [],
+"sourceNote": "t205: PDF supplied by K. Williams 2026-10-20 (sources/lm_test_directory/), printed 2026-10-20 from tests.lifelabs.com (URL printed in the page footer).",
+"patientInstructionDocs": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/TISSUE-TRANSGLUTAMINASE-IgA-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
+},
+{
+"id": "glucose_fasting",
+"title": "GLUCOSE FASTING",
+"name": "Glucose - Fasting",
+"region": "Lower Mainland",
+"aka": [
+"FBS",
+"FASTING BLOOD GLUCOSE",
+"FASTING BLOOD SUGAR",
+"GLUF",
+"GLUCOSE AC (ante caenam)"
+],
+"dictIds": [
+"glucose_fasting"
+],
+"discipline": "Chemistry",
+"methodology": "Colorimetric (Enzymatic - Hexokinase)",
+"specimenType": "Blood (Serum)",
+"frequency": "7x per/wk",
+"specimenStability": "2 days room temperature; 7 days refrigerated; 28 days frozen",
+"turnaroundTime": "",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "0.5 mL",
+"preTestPrep": [
+"Sunshine Coast - Gibsons & Sechelt locations:",
+"For urgent/ STAT requests refer the patient to the local hospital immediately.",
+"1. A fasting interval of at least 8-12 hours must precede this test.",
+"2. If patient has been fasting for more than 12 hours, proceed with collection.",
+"3. If the patient has been fasting for less than 8 hours, they must return another day.",
+"4. Water is permitted according to thirst."
+],
+"includes": [],
+"handling": [
+"1. Collect specimen in a 5 mL SST Gold top tube.",
+"2. Gently invert/mix tube 5-6 times.",
+"3. Label specimen with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot upright for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Place specimen in specimen transport bag.",
+"7. Seal bag.",
+"8. Fold requisition and place in sleeve of bag."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Patient Instructions - English",
+"Patient Instructions - Arabic",
+"Patient Instructions - Chinese",
+"Patient Instructions - Farsi",
+"Patient Instructions - French",
+"Patient Instructions - Korean",
+"Patient Instructions - Punjabi"
+],
+"patientPrep": [
+"1. A fasting interval of at least 8-12 hours must precede this test.",
+"2. If patient has been fasting for more than 12 hours, proceed with collection.",
+"3. If the patient has been fasting for less than 8 hours, they must return another day.",
+"4. Water is permitted according to thirst."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Regional note on the page applies to Sunshine Coast (Gibsons & Sechelt) only: \"For urgent/ STAT requests refer the patient to the local hospital immediately.\""
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-10-09",
+"lastChecked": "2026-10-20",
+"printedUrl": "https://tests.lifelabs.com/s/article/GLUCOSE-FASTING-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": 30,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "0.5 mL",
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"volumeMl": 0.5,
+"temp": "Refrigerated (2-8°C)",
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag"
+}
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/GLUCOSE-FASTING-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-20"
 },
 {
 "id": "urea",

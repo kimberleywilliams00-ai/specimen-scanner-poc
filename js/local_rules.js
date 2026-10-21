@@ -125,8 +125,8 @@ const L={rules:[
     (chart group joinGroup); when AFP is alone in its tube, SST gold 3.5 mL (as on the LifeLabs ALPHA FETOPROTEIN page). If it shares its own
     chart group (SST50_ENDO) with other tests, that 5 mL tube is kept. The page/chart size difference is a quiet Details note. */
  {id:'afp_tube', kind:'chartJoin', source:'VCH community practice (K. Williams)', date:'2026-10-11', ids:['afp'], fromGroup:'SST50_ENDO', joinGroup:'SST50_CHEM',
-  alone:{sizeMl:3.5, label:'SST gold top 3.5 mL'},
-  text:'AFP: SST gold 3.5 mL when it is alone in its tube; 5 mL when it shares the chemistry SST with other tests.'},
+  /* t207: size part removed (tube size comes from the LifeLabs pages) */
+  text:'AFP shares the chemistry SST when other chemistry is ordered.'},
  /* ui2 (turn 16): tubeSize - tube size not printed on the page; size from local practice (container match on the named entries). */
  {id:'cd4_acd_8_5', kind:'tubeSize', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['cd4_sph'], match:'ACD', label:'ACD-A yellow 8.5 mL',
   text:'CD4 ACD tube: ACD-A 8.5 mL.'},
@@ -139,9 +139,7 @@ const L={rules:[
   text:'Redirect to LifeLabs: send the client to the nearest LifeLabs Patient Service Centre with the requisition.'},
  {id:'page_vs_chart_date', kind:'precedence', source:'K. Williams decision', date:'2026-10-13', chartDate:'2024-04-08',
   text:'When a LifeLabs directory page conflicts with the Quick Reference Chart (Doc#49141, effective 2024-04-08), the more recent source wins (page Last Published date vs chart date). Chart newer or page date missing: chart kept and the conflict stays flagged.'},
- {id:'sst_size_alone_shared', kind:'sstSize', source:'K. Williams decision (generalises afp_tube)', date:'2026-10-13', alone:3.5, shared:5.0,
-  exceptIds:['hav_igm','hav_immune','hbsag','hbeag','hbv_serology','hbv_immune','hbc_ab','hcv_screen','hep_acute','hep_chronic'], /* turn 46 K. Williams: hepatitis serology always Gold SST 5 mL (every LifeLabs page + chart Doc#49141) */
-  text:'SST gold: 3.5 mL when the test is alone in its SST, 5 mL when the SST is shared.'},
+ /* t207 (K. Williams 2026-10-20): local rule sst_size_alone_shared (3.5 mL alone / 5 mL shared) REMOVED - SST size comes from the LifeLabs test directory page or eLab handbook page (summary.js). */
  {id:'communicable_separate', kind:'constraint', source:'VCH community practice (K. Williams)', date:'2026-10-11',
   ids:['syphilis','hiv_serology','hiv_vl','hcv_screen','hcv_rna_quant','hcv_genotype','hav_immune','hav_igm','hbc_ab','hbv_immune','hbsag','hbv_serology','hep_acute','hep_chronic'], /* turn 28: hbeag, hbv_dna removed - LifeLabs-processed (hep_b_lifelabs) */
   text:'All communicable disease tests (HIV, hepatitis, syphilis) go to BCCDC and never share a tube with non-communicable tests (lipids, chemistry, etc.).'}
