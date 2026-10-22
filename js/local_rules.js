@@ -133,6 +133,22 @@ const L={rules:[
  {id:'afp_tube', kind:'chartJoin', source:'VCH community practice (K. Williams)', date:'2026-10-11', ids:['afp'], fromGroup:'SST50_ENDO', joinGroup:'SST50_CHEM',
   /* t207: size part removed (tube size comes from the LifeLabs pages) */
   text:'AFP shares the chemistry SST when other chemistry is ordered.'},
+ /* t229 (K. Williams decision 2026-10-22): bilirubin fractions. kind 'chartAs' - tests NOT on the LifeLabs Quick Reference Chart that are
+    placed as the named chart test (asChart = dictionary id whose chart entry is used); tube_rules.js stays an exact copy of the chart.
+    Exception to t205 (off-chart = own tube) for these ids only. Basis: the LifeLabs Lower Mainland pages BILIRUBIN TOTAL / DIRECT /
+    INDIRECT give the same container (SST Gold top 5.0 mL), clot/spin, temperature and light note and no separate-tube wording; the chart
+    lists only "Bilirubin". Research: eval/bilirubin_tube_sharing_2026-10-22.md. */
+ {id:'bilirubin_fractions_one_sst', kind:'chartAs', source:'K. Williams decision', date:'2026-10-22', ids:['bilirubin_direct','bilirubin_indirect'], asChart:'bilirubin',
+  text:'Direct and indirect bilirubin go in the same SST as total bilirubin (the chart’s “Bilirubin” tube).',
+  basis:'The LifeLabs pages BILIRUBIN TOTAL, BILIRUBIN DIRECT and BILIRUBIN INDIRECT (Lower Mainland) give the same tube and handling (SST Gold top 5.0 mL; clot 30 min; centrifuge 10 min at 1300 RCF; refrigerated; protect from direct sunlight) and no separate-tube wording; the Quick Reference Chart (Doc#49141) lists only “Bilirubin”.'},
+ /* t229: kind 'calculated' - a result the lab calculates from other tests (no specimen of its own). The card line is shown only while the
+    LifeLabs entry still says methodology === quoteFrom.methodology (looked up at render time). 'from' = the measured tests; if none of them
+    is ordered the line says so (Details only). */
+ {id:'bilirubin_indirect_calculated', kind:'calculated', source:'LifeLabs BILIRUBIN INDIRECT page (Lower Mainland)', date:'2026-10-22', ids:['bilirubin_indirect'],
+  quoteFrom:{entry:'bilirubin_indirect', methodology:'Calculation'}, from:['bilirubin','bilirubin_direct'],
+  card:'calculated by the lab from total and direct bilirubin (LifeLabs page: Methodology “Calculation”)', shared:' - no extra tube',
+  missing:'Total and direct bilirubin are not on this requisition (indirect bilirubin is calculated from them).',
+  reference:'Indirect = total minus direct: HealthLink BC “Bilirubin Test” (“Indirect bilirubin levels are derived from the total and direct bilirubin measurements.”); reference only, not LifeLabs: Dynacare BILIRUBIN INDIRECT (“This is a calculation. You must order total + direct bilirubin to obtain indirect bilirubin.”).'},
  /* ui2 (turn 16): tubeSize - tube size not printed on the page; size from local practice (container match on the named entries). */
  {id:'cd4_acd_8_5', kind:'tubeSize', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['cd4_sph'], match:'ACD', label:'ACD-A yellow 8.5 mL',
   text:'CD4 ACD tube: ACD-A 8.5 mL.'},

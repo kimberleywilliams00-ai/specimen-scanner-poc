@@ -121,6 +121,7 @@ function prepShort(p){const s=p.replace(/^“|”$/g,'').replace(/^\d+\.\s+/,'')
    is shown as written (not reworded). No time limits are added here (time limits come only from the sources, shown above). */
 function prepLabel(u){return shortName(u).replace(/^Chlamydia\/GC\b/,'CT/GC').replace(/\s+if indicated$/,'').replace(/\s*\([^)]*\)\s*$/,'')
   .replace(/^HIV serology$/,'HIV').replace(/^Hep C antibody$/,'Hep C');}
+const ELAB_URL='https://www.elabhandbook.info/phsa'; // t229b: handbook home printed on the BCCDC eLab pages (elab_data.js sourceUrl)
 const PREP_FACTS=[ // [key, test, phrase, personal phrase (n = test name) or null]
   ['meal',/at least (?:one|1) hours? after a meal/i,'At least 1 hour after a meal.'],
   ['novoid',/not have voided within the last hour|not have urinated for at least (?:1|one) hour|(?:do not|don't|no) (?:void|urinat|pee)\w* for (?:at least )?(?:1|one) h/i,'No voiding for 1 hour.'],
@@ -158,7 +159,9 @@ function prepVolRules(){const LR=root.LocalRules||{rules:[]},GD=root.GuideData||
 function prepByUnit(U){const out=new Map();const unitByName=n=>U.units.find(x=>x.name===n)||U.units.find(x=>(x.items||[]).some(it=>it.name===n));
   for(const [w,p] of U.prep){const isReq=/\(requisition\)$/.test(w);const who=w.replace(/ \(BCCDC eLab Handbook\)$/,'').replace(/ \(requisition\)$/,'');
     const us=isReq?[unitByName(who)]:who.split(', ').map(unitByName);const fs=prepFacts(p,isReq);if(!fs.length)continue;
-    for(const u of us){if(!u)continue;if(!out.has(u))out.set(u,new Map());const m=out.get(u);for(const f of fs)if(!m.has(f.k)||f.ph.length>m.get(f.k).ph.length)m.set(f.k,f);}}
+    const src=isReq?'req':/ \(BCCDC eLab Handbook\)$/.test(w)?'elab':'lifelabs'; // t229b: where the fact came from (card attribution)
+    for(const u of us){if(!u)continue;if(!out.has(u))out.set(u,new Map());const m=out.get(u);if(!m.srcs)m.srcs=new Map();for(const f of fs){if(!m.has(f.k)||f.ph.length>m.get(f.k).ph.length)m.set(f.k,f);
+      if(!m.srcs.has(f.k))m.srcs.set(f.k,new Set());m.srcs.get(f.k).add(src);}}}
   for(const r of prepVolRules())for(const [u,m] of out)if(u.ids.some(i=>r.appliesTo.includes(i))&&m.has('novoid'))m.set('firstvol',{k:'firstvol',ph:'Collect the first '+r.volume+'.'});
   for(const m of out.values())for(const [k,sub] of Object.entries(SUPERSEDES))if(m.has(k))for(const x of sub)m.delete(x);
   return out;}
@@ -270,9 +273,14 @@ function render(host,items,opts){
   const PBU=prepByUnit(U);
   const cardPrep=t=>{const us=uniq(t.members.map(m=>m.unit)).filter(u=>!u.excludedBy);const out=[];
     for(const {u,s} of U.crit)if(us.includes(u))out.push(el('div',{class:'tc-prep tl'},el('b',{text:(us.length>1?shortName(u)+' - ':'')+'time limit: '}),s.text+(s.when?' (when '+s.when+')':'')));
-    const facts=new Map();for(const u of us)for(const [k,f] of (PBU.get(u)||new Map())){if(!facts.has(k))facts.set(k,{f,us:[]});const x=facts.get(k);x.us.push(u);if(f.ph.length>x.f.ph.length)x.f=f;}
+    const facts=new Map();for(const u of us){const pm=PBU.get(u)||new Map();for(const [k,f] of pm){if(!facts.has(k))facts.set(k,{f,us:[],srcs:new Set()});const x=facts.get(k);x.us.push(u);if(f.ph.length>x.f.ph.length)x.f=f;
+      for(const sr of ((pm.srcs&&pm.srcs.get(k))||['other']))x.srcs.add(sr);}}
     const ord=k=>{const i=PREP_FACTS.map(f=>f[0]).indexOf(k);return i<0?99:i;};
-    for(const [k,x] of [...facts.entries()].sort((a,b)=>ord(a[0])-ord(b[0])))out.push(el('div',{class:'tc-prep'},x.f.ph)); // turn 42 (K. Williams): no test-name prefix - guidance applies to the whole tube
+    /* t229b (K. Williams 2026-10-22): a prep line that only the BCCDC eLab handbook gives (not the LifeLabs page, not the requisition) says so on the card,
+       in the existing linked 'as per BCCDC eLab handbook' style (a nurse following the LifeLabs link would not find it there); no trailing period, like the other card lines */
+    for(const [k,x] of [...facts.entries()].sort((a,b)=>ord(a[0])-ord(b[0])))out.push(x.srcs.size===1&&x.srcs.has('elab')
+      ?el('div',{class:'tc-prep'},x.f.ph.replace(/\.$/,'')+' - as per ',el('a',{href:ELAB_URL,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'}))
+      :el('div',{class:'tc-prep'},x.f.ph)); // turn 42 (K. Williams): no test-name prefix - guidance applies to the whole tube
     if(t.pairLine)out.push(el('div',{class:'tc-prep'},t.pairLine));return out;};
   /* turn 35 (K. Williams): urine cups - her exact one-line wording, shown only when a test in the cup carries the fact; no prefixes,
      no step quotes, no label lines. Container / local-practice lines move to Details (review mode). */
@@ -310,6 +318,7 @@ function render(host,items,opts){
       (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
       ...(nb&&isCup(t)?urineLines(t):[h.text?el('div',{class:'tc-hand '+h.cls,text:h.text}):null,...cardPrep(t)]),
       ...t.members.filter(m=>m.c&&m.c.cardNote).map(m=>el('div',{class:'tc-hand',text:shortName(m.unit)+': '+m.c.cardNote.replace(/^\d+\.\s+/,'').replace(/^./,x=>x.toLowerCase())})), // turn 29: plain source-based card line (fibrinogen 8 h)
+      ...(t.calcNotes||[]).map(x=>el('div',{class:'tc-kit',text:shortName(x.unit)+': '+x.body})), // t229: calculated result (indirect bilirubin; LifeLabs page Methodology "Calculation")
       ...routeLines(t), // t199: e.g. LDL -> Full Lipid Profile (LifeLabs LDL CHOLESTEROL page)
       ...(nb&&!isCup(t)?otherBits(t):[]),
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC

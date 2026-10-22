@@ -118,6 +118,10 @@ function resolve(items){const units=[],unknown=[],noSpec=[],by=new Map();
     for(const e of es.length?es.slice().sort((a,b)=>pos(a)-pos(b)):[null]){const key=e?'E:'+e.id+(e.perDictId?':'+id:''):'C:'+id; // ui2: perDictId = one specimen per site
       if(!by.has(key)){const u={key,entry:e||null,chart:ch||null,ids:[],items:[],name:e?(e.perDictId?dictName(id):short(e)):dictName(id)};by.set(key,u);units.push(u);}
       const u=by.get(key);u.items.push(it);if(!u.ids.includes(id))u.ids.push(id);if(!u.chart&&ch)u.chart=ch;}}
+  /* t229 (K. Williams decision 2026-10-22): local rule kind 'chartAs' - an off-chart test placed as a named chart test (direct / indirect
+     bilirubin -> the chart's "Bilirubin" SST). u.chart.via marks it; tube_rules.js is not changed. */
+  for(const u of units){if(u.chart)continue;const r=LR.rules.find(r=>r.kind==='chartAs'&&u.ids.length&&u.ids.every(i=>r.ids.includes(i))&&TR.byId[r.asChart]);if(!r)continue;const ch=TR.byId[r.asChart];
+    u.chart=Object.assign({},ch,{via:r,partial:null,coverageNote:u.name+': not on the LifeLabs Quick Reference Chart (it lists “'+ch.chartNames.join(', ')+'”) - in the chart’s “'+ch.chartNames.join(', ')+'” tube per local practice: '+r.text.replace(/\.$/,'')+' ('+r.source+', '+r.date+'). '+r.basis.replace(/\.$/,'')});}
   for(const u of units){u.localTube=localTubeRule(u);u.route=formRoute(u);u.formOnly=!u.entry&&!u.chart&&!u.localTube;
     if(u.entry&&u.ids.length&&u.ids.every(i=>(u.entry.dictIdsVia||{})[i]))u.name=dictName(u.ids[0]);} // via-only: named after the test asked for
   return {units,known:units.filter(u=>u.entry),chartOnly:units.filter(u=>!u.entry),unknown,noSpec};}
@@ -279,6 +283,13 @@ function plan(units){
     { const zr=LR.rules.find(r=>r.kind==='tubeSize'&&t.members.some(m=>m.unit.entry&&r.entries.includes(m.unit.entry.id)&&m.c&&new RegExp(r.match).test(m.c.container||'')));
       if(!g&&zr){t.label=zr.label;t.sizeLocal=zr;t.infos.push('Tube size: '+zr.text+' Local practice ('+zr.source+', '+zr.date+'); the LifeLabs page says “'+rep.container+'”.');} } // ui2 turn 16
     for(const x of t.joined||[])t.infos.push(x.names.join(', ')+' in this tube - local practice: '+x.rule.text+' ('+x.rule.source+', '+x.rule.date+')'); // ui2 turn 16
+    /* t229: calculated result (indirect bilirubin) - card line only while the LifeLabs entry still says the quoted methodology */
+    for(const r of LR.rules.filter(r=>r.kind==='calculated'))for(const m of t.members){if(!m.unit.ids.some(i=>r.ids.includes(i)))continue;const qe=DATA.entries.find(e=>e.id===r.quoteFrom.entry);
+      if(!qe||qe.methodology!==r.quoteFrom.methodology){t.caveats.push(m.unit.name+': calculated-result rule '+r.id+' not applied - the LifeLabs page methodology no longer reads “'+r.quoteFrom.methodology+'”.');continue;}
+      const others=uniq(t.members.filter(x=>x.unit!==m.unit).map(x=>x.unit.key)).length>0;
+      (t.calcNotes=t.calcNotes||[]).push({unit:m.unit,rule:r,body:r.card+(others?r.shared:'')+'.'});
+      t.infos.push(m.unit.name+': '+r.card+(others?r.shared+' (in this tube with '+uniq(t.members.filter(x=>x.unit!==m.unit).map(x=>x.unit.name)).join(', ')+')':'')+'. '+r.reference+' ('+r.source+'; rule '+r.id+', '+r.date+')');
+      if(!units.some(u=>u.ids.some(i=>r.from.includes(i))))t.infos.push(r.missing);}
     if(t.sizeRule)t.infos.push('Tube size: local practice: '+t.sizeRule.text+' ('+t.sizeRule.source+', '+t.sizeRule.date+')');
     if(!g&&!rep&&t.formSpec&&t.formSpec.css==='lav')t.label='EDTA lavender top (size not stated on the form)';
     t.c=rep||{container:t.label,centrifuge:null};
@@ -753,7 +764,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
       d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),(lt?lt.label+(lt.ofType>1?' #'+lt.no:''):u.localTube.tube.label)+' - local practice ',localTag(u.localTube)));
       if(u.chart)d.appendChild(el('div',{class:'small',text:'LifeLabs chart (overridden by local practice): '+u.chart.group.tube.label+' (chart: '+u.chart.chartNames.join(', ')+')'}));}
     else if(u.chart){const g=u.chart.group;
-      d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),(((P.blood||[]).find(t=>t.members.some(m=>m.unit===u))||{}).label||g.tube.label)+(e?'':' - per LifeLabs Quick Reference Chart; full handling: check Lab Test Information'),' (chart: '+u.chart.chartNames.join(', ')+')'));
+      d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),(((P.blood||[]).find(t=>t.members.some(m=>m.unit===u))||{}).label||g.tube.label)+(e?'':' - per LifeLabs Quick Reference Chart; full handling: check Lab Test Information'),u.chart.via?' (not on the chart; in the chart’s “'+u.chart.chartNames.join(', ')+'” tube - local practice, '+u.chart.via.source+', '+u.chart.via.date+')':' (chart: '+u.chart.chartNames.join(', ')+')')); // t229: chartAs
       if(u.chart.partial)d.appendChild(el('div',{class:'fact caveat',text:'⚠ '+u.chart.partial+' - confirm with lab.'}));}
     if(!e&&!u.chart&&!u.localTube&&u.route)d.appendChild(el('div',{class:'fact'},el('b',{text:'Tube: '}),u.route.spec.tube+' - per the '+u.route.form.display+' (“'+u.route.spec.combine+'”); not on the LifeLabs chart; full handling: check Lab Test Information / PHSA eLab Handbook'));
     if(u.route&&u.route.how!=='lifelabs')d.appendChild(el('div',{class:'small',text:'Requisition: '+u.route.form.display+' - “'+u.route.test.onForm+'” ('+u.route.test.section+')'}));
@@ -786,7 +797,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
     elabsOf(u).forEach((eb,i)=>d.appendChild(elabBlock(eb,e,u,i>0)));
     for(const g of guidesFor(u).filter(g=>g.kind==='guide'))d.appendChild(guideBlock(g,u)); // ui2
     for(const g of guidesFor(u).filter(g=>g.kind==='elab-other-lab'))d.appendChild(el('div',{class:'small',text:'Hospital lab, reference only: '+g.issuer+' - eLab Handbook “'+g.title+'” ('+g.date+'). Not the lab community samples go to.'})); // ui2 turn 11
-    d.appendChild(el('div',{class:'src'},srcLine(e)+(u.localTube?' · tube: local practice':u.chart?' · tube: '+TR.shortSource:'')+' · ',srcLink(u),' ',unvTag(u)||''));
+    d.appendChild(el('div',{class:'src'},srcLine(e)+(u.localTube?' · tube: local practice':u.chart?' · tube: '+TR.shortSource+(u.chart.via?' + local practice ('+u.chart.via.date+')':''):'')+' · ',srcLink(u),' ',unvTag(u)||''));
     d.__unit=u;tc.appendChild(d);}
   host.appendChild(tc);
   banner();
