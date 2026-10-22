@@ -39,7 +39,7 @@ const TUBE_IMG={'gold|5':['sst_gold_5ml','Gold SST 5 mL tube'],'gold|3.5':['sst_
   'lav|4':['edta_lavender_4ml','Lavender EDTA 4 mL tube'],'lblue|2.7':['citrate_light_blue_2_7ml','Light blue citrate 2.7 mL tube'],'red|6':['red_top_serum_6ml','Red top serum 6 mL tube'],'yellow|8.5':['acd_a_yellow_8_5ml','ACD-A yellow 8.5 mL tube']};
 function thumbOf(t,nb){
   if(!nb){if(t.sstSize&&t.sstSize.ml==null)return null; /* t207 */const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);const k=t.css+'|'+(m?(+m).toString():'');return TUBE_IMG[k]||null;}
-  if(t.kitRule&&t.kitRule.img)return [t.kitRule.img,'COPAN green-top eSwab'];
+  if(t.kitRule&&t.kitRule.img)return [t.kitRule.img,t.kitRule.alt||'COPAN green-top eSwab']; // t228d: per-rule alt (BV & yeast: COPAN blue-top Amies swab)
   { const LRr=(typeof root.LocalRules&&root.LocalRules)||{rules:[]};const ho=LRr.rules.find(r=>r.kind==='handOut'&&(t.members||[]).some(m=>m.unit.entry&&r.entries.includes(m.unit.entry.id)));if(ho)return [ho.img,ho.alt]; } // turn 19: FIT Eiken (local practice)
   const kit=t.eb&&!t.eb.local?t.eb.sp.kit:'';const c=(t.label||'');
   if(/Multitest/.test(kit)||(!t.eb&&/Aptima Multitest/i.test(c)))return ['aptima_multitest_swab','Aptima Multitest swab kit'];
@@ -56,9 +56,10 @@ function edgeColour(t,nb){if(!nb&&EDGE[t.css])return EDGE[t.css];const l=(t.labe
 function chip(css){return el('span',{class:'tchip '+(css||'none'),'aria-hidden':'true'});}
 function sizeText(t){if(t.sstSize&&t.sstSize.ml==null)return ''; /* t207: no page size -> none shown */const m=H.nominalMl(t.label)||(t.group&&t.group.tube.sizeMl);return m?(+m).toString().replace(/\.0+$/,'')+' mL':'';}
 function nonBloodName(o){const c=(o.label||'').toLowerCase();
+  if((o.members||[]).some(m=>m.unit.entry&&m.unit.entry.standIn))return o.kitRule?o.kitRule.short:o.label; /* t228c: the source page's own container name; t228d: local kit rule (BV & yeast COPAN swab) wins */
   if(o.eb&&!o.eb.local){const k=o.eb.sp.kit;return (/Multitest/.test(k)?'Multitest swab':/Unisex/.test(k)?'Unisex swab':/Urine/.test(k)?'Aptima urine kit':k)+' ('+o.eb.sp.label+')';} /* ui2: BCCDC eLab kit */
   if(/urine/.test(c))return 'Urine cup'+(o.pairNo?' #'+o.pairNo+(o.pairNo===1?' - first catch':' - midstream'):'')+(/preservative/.test(c)&&!o.cupOnly?' + boric acid tube':'');if(o.kitRule)return o.kitRule.short; /* turn 11: local kit rule (GC culture eSwab) */
-  if(/swab/.test(c)&&/amies/.test(c))return 'Amies swab (red cap)'; /* GC CULTURE page: 'Red cap, Liquid Amies Single Plastic Swab' */
+  if(/swab/.test(c)&&/amies/.test(c))return 'Amies swab'+(/red cap/i.test(JSON.stringify((o.members||[]).map(m=>[m.c&&m.c.notes,m.unit.entry&&m.unit.entry.preTestPrep])))?' (red cap)':''); /* GC CULTURE / C&S VAGINA INITIAL pages: 'Red cap(ped)'; t228: wound/nose pages name no cap colour */
   if(/swab/.test(c))return 'Swab'+(/copan|aptima/i.test(o.label)?' ('+o.label.replace(/^.*\((.*)\).*$/,'$1')+')':'');return o.label;}
 /* plain temperature words (display only; the exact lab wording is in Details) */
 function tempWord(t){const s=(t||'').toLowerCase();if(!s)return '';const r=/refrigerat|2-8/.test(s),rt=/room/.test(s),f=/froz/.test(s);
@@ -82,7 +83,7 @@ function handling(t){const c=t.c||{};const out=[];let cls='';
   const s=out.join(', ');return {text:s.charAt(0).toUpperCase()+s.slice(1),cls};}
 /* ui2 (2026-10-11): Other samples - kit, short steps, time limit (verbatim text from js/guide_data.js; source in Details) */
 function otherBits(t){const out=[];
-  if(t.kits)out.push(el('div',{class:'tc-kit'},el('b',{text:t.kits.some(k=>k.local)?'Container: ':'Kit: '}),t.kits.map(k=>k.name+(k.label?' ('+k.label+')':'')).join(' + '),
+  if(t.kits&&!t.kitAlso)out.push(el('div',{class:'tc-kit'},el('b',{text:t.kits.some(k=>k.local)?'Container: ':'Kit: '}),t.kits.map(k=>k.name+(k.label?' ('+k.label+')':'')).join(' + '),
     t.kits.some(k=>k.local)?el('span',{class:'tc-local',text:t.cupOnly?t.cupOnly.short:'Local practice: send the cup, no Aptima transfer.'}):null));
   if(t.cupVol)out.push(el('div',{class:'tc-kit'},el('b',{text:'Volume: '}),t.cupVol.text)); // ui2 turn 10: cup volume (source in Details)
   if((t.sharedWith||[]).some(x=>x.rule))out.push(el('div',{class:'tc-kit'},t.sharedWith.find(x=>x.rule).rule.short+' ',(r=>r.sourceUrl?el('a',{class:'tc-local',href:r.sourceUrl,target:'_blank',rel:'noopener',text:r.source}):el('span',{class:'tc-local',text:'Local practice'}))(t.sharedWith.find(x=>x.rule).rule)));
@@ -90,6 +91,17 @@ function otherBits(t){const out=[];
   const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);const swab=/swab/i.test(t.label||'');
   if(t.keySteps)out.push(el('ol',{class:'tc-steps'},...t.keySteps.map(fr=>el('li',{text:cap(fr.reduce((a,x)=>a?a+(/\.$/.test(a)?' ':'; ')+x:x,'').replace(/\.?$/,'.'))})),swab?el('li',{text:'Label with the site.'}):null)); // ui2: essential eLab steps; full text in Details
   else if(t.steps){const st=t.steps.site;out.push(el('ol',{class:'tc-steps'},...st.steps.map(x=>el('li',{text:x}))));}
+  { // t228: verbatim card lines from the LifeLabs page (collect.cardLinesBy = steps per scanner id, collect.cardLines = short lines; [bold prefix, verbatim])
+    const by=uniq(t.members.flatMap(m=>m.unit.ids.flatMap(i=>((m.c&&m.c.cardLinesBy)||{})[i]||[])));
+    if(by.length&&!t.steps&&!t.keySteps)out.push(el('ol',{class:'tc-steps'},...by.map(x=>el('li',{text:x}))));
+    const cl=[];for(const m of t.members)for(const x of (m.c&&m.c.cardLines)||[])if(!cl.some(y=>JSON.stringify(y)===JSON.stringify(x)))cl.push(x);
+    const plain=cl.filter(x=>!Array.isArray(x)),pre=cl.filter(x=>Array.isArray(x));
+    if(plain.length>1&&!t.steps&&!t.keySteps&&!by.length)out.push(el('ol',{class:'tc-steps'},...plain.map(x=>el('li',{text:x}))));else for(const x of plain)out.push(el('div',{class:'tc-kit',text:x}));
+    for(const x of pre)out.push(el('div',{class:'tc-kit'},el('b',{text:x[0]}),x[1].replace(/^\d+\.\s*/,''))); // page step number dropped on the card
+    for(const x of t.cardShort||[])out.push(el('div',{class:'tc-kit'},el('b',{text:x.lead}),x.items.map(i=>i.join(' ')).join(' · ')+(x.tail?' - '+cap(x.tail)+'.':'')));}
+  for(const m of t.members)if(m.unit.entry&&m.unit.entry.standIn)out.push(el('div',{class:'tc-kit'},el('b',{text:'Specimen: '}),m.unit.entry.specimenType));
+  if(t.kitAlso)out.push(el('div',{class:'tc-kit',text:cap(t.kitAlso.text.replace(/^\*\s*/,'')).replace(/\.?$/,'.')})); // t228d: BCCDC QR footnote (swab named in the card title; verbatim kit in Details)
+  for(const m of t.members)for(const fr of (m.c&&m.c.cardLinesG)||[])out.push(el('div',{class:'tc-kit',text:cap(fr.join(' ').replace(/\.?$/,'.'))})); // t228c: verbatim fragments from the source page
   for(const x of t.timeLimits||[])out.push(el('div',{class:'tc-time',text:'Time limit: '+x.text}));
   return out;}
 const isBCCDC=t=>!(t.group&&t.group.lab==='LifeLabs')&&!(t.c&&t.c.centrifuge===true&&!t.local&&t.c.destGroup!=='PHL'&&t.members.some(m=>m.unit.entry&&m.unit.entry.collect.some(x=>x.destGroup==='PHL')))&&(/* turn 44: chart LifeLabs SST / LifeLabs half of a two-tube panel */t.dest==='BCCDC'||(t.local&&t.local.destination==='BCCDC')||(t.c&&t.c.destGroup==='PHL')||(t.kind==='blood'&&t.members.length&&t.members.every(m=>H.isComm(m.unit))&&!t.members.some(m=>m.c&&m.c.destination)));
@@ -208,7 +220,7 @@ function render(host,items,opts){
   const y=typeof window!=='undefined'?window.scrollY:0;
   const rerender=()=>{render(host,items,opts);if(typeof window!=='undefined')window.scrollTo(0,y);};
   const L=document.createElement('div');                       // legacy summary, detached (source of every Details block)
-  const res=CS.renderDetail(L,items,Object.assign({},opts,{rerender}));const U=res.ui;
+  const res=CS.renderDetail(L,items,Object.assign({},opts,{rerender}));const U=Object.assign({crit:[],prep:[],byForm:new Map(),inter:[],rn:[],full:[],pdocs:[],excl:[]},res.ui); // t228e: renderDetail's early return (no unit with collection info, e.g. ONLY ECG / vitamin D / a GTT row) has no crit/prep/... - treat as empty
   const part=k=>L.querySelector('[data-part="'+k+'"]'),parts=k=>[...L.querySelectorAll('[data-part="'+k+'"]')];
   const tubeBox=new Map([...L.querySelectorAll('.tube')].map(b=>[b.__tube,b]));
   const testLine=new Map([...L.querySelectorAll('.test-line')].map(d=>[d.__unit,d]));
@@ -249,7 +261,8 @@ function render(host,items,opts){
 
   // ---- Tubes in draw order ----
   const tb=el('section',{class:'blk'},el('h2',{class:'sr-only',text:'Tubes'},el('span',{class:'h2sub',text:' in draw order'})),el('div',{class:'order-line',text:'Tubes listed in order of draw'})); // turn 36
-  for(const q of parts('unknown')){const nm=q.getAttribute('data-name');
+  const unkParts=parts('unknown'); // t228e: counted before details() moves them out of L (a plan with ONLY no-info tests showed nothing)
+  for(const q of unkParts){const nm=q.getAttribute('data-name');
     tb.appendChild(el('div',{class:'ask'},el('div',{class:'ask-h',text:nm+': no collection info in the app'}),
       el('div',{class:'ask-t'},'Check ',el('a',{href:H.DIR_URL,target:'_blank',rel:'noopener noreferrer',text:'tests.lifelabs.com'}),' for the tube or container. Not counted below.'),details('Details & sources',[q])));}
   const full=(U.full||[]).length>0;
@@ -301,6 +314,7 @@ function render(host,items,opts){
       ...(nb&&!isCup(t)?otherBits(t):[]),
       ...t.members.filter(m=>m.unit.companion).map(m=>el('div',{class:'tc-kit'},m.unit.companion.satisfied?m.unit.companion.rule.satisfiedNote:m.unit.companion.rule.note,' ',el('span',{class:'tc-local',text:'Local practice'}))), // turn 14: CD4 needs a CBC
       t.drawLast?el('div',{class:'tc-kit'},'Draw last ',el('span',{class:'tc-local',text:'Local practice'})):null, // turn 14: ACD yellow
+      ...(nb?[]:uniq(t.members.flatMap(m=>((m.c&&m.c.cardLines)||[]).filter(Array.isArray).map(x=>JSON.stringify(x)))).map(j=>JSON.parse(j)).map(x=>el('div',{class:'tc-kit'},el('b',{text:x[0]}),x[1]))), // t228: requisition box (HFE sibling/parent)
       ...warn.map(w=>el('div',{class:'tc-warn'+(/^(Kit|Volume) differs|not covered by|^Open question|^Check: |^Requires STI certified|^Confirm whether|^Site not stated|^BCCDC eLab accepts|^Not for asymptomatic|^CBC not on the requisition/.test(w)?' amb':''),text:w.replace(/^PTT is NOT in this tube - see the question above\.?$/,'PTT is not in this tube (see the heparin question above)')})),
       ...(REVIEW?[]:cav.filter(n=>!/ELECTROLYTES EXTENDED PANEL page/.test(n.textContent)).map(n=>cavEl(n.textContent))), /* turn 55 (K. Williams): Na/K-only electrolytes note is result scope, not collection - Details only */ // turn 34: amber notes on the card in normal mode
       details('Details & sources',[nb&&isCup(t)?el('div',{class:'dx-sub',text:'Container'}):null,...(nb&&isCup(t)?otherBits(t):[]),checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0}));
@@ -326,7 +340,8 @@ function render(host,items,opts){
   const tbDet=[part('banner'),part('head'),part('order'),part('nospin'),part('conflicts'),part('proc'),part('fullnote'),part('collect')].filter(Boolean).concat(bysLeft);
   const confl=part('conflicts');
   if(blood.length)tb.appendChild(details('Draw order, processing & sources',tbDet,{dot:!!confl,cls:'secdx'}));
-  if(blood.length||parts('unknown').length)host.appendChild(tb);
+  for(const q of parts('nospec'))tb.appendChild(el('div',{class:'small nospec',text:q.getAttribute('data-name')+': '+q.lastChild.textContent})); // t228: ECG
+  if(blood.length||unkParts.length||parts('nospec').length)host.appendChild(tb);
   else if(tbDet.length){/* no blood tubes: keep legacy blocks reachable */}
   if(nonBlood.length){const ob=el('section',{class:'blk'},el('h2',{text:'Other samples'}));const nbOrd=(()=>{const a=nonBlood.slice(),idx=a.map((t,i)=>t.pairNo?i:-1).filter(i=>i>=0),pr=idx.map(i=>a[i]).sort((x,y)=>x.pairNo-y.pairNo);idx.forEach((i,k)=>a[i]=pr[k]);return a;})(); /* turn 37: numbered cups in number order (#1 first catch before #2 midstream) */groupCards(nbOrd,t=>t.pairNo||/urine cup/i.test(nonBloodName(t))?'urinecup':nonBloodName(t),true,ob); /* turn 42 */host.appendChild(ob);}
   if(!blood.length&&tbDet.length)host.appendChild(el('section',{class:'blk'},details('Processing & sources',tbDet,{dot:!!confl,cls:'secdx'})));

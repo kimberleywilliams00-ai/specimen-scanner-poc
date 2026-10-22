@@ -64,6 +64,12 @@ const L={rules:[
 {id:'gc_culture_eswab', kind:'kitSource', source:'VCH community practice (K. Williams)', date:'2026-10-11', entries:['gc_culture'],
  guide:'bccdc_sti_quickref', kit:'gc_culture', short:'eSwab (green top)', img:'eswab_green_cap',
  text:'GC culture swab: COPAN green-top eSwab, as in the BCCDC Quick Reference STI Screening and Testing Guide (May 2026).'},
+/* t228d (K. Williams 2026-10-21): Vaginitis initial (BV & yeast) - the swab comes from the BCCDC Quick Reference BV & yeast row (slide option
+   not used in community). entries: the plan-only stand-in entry id built from guide_data.js cw_elab_bv_yeast.cardEntry. pageLabel names the
+   page whose container is noted in Details ('sources differ'). img/alt: K. Williams' blue-cap COPAN Amies drawing (this card only). */
+{id:'bv_yeast_copan_red', kind:'kitSource', source:'VCH community practice (K. Williams)', date:'2026-10-21', entries:['cw_elab_bv_yeast:vaginitis_initial'],
+ guide:'bccdc_sti_quickref', kit:'bv_yeast', short:'COPAN (red top) Transport Swab', img:'copan_blue_cap_swab_medium', alt:'COPAN blue-top Amies swab', pageLabel:'C&W eLab page',
+ text:'BV & yeast swab: COPAN red-top Transport Swab (blue-top or white-top COPAN Amies swab if red top unavailable), as in the BCCDC Quick Reference STI Screening and Testing Guide (May 2026). Community nurses do not use slides.'},
 /* ui2 (2026-10-11): community transport. urineCup: every non-blood urine container (any urine test) is refrigerated. dropoff: where all community samples go. */
 {id:'urine_cup_fridge', kind:'urineCup', source:'VCH community practice (K. Williams)', date:'2026-10-11', temp:'Refrigerate',
  text:'Urine cups are always refrigerated.'},

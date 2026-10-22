@@ -53,7 +53,7 @@ const G={source:'Collection guides and patient instructions (supplied by K. Will
   invalid:['It is returned after 7 days','The sample freezes or gets too hot','Too much poop is collected','Poop touches pee or toilet water']},
  {id:'ll_doc49222', kind:'patient', issuer:'LifeLabs', issuerBasis:'LifeLabs logo printed on each page (image, not text)', title:'Swab - CTGC or Trichomonas Self Collected Vaginal Swabs',
   heading:'Self-Collected Vaginal Swab – for CTGC or Trichomonas Testing', docNumber:'Doc.#49222', version:'Ver 2.0', date:null, url:null,
-  dictIds:[], kit:'Aptima Multitest Swab',
+  dictIds:['trich'], kit:'Aptima Multitest Swab', // t228: named by the LifeLabs TRICHOMONAS SELF COLLECTED VAGINAL SWAB page
   share:['All 3 tests can be performed from a single swab.'],
   steps:['Carefully insert the swab into the vagina about 2 inches (5 cm) past the introitus and gently rotate the swab for 10 to 30 seconds.',
    'Immediately place the swab into the transport tube so that the score line is at the top of the tube.',
@@ -89,8 +89,10 @@ const G={source:'Collection guides and patient instructions (supplied by K. Will
    'APTIMA swabs are only for nucleic acid amplification testing (NAAT) – these swabs are not suitable for culture.']},
  {id:'ll_doc31971', kind:'guide', issuer:'LifeLabs', title:'Microbiology Swab and Collection Containers', docNumber:'Doc#31971', version:'Ver: 13.0', date:'Effective: 2026-06-16', url:null,
   links:[{text:'Clinic and Healthcare Provider Supply Requisition', url:'https://lifelabs.azureedge.net/lifelabs-wp-cdn/2023/10/64253-Healthcare-Provider-Client-Order-Form.pdf'}],
-  dictIds:['ct_ng_urine','ct_ng_vaginal','ct_ng_cervix','ct_ng_urethra','ct_ng_rectal','ct_ng_throat','urine_trich','culture_urine','urine_macro_culture'],
+  dictIds:['ct_ng_urine','ct_ng_vaginal','ct_ng_cervix','ct_ng_urethra','ct_ng_rectal','ct_ng_throat','urine_trich','culture_urine','urine_macro_culture','culture_throat'],
   kits:{
+   // t228: C&S THROAT page names no container (Specimen Type: Swab) - this LifeLabs containers sheet is the only LifeLabs source naming one
+   culturette:{name:'Culturette – Copan Gel Amies Single Plastic Swab', use:'Routine Bacterial Culture for throats, wounds, vagina, etc.', not:'Not for Chlamydia/GC/Trichomonas PCR/NAAT', ids:['culture_throat']},
    unisex:{name:'Aptima Unisex Swab (MALE/FEMALE) and Specimen Transport Tube', use:'For collection of cervix and urethra specimens for Chlamydia/GC/Trichomonas/Mycoplasma', not:'Not for bacterial culture', ids:['ct_ng_cervix','ct_ng_urethra']},
    multitest:{name:'Aptima Multitest Swab and Specimen Transport Tube', use:'For collection of vaginal, throat, eye and rectal specimens for Chlamydia/GC/Trichomonas/Mycoplasma', not:'Not for bacterial culture', ids:['ct_ng_vaginal','ct_ng_rectal','ct_ng_throat']},
    urine:{name:'Sterile Urine Container (100 mL)', use:'For the collection of urine, sputum or other liquid specimens. Including urine specimens for Chlamydia/GC/Trichomonas/ Mycoplasma testing.', ids:['ct_ng_urine','urine_trich','culture_urine','urine_macro_culture']},
@@ -127,7 +129,7 @@ const G={source:'Collection guides and patient instructions (supplied by K. Will
  {id:'bccdc_sti_quickref', kind:'guide', issuer:'BCCDC', title:'Quick Reference STI Screening and Testing Guide', docNumber:null, version:null, date:'May 2026', url:null,
   supersededNote:'K. Williams 2026-10-11: the guide\'s text says Unisex swab but its photo shows a Multitest swab - its "Unisex" wording is treated as superseded. For BCCDC-bound CT/GC samples the BCCDC eLab Handbook entry applies.',
   scopeNote:'Used ONLY for specimen collection facts (site, specimen type, kit). Its screening/testing recommendations are not used by this app.',
-  dictIds:['ct_ng_urine','ct_ng_vaginal','ct_ng_rectal','ct_ng_throat','urine_trich','hiv_serology','syphilis','gc_culture_cervix','gc_culture_urethra','gc_culture_throat','gc_culture_rectum','gc_culture_other'],
+  dictIds:['ct_ng_urine','ct_ng_vaginal','ct_ng_rectal','ct_ng_throat','urine_trich','hiv_serology','syphilis','gc_culture_cervix','gc_culture_urethra','gc_culture_throat','gc_culture_rectum','gc_culture_other','vaginitis_initial'] /* t228d: + vaginitis_initial (BV & yeast row) */,
   intro:'For BCCDC Public Health Laboratory (PHL) specimen collection instructions, refer to the eLab Handbook.',
   kits:{
    ct_swab:{test:'Chlamydia & Gonorrhea (CT/GC NAAT)', sites:'Throat Vagina Rectum', kit:'Aptima Unisex Swab Sample Collection Kit', ids:['ct_ng_throat','ct_ng_vaginal','ct_ng_rectal']},
@@ -135,9 +137,53 @@ const G={source:'Collection guides and patient instructions (supplied by K. Will
    trich:{test:'Trichomonas (NAAT)', sites:'Vagina', kit:'Aptima Unisex Swab Sample Collection Kit', ids:[]},
    hiv:{test:'HIV (4th generation Ag/Ab)', sites:'Blood', kit:'Gold top serum separator tube (SST)', ids:['hiv_serology']},
    syphilis:{test:'Syphilis (EIA)', sites:'Blood', kit:'Gold top serum separator tube (SST)', ids:['syphilis']},
-   gc_culture:{test:'Gonorrhea Culture (GC C&S)', sites:'Throat Rectum Penile Urethra Cervix (preferred) or vagina', kit:'COPAN (green top) eSwab + Liquid Amies', ids:['gc_culture_cervix','gc_culture_urethra','gc_culture_throat','gc_culture_rectum','gc_culture_other']}},
+   gc_culture:{test:'Gonorrhea Culture (GC C&S)', sites:'Throat Rectum Penile Urethra Cervix (preferred) or vagina', kit:'COPAN (green top) eSwab + Liquid Amies', ids:['gc_culture_cervix','gc_culture_urethra','gc_culture_throat','gc_culture_rectum','gc_culture_other']},
+   // t228d (K. Williams 2026-10-21): BV & yeast row - kitRow is the whole verbatim cell; kit is the swab half (community nurses do not use slides)
+   bv_yeast:{test:'Bacterial Vaginosis (BV) & Yeast', sites:'Vagina', kitRow:'Frosted-end slide, slide cover, and plain sterile swab OR COPAN (red top)* Transport Swab', kit:'COPAN (red top)* Transport Swab', footnote:'*if red top unavailable, blue top or white top COPAN Amies swab also acceptable', ids:['vaginitis_initial']}},
   urineNote:'Vaginal swab should be substituted with urine sample if an individual has had vaginoplasty, hysterectomy with cervix removed, or if individual preference is to provide urine sample.',
-  trichSites:'Trichomonas Vagina or urine*'}
+  trichSites:'Trichomonas Vagina or urine*'},
+ // t228 (2026-10-21): LifeLabs patient sheet named by the LifeLabs HELICOBACTER PYLORI STOOL AG page ("Provide patient with a copy of the
+ // H. pylori Stool Antigen patient instructions"). Supplied by K. Williams 2026-10-21 (Drive: LifeLabs folder).
+ {id:'ll_doc52608', kind:'patient', issuer:'LifeLabs', issuerBasis:'LifeLabs Doc.# numbering; the LifeLabs HELICOBACTER PYLORI STOOL AG page names this sheet', title:'Stool - Helicobacter Pylori Stool Antigen', heading:'Helicobacter pylori Stool Antigen Test', docNumber:'Doc.#52608', version:'Ver 2.0', date:null, url:null,
+  dictIds:['hpylori_stool_ag'],
+  sites:{hpylori_stool_ag:{site:'Helicobacter pylori Stool Antigen Test', device:[], steps:['Using the spoon attached to the cap, place stool into container. Do not over-fill the container.','Add stool to the “FILL LINE”. Tighten cap securely.'], comments:[]}},
+  meds:['Antibiotics and acid lowering medication may interfere with this test and should not be taken for the periods indicated in brackets prior to the test.',
+   '1. Antibiotics e.g. Amoxicillin, Clarithromycin, Metronidazole, Tetracycline (4 weeks)','2. Bismuth Preparations e.g. Pepto-Bismol (2 weeks)',
+   '3. Proton pump inhibitors e.g. Nexium, Pariet, Prevacid, Losec, Pantoloc, Pantoprazole (Tecta®) (7 days)','4. H2 receptor antagonists e.g. Zantac, Tagamet, Pepcid (1 day)',
+   '5. Antacids e.g. Maalox, Diovol, Gaviscon, Tums (1 day)','If you are taking any of these medications, it is recommended that you discuss this with your doctor before having the test done.'],
+  // card summary: lead is a UI label (not checked); items are verbatim words of the medication list
+  cardShort:[{lead:'Not taken before the test: ', items:[['Antibiotics','(4 weeks)'],['Bismuth','(2 weeks)'],['Proton pump inhibitors','(7 days)'],['H2 receptor antagonists','(1 day)'],['Antacids','(1 day)']], tail:'discuss this with your doctor'}],
+  steps:['Please discuss your medication use with your physician prior to taking this test.','Urinate into the toilet if needed.',
+   'Lift toilet seat. Place sheets of plastic wrap (e.g. Saran Wrap™) over the toilet bowl, leaving a slight dip in the centre. Place the toilet seat down. Pass stool onto plastic wrap.',
+   'Alternatively, use a clean bowl or sterilized bedpan. Do not let urine or water touch the stool specimen.',
+   'Using the spoon attached to the cap, place stool into container. Do not over-fill the container.','Add stool to the “FILL LINE”. Tighten cap securely.',
+   'Wash hands with soap and water. Write Name, Date of Birth or Health Card Number, and Date and Time of collection on each container. Place container(s) into plastic bag(s) and seal.'],
+  storage:['Bring the container back to the laboratory within 12hours of collection. Delays will require specimen recollection. Until specimens can be brought to the laboratory, refrigerate.']},
+ // t228 (K. Williams 2026-10-21): HPV self-collection is always this BC Cancer kit; the LifeLabs HPV SELF COLLECTED SWAB page names no container.
+ {id:'bccancer_cervix_selfscreen', kind:'patient', issuer:'BC Cancer', title:'CERVIX SELF-SCREENING KIT INSTRUCTIONS', heading:'CERVIX SELF-SCREENING KIT INSTRUCTIONS', docNumber:null, version:'Version: November 2024', date:null, url:null,
+  dictIds:['hpv_self'], kitDisplay:'CERVIX SELF-SCREENING KIT',
+  sites:{hpv_self:{site:'CERVIX SELF-SCREENING KIT', device:[], steps:['Hold the swab at the red line.','Locate your vagina, then gently insert the swab like how you would insert a tampon into your vaginal opening.','Rotate the swab as you slowly count to 20, then remove the swab.','Slide the swab into the plastic tube and close firmly.','CLEARLY write your collection date on the tube label AND the lab requisition.'], comments:[]}},
+  doNot:['When you are on your period. Wait until your period is over.','If you are pregnant or use a pessary. Talk to a health care provider','If you’ve had your cervix removed (e.g., total hysterectomy). Talk to a health care provider to see if cervix screening is still required.'],
+  cardShort:[{lead:'Do not take the test: ', items:[['on your period'],['pregnant'],['use a pessary'],['total hysterectomy']], tail:'Talk to a health care provider'}],
+  steps:['Hold the swab at the red line.','Locate your vagina, then gently insert the swab like how you would insert a tampon into your vaginal opening.','Rotate the swab as you slowly count to 20, then remove the swab.','Slide the swab into the plastic tube and close firmly.','CLEARLY write your collection date on the tube label AND the lab requisition.'],
+  storage:['No, it’s fine to store your sample at room temperature.']},
+ // t228c (K. Williams 2026-10-21, explicit exception to "hospital sources in Details only" for THIS test): community nurses do not use glass
+ // slides - the D2350 Vaginitis Initial (BV & yeast) card is built from this C&W eLab page (cardEntry). LifeLabs forwarding to C&W is
+ // K. Williams' belief only - not printed on any page, so the card names no lab.
+ {id:'cw_elab_bv_yeast', kind:'elab-other-lab', issuer:"Children's & Women's Health Centre of British Columbia - Laboratory", title:'Bacterial Vaginosis & Yeast Screen', docNumber:null, version:null, date:'Last Changed Monday, February 9, 2026', url:'www.elabhandbook.info/phsa',
+  issuerNote:'PHSA eLab Handbook public view (C&W laboratory entry); handbook home, not a per-test link',
+  scopeNote:'C&W hospital laboratory entry, used for the card by K. Williams (2026-10-21). Which lab receives community samples is not printed on any page.',
+  dictIds:['vaginitis_initial'],
+  cardEntry:{displayName:'Vaginitis - initial (BV & yeast)', specimen:'Vagina', container:'Culture swab (clear transport medium)',
+   lines:[['Deliver specimen to laboratory immediately'],['If immediate delivery is not available, refrigerate sample','prior to and during transport'],['Specimen is stable at 2-8 C for up to 24 hours']]},
+  testMethod:'Gram Stain', alternateNames:'BV Smear', testIncludes:'Microscopic examination for evidence of bacterial vaginosis',
+  inquiries:['General: 604-875-2345 x7460','Results: 604-875-2345 x7460'], timeAccepted:'Daily 24 hours',
+  requisition:'Med_Services Lab_Req - OUTPATIENT - CW 00051975', turnaround:'1 day',
+  specimenRows:[{specimen:'Vagina', container:'Culture swab (clear transport medium)', collection:null}], volume:'Optimal: N/A', volumeMin:'Min: N/A',
+  storage:['Deliver specimen to laboratory immediately to the lab. If immediate delivery is not available, refrigerate sample where prior to and during transport. Specimen is stable at 2-8 C for up to 24 hours'],
+  tdg:'All samples must be in acceptable sample collection container and properly packaged as per transport Canada, Transport of Dangerous Goods Regulations.',
+  shipTo:['CW Department of Pathology Specimen Receiving Room 2J20',"Children's & Women's Health Centre of British Columbia - Laboratory",'4500 Oak Street','Vancouver, BC','V6H 3N1'],
+  additionalFiles:['Collection_Device-CLEAR_TRANSPORT_MEDIUM_Culture_S']}
 ]};
 G.byDict={};for(const e of G.entries)for(const id of e.dictIds||[])(G.byDict[id]=G.byDict[id]||[]).push(e);
 if(typeof module!=='undefined'&&module.exports)module.exports=G;else root.GuideData=G;

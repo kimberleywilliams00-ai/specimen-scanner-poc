@@ -44,6 +44,14 @@ const BYDICT={},BYDICT_ALL={};for(const e of DATA.entries)for(const id of e.dict
 for(const e of DATA.entries)for(const id in e.dictIdsVia||{})if(!BYDICT_ALL[id])(BYDICT_ALL[id]=[]).push(e);
 const GD=root.GuideData||{entries:[],byDict:{}}; // ui2: collection guides + patient instruction sheets (js/guide_data.js, verbatim)
 const guidesFor=u=>uniq((u.ids||[]).flatMap(id=>GD.byDict[id]||[]));
+/* t228c (K. Williams 2026-10-21): stand-in entry for a test with NO LifeLabs page whose card she has chosen to build from another
+   source page (guide_data.js cardEntry) - D2350 Vaginitis Initial from the C&W eLab Bacterial Vaginosis & Yeast Screen page. Plan-only;
+   never added to DATA.entries; no destination or lab named on the card (the page does not say where community samples go). */
+for(const g of GD.entries){if(!g.cardEntry)continue;for(const id of g.dictIds||[]){if(BYDICT_ALL[id])continue;const ce=g.cardEntry;
+  const e={id:g.id+':'+id,standIn:g,name:ce.displayName,title:g.title,sourceUrl:'https://www.elabhandbook.info/phsa',sourceUrlVerified:false,dictIds:[id],specimenType:ce.specimen,
+    collect:[{kind:'swab',container:ce.container,count:1,centrifuge:null,temp:'',noShare:true,destination:'',destGroup:'',form:'',notes:[],cardLinesG:ce.lines}],
+    preTestPrep:[],handling:[],stability:[],requisitionNotes:[],orderNotes:[],ambiguities:[],patientInstructionDocs:[],additionalInfo:[]};
+  BYDICT[id]=e;BYDICT_ALL[id]=[e];}}
 const viaIds=u=>u.entry&&u.entry.dictIdsVia?u.ids.filter(i=>u.entry.dictIdsVia[i]):[];
 function guideRef(g){return [g.issuer,g.title,g.docNumber,g.version,g.date].filter(Boolean).join(' · ');}
 /* v3.7: one dictionary id can be linked to several LifeLabs entries (e.g. 'TSH +/- fT4' -> TSH and FREE T4): one unit per entry. */
@@ -62,7 +70,8 @@ function destLabel(c){if(c.destination)return c.destination+(c.destGroup==='PHL'
 /* ui2 (2026-10-11) source links: each test name links to its own directory page. LifeLabs: entry.sourceUrl (a candidate built from the
    page title unless sourceUrlVerified); no LifeLabs entry: the directory home (page not in the app). eLab: handbook home (no per-test URL is
    printed on the pages). Links open in a new tab; offline they simply do not load. */
-function srcOf(u){const e=u&&u.entry;if(e&&e.sourceUrl)return {url:e.sourceUrl,verified:!!e.sourceUrlVerified,label:'LifeLabs page: '+e.title};
+function srcOf(u){const e=u&&u.entry;if(e&&e.standIn)return {url:e.sourceUrl,verified:false,home:true,label:e.standIn.issuer+' - eLab Handbook: '+e.title}; // t228c
+  if(e&&e.sourceUrl)return {url:e.sourceUrl,verified:!!e.sourceUrlVerified,label:'LifeLabs page: '+e.title};
   return {url:DIR_URL,verified:false,home:true,label:'LifeLabs test directory (this test’s page is not in the app yet)'};}
 function srcLink(u,text,cls){const s=srcOf(u);return el('a',{href:s.url,target:'_blank',rel:'noopener noreferrer',class:'srclink'+(cls?' '+cls:''),text:text||s.label});}
 function unvTag(u){const s=srcOf(u);return s.verified?null:el('span',{class:'unv',title:s.home?'Directory home - the page for this test is not in the app yet':'Built from the page title with the confirmed LifeLabs URL rule - this link has not been opened yet',text:s.home?'directory home':'pattern-based, unverified'});}
@@ -99,8 +108,11 @@ function chartSrc(){return 'Source: '+TR.source+' ('+TR.region+') · last checke
 function ruleSrc(r){return r.source+', '+r.date;}
 
 /* items: [{id, name, notes}] -> units: one per LifeLabs entry (per-test PDF) or per chart-only dictionary id */
-function resolve(items){const units=[],unknown=[],by=new Map();
-  for(const it of items){const id=it.id;const es=(id&&BYDICT_ALL[id])||[];const ch=id&&TR.byId[id];
+/* t228 (2026-10-21): D2350 name-only boxes with no page of their own -> the LifeLabs page that covers them (the item keeps its own name) */
+const ALIAS_ID={psa_screen:'psa',stool_op_highrisk:'stool_op',fit_nocopy:'fit'};
+const NO_SPECIMEN={ecg:'Not a lab specimen - nothing to collect.'}; // t228: ECG box on D2350
+function resolve(items){const units=[],unknown=[],noSpec=[],by=new Map();
+  for(const it of items){if(it.id&&NO_SPECIMEN[it.id]){noSpec.push(it);continue;}const id=(it.id&&ALIAS_ID[it.id])||it.id;const es=(id&&BYDICT_ALL[id])||[];const ch=id&&TR.byId[id];
     if(!es.length&&!ch&&!RF.byId[id]){unknown.push(it);continue;}
     const dn=dictName(id).toLowerCase(),pos=e=>{const i=dn.indexOf(short(e).toLowerCase());return i<0?999:i;}; // order as named on the line (TSH, then fT4)
     for(const e of es.length?es.slice().sort((a,b)=>pos(a)-pos(b)):[null]){const key=e?'E:'+e.id+(e.perDictId?':'+id:''):'C:'+id; // ui2: perDictId = one specimen per site
@@ -108,7 +120,7 @@ function resolve(items){const units=[],unknown=[],by=new Map();
       const u=by.get(key);u.items.push(it);if(!u.ids.includes(id))u.ids.push(id);if(!u.chart&&ch)u.chart=ch;}}
   for(const u of units){u.localTube=localTubeRule(u);u.route=formRoute(u);u.formOnly=!u.entry&&!u.chart&&!u.localTube;
     if(u.entry&&u.ids.length&&u.ids.every(i=>(u.entry.dictIdsVia||{})[i]))u.name=dictName(u.ids[0]);} // via-only: named after the test asked for
-  return {units,known:units.filter(u=>u.entry),chartOnly:units.filter(u=>!u.entry),unknown};}
+  return {units,known:units.filter(u=>u.entry),chartOnly:units.filter(u=>!u.entry),unknown,noSpec};}
 
 /* local practice rules: which apply, how they are answered, which units they take out of the tube plan */
 function ruleStates(units,answers){const ids=new Set(units.flatMap(u=>u.ids));const out=[];
@@ -342,6 +354,9 @@ function plan(units){
     const kitG=gs.find(g=>g.id==='ll_doc31971');if(kitG){const k=Object.values(kitG.kits).filter(k=>ids.some(i=>k.ids.includes(i))&&(!/Boric/.test(k.name)||/Preservative/.test(o.c.container||'')));if(k.length)o.kits=k.map(k=>({name:k.name,use:k.use,not:k.not,g:kitG}));}
     // (BCCDC Quick Reference kit conflict removed 2026-10-11: its 'Unisex' wording is treated as superseded - K. Williams: the photo shows a Multitest swab)
     const stG=gs.find(g=>g.sites);const sid=stG&&ids.concat(viaIds(u).length?['ct_ng_urine']:[]).find(i=>stG.sites[i]);if(sid)o.steps={site:stG.sites[sid],g:stG};
+    // t228: page names no container (C&S throat, HPV self-collected) -> the LifeLabs containers sheet kit / the named kit; card summary lines from guides
+    if(!o.label){const kd=gs.find(g=>g.kitDisplay);o.label=(o.kits&&o.kits[0].name)||(kd&&kd.kitDisplay)||((u.entry&&u.entry.specimenType)||'');o.labelFrom=o.kits?'kit':kd?'kitDisplay':'specimenType';}
+    o.cardShort=gs.flatMap(g=>(g.cardShort||[]).map(x=>Object.assign({g},x)));
     o.timeLimits=gs.flatMap(g=>(g.timeLimits||[]).filter(x=>ids.some(i=>x.ids.includes(i))).map(x=>({text:x.text,g})));
     const via=viaIds(u);if(via.length)o.shared={ids:via,ev:via.map(i=>u.entry.dictIdsVia[i])};
     // ui2 (2026-10-11): BCCDC-bound test with a site row in the eLab Handbook - eLab is the source of specimen requirements (K. Williams
@@ -358,7 +373,7 @@ function plan(units){
     // ui2 (turn 11): local practice - kit from a guide row (GC culture: BCCDC Quick Reference green-top eSwab)
     { const kr=LR.rules.find(r=>r.kind==='kitSource'&&o.members.some(m=>m.unit.entry&&r.entries.includes(m.unit.entry.id)));
       const kg=kr&&GD.entries.find(g=>g.id===kr.guide),kk=kg&&kg.kits&&kg.kits[kr.kit];
-      if(kk){o.kitRule=kr;o.ll=Object.assign({},o.ll||{},{kits:o.kits});o.kits=[{name:kk.kit,g:kg}];} }
+      if(kk){o.kitRule=kr;o.ll=Object.assign({},o.ll||{},{kits:o.kits});o.kits=[{name:kk.kit,g:kg}];if(kk.footnote)o.kitAlso={text:kk.footnote,g:kg};if(o.members.some(m=>m.unit.entry&&m.unit.entry.standIn))o.label=kr.short;} } // t228d: stand-in card: the kit names the container everywhere (source page container stays in its Details block / 'sources differ' note) // t228d: footnote (BV & yeast alternative swabs)
     // ui2 (turn 10): local practice - urine culture: send the cup, no boric acid tube (LifeLabs kit/pour-off kept in Details as lab-side)
     const co=LR.rules.find(r=>r.kind==='cupOnly'&&o.members.some(m=>m.unit.entry&&r.entries.includes(m.unit.entry.id)));
     if(co&&!o.eb){o.cupOnly=co;o.ll=Object.assign({},o.ll||{},{kits:o.kits});o.kits=[{name:co.container,g:{issuer:'Local practice',title:co.source,date:co.date},local:true}];
@@ -439,13 +454,14 @@ function elabBlock(eb,e,u,secondary){const b=el('div',{class:'elab-block'},el('d
 /* ui2 (2026-10-11): what a collection guide says for this test (verbatim; source line with issuer / title / doc number / version / date) */
 function guideBlock(g,u){const b=el('div',{class:'elab-block guide-block'},el('div',{class:'tname',text:g.issuer?g.issuer+' - '+g.title:g.title}));const ids=u.ids;const L=[];
   if(g.sites)for(const i of ids)if(g.sites[i])L.push(g.sites[i].site+': '+g.sites[i].device.join('; ')+' - '+g.sites[i].steps.join('; ')+(g.sites[i].comments.length?' - '+g.sites[i].comments.join(' '):''));
-  if(g.kits)for(const k of Object.values(g.kits))if(ids.some(i=>k.ids.includes(i)))L.push(k.name?(k.name+(k.use?' - '+k.use:'')+(k.not?' - '+k.not:'')):(k.test+' · '+k.sites+' · '+k.kit));
+  if(g.kits)for(const k of Object.values(g.kits))if(ids.some(i=>k.ids.includes(i)))L.push(k.name?(k.name+(k.use?' - '+k.use:'')+(k.not?' - '+k.not:'')):(k.test+' · '+k.sites+' · '+(k.kitRow||k.kit)+(k.footnote?' '+k.footnote:''))); // t228d: whole verbatim cell + footnote
   if(g.rows)for(const r of g.rows)L.push(r.order+': '+r.cells.join(' OR '));
   const uri=ids.some(i=>/urine/.test(i)),swb=ids.some(i=>!/urine/.test(i)); // storage lines: only the specimen type(s) in this unit
   for(const x of (g.share||[]).concat((g.storage||[]).filter(x=>/urine/i.test(x)?uri:/swab/i.test(x)?swb:true)))L.push(x);
   if(g.specimenRows){if(g.testIncludes)L.push('Test Includes: '+g.testIncludes);if(g.alternateNames)L.push('Alternate Names: '+g.alternateNames);if(g.quickTip)L.push('Quick Tip: '+g.quickTip);
     for(const r of g.specimenRows)L.push(r.specimen+': '+r.container+' · '+g.volume+' · '+g.volumeMin+(r.collection?' - '+r.collection:''));
     L.push('Requisition(s): '+g.requisition+' · Turnaround Time: '+g.turnaround+' · Time Accepted: '+g.timeAccepted);}
+  for(const x of g.meds||[])L.push(x);for(const x of g.doNot||[])L.push('DO NOT TAKE THE TEST: '+x); // t228
   if(g.labelling)L.push('Label: '+g.labelling.join('; '));
   if(g.transport)L.push('Transport to: '+g.transport);if(g.additionalInfo)L.push('Additional Information: '+g.additionalInfo);
   if(g.urineNote&&ids.some(i=>/ct_ng_(vaginal|urine)/.test(i)))L.push(g.urineNote);
@@ -461,12 +477,12 @@ function localTag(r){if(r.sourceUrl)return el('span',{class:'local-tag'},el('a',
 function render(host,items,opts){ // ui2: legacy full renderer, used as the source of every 'Details & sources' block (js/plan_view.js)
   opts=opts||{};opts.answers=opts.answers||{};
   const y=typeof window!=='undefined'?window.scrollY:0;
-  host.innerHTML='';const {units,known,chartOnly,unknown}=resolve(items);const RS=ruleStates(units,opts.answers);const P=plan(units);
+  host.innerHTML='';const {units,known,chartOnly,unknown,noSpec}=resolve(items);const RS=ruleStates(units,opts.answers);const P=plan(units);
   const live=units.filter(u=>!u.excludedBy);
   const confirmedIds=new Set(items.map(i=>i.id).filter(Boolean));
   const rerender=()=>{if(opts.rerender)return opts.rerender();render(host,items,opts);if(typeof window!=='undefined')window.scrollTo(0,y);};
   host.appendChild(el('div',{class:'sum-head','data-part':'head'},el('h2',{text:'Collection summary'}),
-    el('div',{class:'small',text:items.length+' confirmed test'+(items.length===1?'':'s')+' · '+known.length+' with full LifeLabs entry · '+chartOnly.length+' tube from chart/form/local rule only · '+unknown.length+' without info'})));
+    el('div',{class:'small',text:items.length+' confirmed test'+(items.length===1?'':'s')+' · '+known.filter(u=>!u.entry.standIn).length+' with full LifeLabs entry · '+(known.some(u=>u.entry.standIn)?known.filter(u=>u.entry.standIn).length+' from another source page (no LifeLabs page) · ':'')+chartOnly.length+' tube from chart/form/local rule only · '+unknown.length+' without info'})));
 
   // 0. local practice questions (e.g. PTT on heparin) - before anything else
   for(const st of RS){const r=st.rule;
@@ -508,6 +524,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
   for(const it of unknown){host.appendChild(el('div',{class:'sum-card amber','data-part':'unknown','data-name':it.name},el('div',{class:'tname',text:'⚠ '+it.name+(it.id?'':' (unmatched)')}),
     el('div',{},el('b',{text:'No collection info yet'}),' - not on the LifeLabs Quick Reference Chart and no Lab Test Information entry. Check ',el('a',{href:DIR_URL,target:'_blank',rel:'noopener noreferrer',text:'tests.lifelabs.com'})),
     el('div',{class:'small',text:'Not included in the tube counts below.'})));}
+  for(const it of noSpec)host.appendChild(el('div',{class:'sum-card','data-part':'nospec','data-name':it.name},el('div',{class:'tname',text:it.name}),el('div',{text:NO_SPECIMEN[it.id]}))); // t228
   const banner=()=>host.appendChild(el('div',{class:'proto-banner','data-part':'banner',text:'Prototype - verify against current LifeLabs/BCCDC guidance before collecting.'}));
   if(!units.length){banner();return {known:0,chartOnly:0,unknown:unknown.length,blood:0,other:0,conflicts:[],ui:{units,known,chartOnly,unknown,RS,P,live,items}};}
 
@@ -592,7 +609,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
         for(const k of st)if(cr.flags[k])box.appendChild(el('div',{class:'fact warn',text:cr.flags[k]}));
         if(st.length)box.appendChild(el('div',{class:'fact okline'},'✔ Local practice: '+cr.text+' ',el('span',{class:'small',text:'('+cr.source+', '+cr.date+')'})));} }
     if(t.kitRule){box.appendChild(el('div',{class:'fact okline'},'✔ Local practice: '+t.kitRule.text+' ',el('span',{class:'small',text:'('+t.kitRule.source+', '+t.kitRule.date+')'})));
-      box.appendChild(el('div',{class:'fact small',text:'Sources differ on the swab: LifeLabs page container “'+t.c.container+'”; local practice follows the BCCDC Quick Reference (“'+t.kits[0].name+'”).'}));}
+      box.appendChild(el('div',{class:'fact small',text:'Sources differ on the swab: '+(t.kitRule.pageLabel||'LifeLabs page')+' container “'+t.c.container+'”; local practice follows the BCCDC Quick Reference (“'+t.kits[0].name+'”'+(t.kitAlso?' “'+t.kitAlso.text+'”':'')+').'}));}
     for(const sw of t.sharedWith||[]){if(!sw.rule){box.appendChild(el('div',{class:'fact'},el('b',{text:'Same container for '+sw.unit.name+' (LifeLabs page '+sw.from.entry.title+'): '}),'“'+sw.quote+'”'));continue;}
       box.appendChild(el('div',{class:'fact okline'},'✔ Local practice: '+sw.rule.text+' ',el('span',{class:'small',text:'('+sw.rule.source+', '+sw.rule.date+')'})));
       if(sw.g)box.appendChild(el('div',{class:'small'},'Supporting wording - '+sw.g.issuer+', “'+sw.g.title+'” ('+sw.g.date+'): '+sw.g.share.map(q=>'“'+q+'”').join(' ')+' ',el('a',{href:sw.g.url,target:'_blank',rel:'noopener',text:'source'})));}
@@ -659,7 +676,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
   const pdocs=[];for(const u of live){for(const g of guidesFor(u).filter(g=>g.kind==='patient')){let d=pdocs.find(x=>x.g===g);if(!d)pdocs.push(d={g,units:[]});if(!d.units.includes(u))d.units.push(u);}}
   if(pdocs.length){const pi=el('div',{class:'sum-card','data-part':'pinstr'},el('h3',{text:'Patient instruction sheets'}));
     for(const d of pdocs){const g=d.g;pi.appendChild(el('div',{class:'tname',text:g.heading+' - for '+d.units.map(u=>u.name).join(', ')}));
-      const ul=el('ul',{class:'verbatim'});for(const x of g.steps.concat(g.storage||[]))ul.appendChild(el('li',{text:x}));pi.appendChild(ul);
+      const ul=el('ul',{class:'verbatim'});for(const x of (g.doNot||[]).map(x=>'DO NOT TAKE THE TEST: '+x).concat(g.meds||[],g.steps,g.storage||[]))ul.appendChild(el('li',{text:x}));pi.appendChild(ul); // t228: do-not / medication lists first
       if(g.kit)pi.appendChild(el('div',{class:'small',text:'Kit: '+g.kit}));
       pi.appendChild(el('div',{class:'src',text:'Source: '+guideRef(g)+(g.issuerBasis?' ('+g.issuerBasis+')':'')+' · supplied by K. Williams, checked '+GD.lastChecked+' · no web address printed on the sheet'}));}
     host.appendChild(pi);}
@@ -696,6 +713,7 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
   const fl=el('ul');for(const f in forms)fl.appendChild(el('li',{},el('b',{text:f+': '}),[...forms[f]].join(', ')));
   if(Object.keys(forms).length){pw.appendChild(el('div',{text:'Other requisition forms named in the directory:'}));pw.appendChild(fl);}
   else if(!byForm.size)pw.appendChild(el('div',{class:'small',text:'No extra requisition forms named for these tests.'}));
+  for(const u of known.filter(u=>u.entry.standIn))pw.appendChild(el('div',{class:'fact',text:u.name+': no LifeLabs page; the '+u.entry.standIn.issuer+' eLab page names “'+u.entry.standIn.requisition+'”. Which lab receives community samples is not printed on any page.'})); // t228c
   const unnamed=known.filter(u=>!u.route&&u.entry.collect.some(c=>c.destination==='BCCDC'&&!c.form&&!u.entry.form)).map(u=>u.name);
   if(unnamed.length)pw.appendChild(el('div',{class:'fact caveat',text:'⚠ '+unnamed.join(', ')+': BCCDC tube but no form named in the directory - confirm which requisition goes with it.'}));
   const noForm=chartOnly.filter(u=>!u.localTube&&(!u.route||u.route.how==='lifelabs')).map(u=>u.name);
@@ -742,6 +760,13 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
     if(!e){d.appendChild(el('div',{class:'fact caveat',text:u.localTube&&u.localTube.destination==='BCCDC'?'Processing, storage and transport details are not yet available for this test (destination BCCDC per local practice).':'Processing, storage, transport and destination details are not yet available for this test.'}));
       d.appendChild(el('div',{class:'src'},(u.chart?chartSrc():u.route?'Source: '+u.route.form.source+' · checked '+u.route.form.lastChecked:'Source: local practice, '+ruleSrc(u.localTube))+' · ',srcLink(u,'tests.lifelabs.com'),' ',unvTag(u)||''));d.__unit=u;tc.appendChild(d);continue;}
     const meta=[e.specimenType,e.discipline,e.frequency&&('Frequency '+e.frequency),e.turnaroundTime&&('TAT '+e.turnaroundTime)].filter(Boolean).join(' · ');d.appendChild(el('div',{class:'small',text:meta}));
+    if(e.standIn){const g=e.standIn; // t228c: no LifeLabs page - the chosen source page, verbatim (Details only: lab, requisition, TAT, method, inquiries)
+      const L=['Specimen: '+g.specimenRows.map(r=>r.specimen+' - '+r.container).join('; ')+' · '+g.volume+' · '+g.volumeMin,'Test Method: '+g.testMethod+' · Test Includes: '+g.testIncludes+' · Alternate Names: '+g.alternateNames,
+        'Requisition(s): '+g.requisition+' · Turnaround Time: '+g.turnaround+' · Time Accepted: '+g.timeAccepted,'Shipping: '+g.storage.join(' ')+' '+g.tdg,'Ship to: '+g.shipTo.join(', '),'Inquiries: '+g.inquiries.join(' · '),'Additional Files: '+g.additionalFiles.join(', ')];
+      const b=el('div',{class:'elab-block guide-block'},el('div',{class:'tname',text:g.issuer+' - eLab Handbook - '+g.title+' ('+g.date+')'}));const ul=el('ul',{class:'verbatim'});for(const x of L)ul.appendChild(el('li',{text:x}));b.appendChild(ul);
+      b.appendChild(el('div',{class:'small',text:'No LifeLabs page for this test. Card built from this hospital-lab page at K. Williams’ request (2026-10-21; exception to the hospital-pages-in-Details-only rule). '+g.scopeNote}));
+      b.appendChild(el('div',{class:'src',text:'Source: '+g.issuer+' - eLab Handbook “'+g.title+'” ('+g.date+') · '+g.issuerNote+' · supplied by K. Williams'}));d.appendChild(b);
+      for(const x of guidesFor(u).filter(x=>x.kind==='guide'))d.appendChild(guideBlock(x,u));d.__unit=u;tc.appendChild(d);continue;}
     if(e.scopeNote&&!scopeOk(e,units))d.appendChild(el('div',{class:'fact caveat',text:'⚠ '+e.scopeNote+' (reviewer note, not LifeLabs text)'})); // v3.7: e.g. Electrolytes page = Na & K only
     for(const rid of e.relatedEntries||[]){const r=DATA.entries.find(x=>x.id===rid);if(!r)continue; // v3.7: ordering-rule pages (e.g. ELECTROLYTES EXTENDED PANEL)
       d.appendChild(el('div',{class:'fact small'},el('b',{text:'LifeLabs page '+r.title+' (published '+r.lastPublished+'): '}),(r.preTestPrep||[]).map(x=>'“'+x+'”').join(' ')));}

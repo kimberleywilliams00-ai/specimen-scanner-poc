@@ -4,7 +4,7 @@
 const DATA={
 "source": "LifeLabs Lab Test Information (Lower Mainland)",
 "directoryUrl": "https://tests.lifelabs.com/",
-"lastChecked": "2026-10-13",
+"lastChecked": "2026-10-21",
 "entries": [
 {
 "id": "acr_urine",
@@ -7157,7 +7157,10 @@ const DATA={
 "additionalInfo": [],
 "reflex": "",
 "patientInstructionDocs": [],
-"patientPrep": ["Collect approximately 7 mL of venous blood (at least one hour after a meal)."], "patientPrepSource": "turn 50 K. Williams: BCCDC eLab Handbook - Hepatitis A Serology (immunity), last changed 2025-05-22 (Drive: BCCDC_eLab_Hepatitis_A_Serology_immunity.pdf)",
+"patientPrep": [
+"Collect approximately 7 mL of venous blood (at least one hour after a meal)."
+],
+"patientPrepSource": "turn 50 K. Williams: BCCDC eLab Handbook - Hepatitis A Serology (immunity), last changed 2025-05-22 (Drive: BCCDC_eLab_Hepatitis_A_Serology_immunity.pdf)",
 "stability": [],
 "orderNotes": [],
 "ambiguities": [
@@ -7954,7 +7957,14 @@ const DATA={
 "bag": ""
 }
 ],
-"includesDictIds": ["hav_igm","hbsag","hcv_screen","hbc_ab","hbv_immune"], "includesNote": "turn 49 K. Williams: BCCDC Serology Screening Requisition (PHRQ_HVS_0001F v1.0 Aug 2026) Acute-undefined etiology = HBsAg, Anti-HBc Total, Anti-HBs, Anti-HCV, Anti-HAV IgM (broader than the LifeLabs requisition)",
+"includesDictIds": [
+"hav_igm",
+"hbsag",
+"hcv_screen",
+"hbc_ab",
+"hbv_immune"
+],
+"includesNote": "turn 49 K. Williams: BCCDC Serology Screening Requisition (PHRQ_HVS_0001F v1.0 Aug 2026) Acute-undefined etiology = HBsAg, Anti-HBc Total, Anti-HBs, Anti-HCV, Anti-HAV IgM (broader than the LifeLabs requisition)",
 "requisitionNotes": [],
 "sourceUrl": "https://tests.lifelabs.com/s/article/HEPATITIS-ACUTE-Lower-Mainland",
 "sourceUrlVerified": false,
@@ -13560,6 +13570,930 @@ const DATA={
 "sourceUrl": "https://tests.lifelabs.com/s/article/VITAMIN-E-Lower-Mainland",
 "sourceUrlVerified": true,
 "sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-13"
+},
+{
+"id": "hpylori_serology",
+"title": "HELICOBACTER PYLORI SEROLOGY",
+"name": "H. pylori serology",
+"region": "Lower Mainland",
+"aka": [
+"H PYLORI AB",
+"H PYLORI BLOOD or SERUM",
+"H PYLORI IMMUNITY",
+"H PYLORI IMMUNOASSAY",
+"HPYLORI SEROLOGY (IgG and/or IgM)",
+"HELICOBACTER PYLORI AB",
+"HELICOBACTER PYLORI BLOOD OR SERUM",
+"HELICOBACTER PYLORI IMMUNITY",
+"HELICOBACTER PYLORI IMMUNOASSAY",
+"HELICOBACTER PYLORI SEROLOGY (IgG and/or IgM)"
+],
+"dictIds": [
+"hpylori_serology"
+],
+"discipline": "Chemistry",
+"methodology": "",
+"specimenType": "Blood (Serum)",
+"frequency": "5x per/wk",
+"specimenStability": "2 days room temperature; 14 days refrigerated; 6 months frozen",
+"turnaroundTime": "1-4 days",
+"container": "SST Gold top 5.0 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Ensure 'serology' or 'serum' is specified or when requested as:",
+"H. pylori immunoassay",
+"H. pylori AB",
+"H. pylori immunity",
+"H. pylori blood test"
+],
+"includes": [],
+"handling": [
+"1. Collect one 5 mL SST Gold top tube.",
+"2. Gently invert tube 5-6 times.",
+"3. Label tube with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Allow to clot for a minimum of 30 minutes.",
+"5. Centrifuge for 10 minutes at 1300 RCF.",
+"6. Package and send specimen with completed requisition."
+],
+"labelling": [
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name"
+],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Ordering note (Details only): \"Ensure 'serology' or 'serum' is specified or when requested as:\" H. pylori immunoassay / AB / immunity / blood test - not the stool antigen or breath test.",
+"Not on the LifeLabs Quick Reference Chart - own SST (local rule t205/t211: no confirm-with-lab alert).",
+"Clot step reads \"Allow to clot for a minimum of 30 minutes.\" (no \"upright\") - shown as clot 30 min."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-09-29",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/HELICOBACTER-PYLORI-SEROLOGY-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "SST Gold top 5.0 mL",
+"count": 1,
+"centrifuge": true,
+"clotMinutes": null,
+"rcf": 1300,
+"spinMinutes": 10,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"1. Collect one 5 mL SST Gold top tube.",
+"2. Gently invert tube 5-6 times.",
+"6. Package and send specimen with completed requisition."
+],
+"noShare": false,
+"destGroup": "",
+"bag": "",
+"temp": "Refrigerated (2-8°C)",
+"clotText": "Allow to clot for a minimum of 30 minutes."
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HELICOBACTER-PYLORI-SEROLOGY-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "hpylori_stool_ag",
+"title": "HELICOBACTER PYLORI STOOL AG",
+"name": "H. pylori stool antigen",
+"region": "Lower Mainland",
+"aka": [
+"H PYLORI STOOL AG",
+"H. PYLORI ANTIGEN STOOL",
+"HPYLORI STOOL",
+"STOOL FOR HPYLORI"
+],
+"dictIds": [
+"hpylori_stool_ag"
+],
+"discipline": "Chemistry",
+"methodology": "Immunoassay, Chemiluminescence (CLIA)",
+"specimenType": "Stool/Fecal",
+"frequency": "",
+"specimenStability": "Specimens > 3 days must be frozen or they will be rejected.",
+"turnaroundTime": "14 days",
+"container": "Stool Collection Kit - CLEAN VIAL (no additive)",
+"collectionVolume": "1/2 full",
+"preTestPrep": [
+"1. Provide patient with a copy of the H. pylori Stool Antigen patient instructions.",
+"ensure the patient is aware of the medication requirements.",
+"instruct patient to refrigerate the specimen bring it to the lab within 12 hours of collection.",
+"2. Note: specimen cannot be shared/split with any other stool sample."
+],
+"includes": [],
+"handling": [
+"1. Specimen containers must be labelled with full name of patient and one other unique patient identifier (i.e.",
+"DOB and/or Medical Health Number) & test name.",
+"2. Complete requisition and note date and time of collection.",
+"3. If unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed",
+"requisition."
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [
+"Specimens can be kept refrigerated for 3 days."
+],
+"reflex": "",
+"patientInstructionDocs": [
+"Helicobacter pylori Stool Antigen Test - English",
+"Helicobacter pylori Stool Antigen Test - Arabic",
+"Helicobacter pylori Stool Antigen Test - Chinese",
+"Helicobacte pylori Stool Antigen Test - Farsi",
+"Helicobacter pylori Stool Antigen Test - French",
+"Helicobacter pylori Stool Antigen Test - Korean",
+"Helicobacter pylori Stool Antigen Test - Punjabi"
+],
+"patientPrep": [
+"1. Provide patient with a copy of the H. pylori Stool Antigen patient instructions.",
+"ensure the patient is aware of the medication requirements."
+],
+"stability": [
+{
+"text": "instruct patient to refrigerate the specimen bring it to the lab within 12 hours of collection.",
+"critical": true
+},
+{
+"text": "Specimens > 3 days must be frozen or they will be rejected.",
+"critical": false
+}
+],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"\"Specimens > 3 days must be frozen\" - lab-side limit; under the 12 h rule (K. Williams) it does not redirect the test.",
+"\"3. If unable to meet criteria, refer patient to the nearest LifeLabs Patient Service Centre with a completed requisition.\" - Details only.",
+"Collection Volume \"1/2 full\"; the patient sheet (Doc.#52608) says add stool to the \"FILL LINE\" - the card shows the sheet wording."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-09-22",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/HELICOBACTER-PYLORI-STOOL-AG-Lower-Mainland",
+"collect": [
+{
+"kind": "stool",
+"container": "Stool Collection Kit - CLEAN VIAL (no additive)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "1/2 full",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"2. Note: specimen cannot be shared/split with any other stool sample."
+],
+"noShare": true,
+"destGroup": "",
+"bag": "",
+"temp": "Refrigerated (2-8°C)",
+"cardLines": [
+"Note: specimen cannot be shared/split with any other stool sample."
+]
+}
+],
+"requisitionNotes": [
+"2. Complete requisition and note date and time of collection."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HELICOBACTER-PYLORI-STOOL-AG-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "hpv_self_swab",
+"title": "HPV - SELF COLLECTED SWAB",
+"name": "HPV self-collected swab",
+"region": "Lower Mainland",
+"aka": [
+"HUMAN PAPILLOMA VIRUS SELF COLLECTED SWAB",
+"VAGINAL SWAB",
+"SELF- COLLECT FOR HPV",
+"PROVIDER COLLECT FOR HPV",
+"CERVICAL CANCER SELF- SCREENING SWAB",
+"CCSL SELF-COLLECTED HPV SWABS"
+],
+"dictIds": [
+"hpv_self"
+],
+"discipline": "Molecular Diagnostics",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"Patient or Medical Practitioner is responsible for:",
+"Specimen collection",
+"Completing the requisition",
+"Packaging the specimen in a specimen transport bag"
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"The LifeLabs page names no container - the kit is the BC Cancer cervix self-screening kit (K. Williams 2026-10-21).",
+"Patient or Medical Practitioner is responsible for: Specimen collection, Completing the requisition, Packaging the specimen in a specimen transport bag."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-10-03",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/HPV---SELF-COLLECTED-SWAB-Lower-Mainland",
+"collect": [
+{
+"kind": "swab",
+"container": "",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": true,
+"destGroup": "",
+"bag": "",
+"temp": "Room Temperature"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HPV---SELF-COLLECTED-SWAB-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "hfe_sibling_parent",
+"title": "HEMOCHROMATOSIS SIBLING PARENT",
+"name": "HFE sibling/parent (C282Y homozygote)",
+"region": "Lower Mainland",
+"aka": [
+"C282Y/C282Y",
+"C282Y/C282Y HOMOZYGOTE",
+"C282Y/C282Y HOMOZYGOUS",
+"C282Y HOMOZYGOTE (DNA TESTING)",
+"C282Y HOMOZYGOTE DNA TESTING",
+"HFE SIBLING/PARENT C282Y/C282Y HOMOZYGOTE",
+"HFE SIBLING PARENT C282Y/C282Y HOMOZYGOTE",
+"HFE SIBLING/PARENT C282Y/C282Y",
+"HFE SIBLING PARENT C282Y/C282Y"
+],
+"dictIds": [
+"hfe_sibling"
+],
+"discipline": "Molecular Diagnostics",
+"methodology": "",
+"specimenType": "Blood (Whole Blood)",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "EDTA Lavender 6 mL",
+"collectionVolume": "",
+"preTestPrep": [
+"Medical Practitioner:",
+"Please complete the requisition and mark the box: Sibling/parent is C282Y/C282Y homozygote (DNA testing).",
+"Hand written requests for HEMOCHROMATOSIS SIBLING PARENT must appear as one of the following examples:",
+"C282Y/C282Y",
+"C282Y/C282Y HOMOZYGOTE",
+"C282Y/C282Y HOMOZYGOUS",
+"C282Y HOMOZYGOTE (DNA TESTING)",
+"C282Y HOMOZYGOTE DNA TESTING",
+"HFE SIBLING/PARENT",
+"HFE SIBLING PARENT",
+"For questions regarding this test refer to: http://www.genebc.ca",
+"For BC Guidelines refer to: http://www.bcguidelines.ca/"
+],
+"includes": [],
+"handling": [
+"1. Collect a 6 mL EDTA Lavender top tube.",
+"2. Gently invert/mix tubes 8-10 times.",
+"3. Label tubes with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"test name",
+"4. Place specimen in specimen transport bag.",
+"5. Seal the bag.",
+"6. Fold requisition and place in sleeve of bag."
+],
+"labelling": [],
+"storageTemp": "Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Not on the LifeLabs Quick Reference Chart - own EDTA tube.",
+"Separate from HFE confirm diagnosis (HEMOCHROMATOSIS CONFIRM DIAGNOSIS page: \"Do NOT mark both\" boxes)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2023-11-29",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/HEMOCHROMATOSIS-SIBLING-PARENT-Lower-Mainland",
+"collect": [
+{
+"kind": "blood",
+"container": "EDTA Lavender 6 mL",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"1. Collect a 6 mL EDTA Lavender top tube.",
+"2. Gently invert/mix tubes 8-10 times."
+],
+"noShare": false,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Room Temperature",
+"cardLines": [
+[
+"Requisition: ",
+"mark the box: Sibling/parent is C282Y/C282Y homozygote (DNA testing)."
+]
+]
+}
+],
+"requisitionNotes": [
+"Please complete the requisition and mark the box: Sibling/parent is C282Y/C282Y homozygote (DNA testing)."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/HEMOCHROMATOSIS-SIBLING-PARENT-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "cs_throat",
+"title": "C&S THROAT",
+"name": "C&S throat",
+"region": "Lower Mainland",
+"aka": [
+"C AND S THROAT",
+"GROUP A STREP FROM THROAT",
+"THROAT CULTURE AND SENSITIVITY"
+],
+"dictIds": [
+"culture_throat"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"For pertussis requests see: PERTUSSIS CULTURE"
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"The page names no container (Specimen Type: Swab). Kit shown from LifeLabs Doc#31971 (Microbiology Swab and Collection Containers): \"Culturette – Copan Gel Amies Single Plastic Swab - Routine Bacterial Culture for throats, wounds, vagina, etc.\"",
+"\"For pertussis requests see: PERTUSSIS CULTURE\" (different test; no page in the app)."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-01-16",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/C-S-THROAT-Lower-Mainland",
+"collect": [
+{
+"kind": "swab",
+"container": "",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": true,
+"destGroup": "",
+"bag": "",
+"temp": "Room Temperature"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-THROAT-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "cs_sputum",
+"title": "C&S SPUTUM",
+"name": "C&S sputum",
+"region": "Lower Mainland",
+"aka": [
+"ASPERGILLUS CULTURE",
+"ASPERGILLUS SPUTUM",
+"C AND S SPUTUM",
+"CRYPTOCOCCOSIS SPUTUM",
+"CRYPTOCOCCUS CULTURE",
+"CRYPTOCOCCUS NEOFORMANS SPUTUM",
+"FUNGUS SPUTUM",
+"MAC SPUTUM CULTURE",
+"MAI SPUTUM CULTURE",
+"SPUTUM ASPERGILLUS",
+"SPUTUM CULTURE AND SENSITIVITY",
+"SPUTUM FUNGAL",
+"SPUTUM FOR FUNGUS",
+"SPUTUM YEAST",
+"YEAST SPUTUM"
+],
+"dictIds": [
+"culture_sputum"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Sputum",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Sterile Container",
+"collectionVolume": "",
+"preTestPrep": [
+"1. Provide patient with a completed lab requisition, sterile container(s), transport bag and Sputum Patient",
+"Collection Instructions.",
+"2. Note: if C&S and AFB are requested, two separate collections are preferred.",
+"3. Ensure container is labeled with:",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB, Medical Health Number)",
+"test name"
+],
+"includes": [],
+"handling": [
+"1. Place each specimen in a separate specimen transport bag and seal",
+"2. Fold completed requisition and place in the sleeve on the outside of the transport bag"
+],
+"labelling": [],
+"storageTemp": "Refrigerated (2-8°C)",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Sputum C&S or TB/AFB Patient Instructions - Arabic",
+"Sputum C&S or TB/AFB Patient Instructions - Chinese",
+"Sputum C&S or TB/AFB Patient Instructions - English",
+"Sputum C&S or TB/AFB Patient Instructions - Farsi",
+"Sputum C&S or TB/AFB Patient Instructions - French",
+"Sputum C&S or TB/AFB Patient Instructions - Korean",
+"Sputum C&S or TB/AFB Patient Instructions - Punjabi",
+"Sputum C&S or TB/AFB Patient Instructions - Tagalog",
+"Sputum C&S or TB/AFB Patient Instructions - Vietnamese"
+],
+"patientPrep": [
+"1. Provide patient with a completed lab requisition, sterile container(s), transport bag and Sputum Patient Collection Instructions."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"\"2. Note: if C&S and AFB are requested, two separate collections are preferred.\" (AFB sputum has no card yet.)",
+"The Sputum C&S or TB/AFB Patient Instructions sheet is listed on the page but is not in the app sources (not on the box or Drive).",
+"Label: full name of patient, one other unique patient identifier (i.e. DOB, Medical Health Number), test name."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2024-01-16",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/C-S-SPUTUM-Lower-Mainland",
+"collect": [
+{
+"kind": "sputum",
+"container": "Sterile Container",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [
+"1. Place each specimen in a separate specimen transport bag and seal"
+],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerated (2-8°C)"
+}
+],
+"requisitionNotes": [],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-SPUTUM-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "cs_wound",
+"title": "C&S WOUND",
+"name": "C&S wound",
+"region": "Lower Mainland",
+"aka": [
+"C AND S WOUND",
+"CULTURE AND SENSITIVITY WOUND",
+"DPWD DEEP WOUND",
+"SPWD SUPERFICIAL WOUND",
+"SPWD (SUPERFICIAL WOUND)",
+"SUPERFICIAL WOUND (SPWD)",
+"SWAB FOR CULTURE",
+"NON-SPECIFIC SITE",
+"WOUND SWAB FOR CULTURE"
+],
+"dictIds": [
+"wound_superficial",
+"wound_deep"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Culturette - Copan Liquid Amies Single Plastic)",
+"collectionVolume": "",
+"preTestPrep": [
+"Wound Specimen Collection Procedure:",
+"Deep wounds include: Abscess, Amputation, Animal or Human Bites, Aspirates, Bursa, Cyst, Endometrial Washing,",
+"Gangrene, Incision, Sinus and Seroma.",
+"Superficial wounds include: Acne, Blister, Eczema, Folliculitis, Hives, Impetigo, Lesion, Paronychia, Rash, Scrapes and",
+"Ulcer.",
+"For Deep Wounds:",
+"1. Skin Decontamination",
+"Proper skin preparation is essential to avoid contamination",
+"Gently remove surface exudate using sterile gauze moistened with sterile saline",
+"2. Specimen Collection for Deep Wound",
+"Using a sterile swab, insert it into the wound bed, targeting the area of active infection or advancing edge",
+"of the wound",
+"Apply firm pressure to ensure collection of viable organisms from deep tissue rather than surface",
+"contaminants",
+"3. For superficial wounds:",
+"Decontaminate the Surface",
+"Gently cleanse the area with sterile saline or sterile water to remove debris and surface contaminants",
+"Pat dry with sterile gauze before sampling",
+"4. Specimen Collection",
+"Use a sterile swab to collect the specimen",
+"Swab the area of greatest inflammation, purulent material, or the center of the wound base",
+"5. Label the swab with:",
+"the exact anatomic site. Do not label with a general term such as wound",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"date and time of collection",
+"6. Complete a LifeLabs requisition:",
+"Mark the box for superficial or deep wound",
+"Include exact anatomic site",
+"Place specimen in specimen transport bag",
+"Fold the requisition and place in sleeve of bag"
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Deep wounds include: Abscess, Amputation, Animal or Human Bites, Aspirates, Bursa, Cyst, Endometrial Washing, Gangrene, Incision, Sinus and Seroma.",
+"Superficial wounds include: Acne, Blister, Eczema, Folliculitis, Hives, Impetigo, Lesion, Paronychia, Rash, Scrapes and Ulcer.",
+"Label also: full name of patient, one other unique patient identifier (i.e. DOB and/or Medical Health Number), date and time of collection."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-09-16",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/C-S-WOUND-Lower-Mainland",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Culturette - Copan Liquid Amies Single Plastic)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Room Temperature",
+"cardLinesBy": {
+"wound_deep": [
+"Gently remove surface exudate using sterile gauze moistened with sterile saline",
+"Using a sterile swab, insert it into the wound bed, targeting the area of active infection or advancing edge of the wound",
+"Apply firm pressure to ensure collection of viable organisms from deep tissue rather than surface contaminants"
+],
+"wound_superficial": [
+"Gently cleanse the area with sterile saline or sterile water to remove debris and surface contaminants",
+"Pat dry with sterile gauze before sampling",
+"Swab the area of greatest inflammation, purulent material, or the center of the wound base"
+]
+},
+"cardLines": [
+[
+"Label: ",
+"the exact anatomic site. Do not label with a general term such as wound"
+],
+[
+"Requisition: ",
+"Mark the box for superficial or deep wound"
+]
+]
+}
+],
+"requisitionNotes": [
+"Mark the box for superficial or deep wound",
+"Include exact anatomic site"
+],
+"includesDictIds": [],
+"perDictId": true,
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-WOUND-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "cs_nose_wound",
+"title": "C&S NOSE (WOUND)",
+"name": "C&S nose (wound)",
+"region": "Lower Mainland",
+"aka": [
+"C&S NASAL WOUND",
+"C&S NOSE WOUND",
+"C&S NOSTRIL WOUND",
+"C AND S NOSE ABCESS",
+"C AND S NOSE CYST",
+"C AND S NOSE LACERATION",
+"C AND S NOSE LESION",
+"C AND S NOSE PUSTUAL",
+"C AND S NOSE RASH",
+"C AND S NOSE",
+"C AND S WOUND FROM NOSE",
+"CANDS NOSE",
+"CULTURE AND SENSITIVITY NOSE WOUND",
+"CULTURE AND SENSITIVITY NASAL WOUND",
+"CULTURE AND SENSITIVITY NOSTRIL WOUND",
+"NOSE WOUND CULTURE AND SENSITIVITY",
+"NASAL WOUND CULTURE AND SENSITIVITY",
+"NOSTRIL WOUND CULTURE AND SENSITIVITY",
+"WOUND FROM NOSE CULTURE AND SENSITIVITY"
+],
+"dictIds": [
+"cs_nose_wound"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "Swab (Culturette - Copan Liquid Amies Single Plastic)",
+"collectionVolume": "",
+"preTestPrep": [
+"Wound Specimen Collection Procedure:",
+"Attention to skin decontamination is critical. Remove surface exudates by wiping with sterile gauze and sterile",
+"saline or 70% alcohol.",
+"Pass a swab deep into the lesion and firmly sample lesion’s advancing edge.",
+"Label the swab with:",
+"the exact anatomic site. Do not label with a general term such as wound.",
+"full name of patient",
+"one other unique patient identifier (i.e. DOB and/or Medical Health Number)",
+"date and time of collection",
+"1. Complete a LifeLabs requisition.",
+"2. Mark the box for superficial or deep wound.",
+"3. Include exact anatomic site.",
+"4. Place specimen in specimen transport bag.",
+"5. Fold the requisition and place in sleeve of bag."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [],
+"patientPrep": [],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"No D2350 box of its own - ordered as a superficial or deep wound culture with the site written in."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2025-10-21",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/C-S-NOSE--WOUND--Lower-Mainland",
+"collect": [
+{
+"kind": "swab",
+"container": "Swab (Culturette - Copan Liquid Amies Single Plastic)",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Room Temperature",
+"cardLines": [
+"Remove surface exudates by wiping with sterile gauze and sterile saline or 70% alcohol.",
+"Pass a swab deep into the lesion and firmly sample lesion’s advancing edge.",
+[
+"Label: ",
+"the exact anatomic site. Do not label with a general term such as wound."
+],
+[
+"Requisition: ",
+"2. Mark the box for superficial or deep wound."
+]
+]
+}
+],
+"requisitionNotes": [
+"2. Mark the box for superficial or deep wound.",
+"3. Include exact anatomic site."
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/C-S-NOSE--WOUND--Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
+},
+{
+"id": "trich_self_vag",
+"title": "TRICHOMONAS SELF COLLECTED VAGINAL SWAB",
+"name": "Trichomonas (self-collected vaginal swab)",
+"region": "Lower Mainland",
+"aka": [
+"TRICHOMONAS NAAT SELF-COLLECTED",
+"TRICHOMONAS SELF COLLECTED VAGINAL SWAB"
+],
+"dictIds": [
+"trich"
+],
+"discipline": "Microbiology",
+"methodology": "",
+"specimenType": "Swab",
+"frequency": "7x per/wk",
+"specimenStability": "",
+"turnaroundTime": "",
+"container": "",
+"collectionVolume": "",
+"preTestPrep": [
+"Note: swabs are not available for pick-up at LifeLabs Patient Service Centres.",
+"1. Provide patient with:",
+"Completed requisition for CHLAMYDIA, GONORRHEA and/or TRICHOMONAS SELF COLLECTION",
+"Aptima Multitest swab for Patient Self Collection",
+"Self-Collected Vaginal Swab - for CTGC or Trichomonas Testing Aptima Multitest Swab.",
+"2. Ensure swab is labelled appropriately with:",
+"Full name of patient",
+"DOB and Medical Health Number",
+"Test name",
+"Date of collection",
+"3. Package specimen in specimen transport bag.",
+"4. Seal bag.",
+"5. Place folded requisition in sleeve of bag."
+],
+"includes": [],
+"handling": [],
+"labelling": [],
+"storageTemp": "Refrigerate or Room Temperature",
+"form": "",
+"performingLab": "",
+"additionalInfo": [],
+"reflex": "",
+"patientInstructionDocs": [
+"Self-Collected Vaginal Swab - for CTGC or Trichomonas Testing Aptima Multitest Swab"
+],
+"patientPrep": [
+"Self-Collected Vaginal Swab - for CTGC or Trichomonas Testing Aptima Multitest Swab."
+],
+"stability": [],
+"orderNotes": [],
+"ambiguities": [
+"Performing laboratory not named.",
+"Note: swabs are not available for pick-up at LifeLabs Patient Service Centres.",
+"The D2350 \"Trichomonas testing\" box names no site; urine Trichomonas (CT/GC urine cup) stays on its own scanner test (Urine Trichomonas).",
+"Container is not in a Container field: Pre-Test Preparation names \"Aptima Multitest swab for Patient Self Collection\"."
+],
+"source": "LifeLabs Lab Test Information (Lower Mainland)",
+"lastPublished": "2026-03-31",
+"lastChecked": "2026-10-21",
+"printedUrl": "https://tests.lifelabs.com/s/article/TRICHOMONAS-SELF-COLLECTED-VAGINAL-SWAB-Lower-Mainland",
+"collect": [
+{
+"kind": "swab",
+"container": "Aptima Multitest swab for Patient Self Collection",
+"count": 1,
+"centrifuge": null,
+"clotMinutes": null,
+"rcf": null,
+"spinMinutes": null,
+"volume": "",
+"volumeMl": null,
+"destination": "",
+"form": "",
+"tests": "",
+"notes": [],
+"noShare": true,
+"destGroup": "",
+"bag": "specimen transport bag",
+"temp": "Refrigerate or Room Temperature"
+}
+],
+"requisitionNotes": [
+"Completed requisition for CHLAMYDIA, GONORRHEA and/or TRICHOMONAS SELF COLLECTION"
+],
+"includesDictIds": [],
+"sourceUrl": "https://tests.lifelabs.com/s/article/TRICHOMONAS-SELF-COLLECTED-VAGINAL-SWAB-Lower-Mainland",
+"sourceUrlVerified": true,
+"sourceUrlNote": "URL printed on the LifeLabs page PDF; last checked 2026-10-21"
 }
 ]
 };
