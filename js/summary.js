@@ -177,8 +177,9 @@ function plan(units){
       t.members.push({unit:u,c});}}
   /* turn 47 (K. Williams): HIV serology joins a hepatitis panel's unspun BCCDC SST (BCCDC Serology Screening Req: "Combinations of Syphilis, HIV,
      Hepatitis Serology and Other Serology - Please provide 1 serum separator tube"; chart Doc#49141 pairs HIV with Hep C). Syphilis not moved: not on the chart. */
+  /* turn 49: + syphilis. turn 230 (K. Williams 2026-10-24): + hav_immune (Hep A immune / Anti-HAV Total). Not hav_igm (LifeLabs spun). */
   { const ph=tubes.find(t=>t.group&&t.group.id==='SST50_HEP_PROFILES'&&t.members.some(m=>m.c&&m.c.centrifuge===false&&m.c.destGroup==='PHL'));
-    if(ph)for(const t of tubes.slice()){if(t===ph||!t.local||!t.members.length||!t.members.every(m=>m.unit.ids.every(i=>i==='hiv_serology'||i==='syphilis') /* turn 49: + syphilis */))continue;
+    if(ph)for(const t of tubes.slice()){if(t===ph||!t.local||!t.members.length||!t.members.every(m=>m.unit.ids.every(i=>i==='hiv_serology'||i==='syphilis'||i==='hav_immune')))continue;
       for(const m of t.members)ph.members.push({unit:m.unit,c:m.c,slots:m.slots,joined:'hep_bccdc'});tubes.splice(tubes.indexOf(t),1);} }
   // (a2) tests not on the chart that go on a requisition form with a combined-tube instruction (BCCDC PHL Serology Screening
   // Requisition: "Combinations of Syphilis, HIV, Hepatitis Serology and Other Serology -Please provide 1 serum separator tube.")

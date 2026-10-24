@@ -132,7 +132,37 @@ const E={source:'BCCDC PHL eLab Handbook', urlText:'www.elabhandbook.info/phsa',
    {specimen:'Serum', preferred:false, container:'Sterile tube', optimal:'N/A', min:'1', centrifuge:true, clot:'about one hour', spinMinutes:10, rcf:1200, transfer:true,
     collection:['Collect approximately 7 mL of venous blood (at least one hour after a meal).','Allow blood to clot in the tube, standing upright at room temperature for about one hour.','Centrifuge the tube for 10 minutes at 1200 rcf.','Transfer the serum fraction to a sterile tube.','Submit the sample after ensuring that instructions on the requisition are followed.','Tests performed on the sample will be determined by the request entered on the requisition, the clinical information provided and any follow-up discussions with the clinician.']}],
   shipping:'REFRIGERATE SAMPLE WHERE APPROPRIATE (UNLESS SPECIFIED) PRIOR TO AND DURING TRANSPORT', shipTo:'BCCDC Lane Level Receiving/drop-off, Rear of BCCDC building, 655 West 12th Ave, Vancouver, BC',
-  stability:null, printedNote:'If printed, this version of the test may be out of date. For the most recent version of the test, please refer to the test online at the www.elabhandbook.info/phsa.'}
+  stability:null, printedNote:'If printed, this version of the test may be out of date. For the most recent version of the test, please refer to the test online at the www.elabhandbook.info/phsa.'},
+ /* turn 230 (2026-10-24) K. Williams: PDF printed from Safari (Drive/hep/elab_new/eLab - Hep A serology (immunity).pdf; also BCCDC_eLab_Hepatitis_A_Serology_immunity.pdf). Verbatim; meal-line attribution + tube share with BCCDC serology SST. */
+ {id:'elab_hepatitis_a_serology_immunity', dictIds:['hav_immune'], sourceUrl:'https://www.elabhandbook.info/phsa', sourceUrlVerified:false, sourceUrlNote:'handbook home printed on the page (no per-test URL printed); search the test name', title:'Hepatitis A Serology (immunity)', lastChanged:'Thursday, May 22, 2025', version:null,
+  testMethod:'Serology',
+  alternateNames:['Hepatitis A convalescent','Hepatitis A total antibody','Hepatitis A vaccination','Hepatitis A vaccine'],
+  testIncludes:'This commercial assay has been validated for specimens listed in SPECIMEN REQUIREMENTS.',
+  quickTip:['This assay measures total (IgG and IgM) antibody.'],
+  unacceptable:['Unlabelled samples','Leaking samples','Grossly hemolysed blood samples.','Grossly lipemic samples','Patient name on the sample does not match name on requisition','Samples accompanied by undecipherable, blank or no requisitions','Sample collected in wrong container'],
+  processing:'M-F (varies with STAT holidays and operations)',
+  requisition:'PHRQ_HVS_0001F_Serology_Screening_Requisition (Version 1.0 August 2026)',
+  turnaround:'1-3 days',
+  patientPrep:'Collect approximately 7 mL of venous blood (at least one hour after a meal).',
+  specimens:[
+   {specimen:'Clotted blood', preferred:true, container:'SST (gold top) blood tube', optimal:'N/A', min:'3 mL', centrifuge:false, clot:'about one hour',
+    collection:['Collect approximately 7 mL of venous blood (at least one hour after a meal).',
+     'Allow blood to clot in the tube, standing upright at room temperature for about one hour.',
+     'Submit the sample after ensuring that instructions on the requisition are followed.',
+     'Tests performed on the sample will be determined by the request entered on the requisition, the clinical information provided and any follow-up discussions with the clinician.',
+     'Blood samples that had been inadvertently frozen during transport are not acceptable for serology testing. If there is a risk that a blood sample will freeze during transport, please submit only the serum fraction for testing.']},
+   {specimen:'Serum', preferred:false, container:'Sterile tube', optimal:'N/A', min:'1 mL', centrifuge:true, clot:'about one hour', spinMinutes:10, rcf:1200, transfer:true,
+    collection:['Collect approximately 7 mL of venous blood (at least one hour after a meal).',
+     'Allow blood to clot in the tube, standing upright at room temperature for about one hour.',
+     'Centrifuge the tube for 10 minutes at 1200 rcf.',
+     'Transfer the serum fraction to a sterile tube.',
+     'Submit the sample after ensuring that instructions on the requisition are followed.',
+     'Tests performed on the sample will be determined by the request entered on the requisition, the clinical information provided and any follow-up discussions with the clinician.']}],
+  shipping:'REFRIGERATE SAMPLE WHERE APPROPRIATE (UNLESS SPECIFIED) PRIOR TO AND DURING TRANSPORT',
+  shipTo:'BCCDC Lane Level Receiving/drop-off, Rear of BCCDC building, 655 West 12th Ave, Vancouver, BC',
+  stability:null,
+  printedNote:'If printed, this version of the test may be out of date. For the most recent version of the test, please refer to the test online at the www.elabhandbook.info/phsa.'}
+
 ]};
 E.byDict={};for(const e of E.entries)for(const i of e.dictIds)E.byDict[i]=e;
 if(typeof module!=='undefined'&&module.exports)module.exports=E;else root.ElabData=E;

@@ -7157,10 +7157,8 @@ const DATA={
 "additionalInfo": [],
 "reflex": "",
 "patientInstructionDocs": [],
-"patientPrep": [
-"Collect approximately 7 mL of venous blood (at least one hour after a meal)."
-],
-"patientPrepSource": "turn 50 K. Williams: BCCDC eLab Handbook - Hepatitis A Serology (immunity), last changed 2025-05-22 (Drive: BCCDC_eLab_Hepatitis_A_Serology_immunity.pdf)",
+"patientPrep": [],
+"patientPrepSource": "turn 230: meal line now from elab_data elab_hepatitis_a_serology_immunity (was stuffed into LifeLabs patientPrep from eLab PDF; cleared so card attributes as BCCDC eLab Handbook)",
 "stability": [],
 "orderNotes": [],
 "ambiguities": [

@@ -4,10 +4,10 @@
      server bypassing the HTTP cache (cache:'reload'), cache used only as an offline / slow-network fallback. A new deploy is picked up on next open.
    - Large immutable vendor files (opencv, tesseract js/wasm, traineddata): CACHE-FIRST in a separate cache keyed by
      VENDOR_CACHE. Bump VENDOR_CACHE whenever any file under vendor/ changes. App version bumps do NOT re-download them. */
-const VERSION='v3.8.15';
+const VERSION='v3.8.16';
 const APP_CACHE='req-scanner-app-'+VERSION;
 const VENDOR_CACHE='req-scanner-vendor-1';
-const Q='?v=3.8.15'; // must match the ?v= query strings in index.html
+const Q='?v=3.8.16'; // must match the ?v= query strings in index.html
 const APP_FILES=['./','index.html','version.json','css/app.css'+Q,'css/ui2.css'+Q,'js/app.js'+Q,'js/dictionary.js'+Q,'js/template_d2350.js'+Q,'js/preprocess.js'+Q,'js/pipeline.js'+Q,'js/collection_data.js'+Q,'js/tube_rules.js'+Q,'js/local_rules.js'+Q,'js/requisition_forms.js'+Q,'js/elab_data.js'+Q,'js/guide_data.js'+Q,'js/summary.js'+Q,'js/plan_view.js'+Q,'img/containers/urine_container_orange_cap.webp','img/containers/sst_gold_5ml.webp','img/containers/edta_lavender_6ml.webp','img/containers/sst_gold_3_5ml.webp','img/containers/acd_a_yellow_8_5ml.webp','img/containers/citrate_light_blue_2_7ml.webp','img/containers/edta_lavender_4ml.webp','img/containers/aptima_multitest_swab.webp','img/containers/starplex_stool_container_spoon.webp','img/containers/eswab_green_cap.webp','img/containers/aptima_unisex_swab.webp','img/containers/copan_fecalswab_orange_cap.webp','img/containers/copan_floqswab_red_cap_dry.webp','img/containers/copan_blue_cap_swab_medium.webp','img/containers/eiken_fit_tube_teal_cap.webp','img/containers/red_top_serum_6ml.webp',
  'manifest.json','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png',
  'icons/icon-maskable-192.png','icons/icon-maskable-512.png','icons/favicon-32.png','icons/favicon-16.png','icons/icon.svg']; // turn 38: Labbie icon (L9-icon-3-c1)

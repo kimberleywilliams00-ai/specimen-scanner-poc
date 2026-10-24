@@ -297,11 +297,25 @@ function render(host,items,opts){
     for(const {u,s:x} of U.crit)if(us.includes(u))L.push('Time limit: '+x.text);
     return L.map(x=>el('div',{class:'tc-prep'},x));};
   /* turn 47 (K. Williams, Option A): grey line listing a panel tube's component tests (requisition names), combined when panels share */
-  const COMP={hav_igm:'anti-HAV IgM',hbsag:'HBsAg',hbc_ab:'anti-HBc',hbv_immune:'anti-HBs',hcv_screen:'anti-HCV'},COMP_BCCDC=new Set(['hcv_screen']),COMP_PM={}; /* turn 49: no ± - Acute follows the BCCDC requisition (anti-HBc total) */
+  const COMP={hav_igm:'anti-HAV IgM',hbsag:'HBsAg',hbc_ab:'anti-HBc',hbv_immune:'anti-HBs',hcv_screen:'anti-HCV'},COMP_BCCDC=new Set(['hcv_screen']),COMP_PM={}; /* turn 49: no ± - Acute follows the BCCDC requisition (anti-HBc total). hav_igm stays LifeLabs COMP only, never COMP_BCCDC. */
+  const isHepProfileUnit=u=>u.ids.includes('hep_acute')||u.ids.includes('hep_chronic')||(u.entry&&(u.entry.id==='hepatitis_acute'||u.entry.id==='hep_b_carrier'));
+  /* turn 232 (K. Williams): acute/chronic panel titles stay on BOTH halves. Turn 231 Hep C rename reverted. */
+  const titleBits=t=>{
+    const us=t.members.map(m=>m.unit).filter(u=>!t.members.map(m=>m.unit).some(v=>v!==u&&shortName(v).startsWith(shortName(u)+' '))); // turn 42: Urinalysis hide
+    return us.map(u=>nameLink(u));};
+  /* turn 234 (K. Williams): pairing cue lives in the grey .tc-comp line (“… panel, tube 1 of 2 includes: …”); digits for scanability. Turn 233: panel markers only — HIV/syphilis/Hep A immune stay in the title. */
   const compLine=t=>{const ps=t.members.filter(m=>m.unit.entry&&(m.unit.entry.includesDictIds||[]).length);if(!ps.length)return null;const bc=isBCCDC(t);const out=[];
     for(const m of ps)for(const d of m.unit.entry.includesDictIds){if(COMP_BCCDC.has(d)!==bc||!COMP[d])continue;const pm=((COMP_PM[m.unit.entry.id]||{})[d])||'';const prev=out.find(x=>x.d===d);if(prev){if(!pm)prev.pm='';}else out.push({d,pm});}
-    const names=out.map(x=>x.pm+COMP[x.d]).concat(t.members.filter(m=>!ps.includes(m)).map(m=>shortName(m.unit)));
-    return names.length?el('div',{class:'tc-comp',text:uniq(names).join(' · ')}):null;};
+    const markers=uniq(out.map(x=>x.pm+COMP[x.d]));if(!markers.length)return null;
+    const hepPs=ps.filter(m=>isHepProfileUnit(m.unit));
+    if(hepPs.length){
+      const hasA=hepPs.some(m=>m.unit.ids.includes('hep_acute')||(m.unit.entry&&m.unit.entry.id==='hepatitis_acute'));
+      const hasC=hepPs.some(m=>m.unit.ids.includes('hep_chronic')||(m.unit.entry&&m.unit.entry.id==='hep_b_carrier'));
+      const tube=t.hepPair?', tube '+t.hepPair.n+' of '+t.hepPair.of:'';
+      const pref=hasA&&hasC?'Acute/chronic hepatitis panels'+tube+' includes: ':hasA?'Acute hepatitis panel'+tube+' includes: ':'Chronic hepatitis panel'+tube+' includes: ';
+      return el('div',{class:'tc-comp',text:pref+markers.join(' · ')});}
+    const names=markers.concat(t.members.filter(m=>!ps.includes(m)).map(m=>shortName(m.unit)));
+    return el('div',{class:'tc-comp',text:uniq(names).join(' · ')});};
   const card=(t,n,nb)=>{const box=tubeBox.get(t);const seen=new Set();const cav=moveCaveats(box,seen);
     const tests=t.members.map(m=>m.unit);const lines=tests.map(u=>testLine.get(u)).filter(Boolean);for(const d of lines)cav.push(...moveCaveats(d,seen));
     const warn=box?[...box.querySelectorAll('.fact.warn')].map(x=>x.textContent).filter(x=>!/NOT centrifuge/.test(x)):[];
@@ -312,7 +326,7 @@ function render(host,items,opts){
     const meta=[];/* turn 34: 'Full tube' removed (implied) */if(t.mix)meta.push('Mix '+t.mix.replace('-','–')+'×');
     const th=thumb(t,nb);if(th){const cp=head.querySelector('.tchip');if(cp)cp.remove();}
     const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
-      el('div',{class:'tc-tests'},...(us=>us.flatMap((u,i)=>i?[' · ',nameLink(u)]:[nameLink(u)]))(tests.filter(u=>!tests.some(v=>v!==u&&shortName(v).startsWith(shortName(u)+' '))))), // turn 42: 'Urinalysis' hidden when 'Urinalysis (dipstick)' is in the same cup (one requested test)
+      el('div',{class:'tc-tests'},...(bits=>bits.flatMap((b,i)=>i?[' · ',b]:[b]))(titleBits(t))),
       compLine(t),
       h.bccdc?el('div',{class:'tc-hand'},'Do not centrifuge - clotted blood preferred as per ',el('a',{href:t.handling.elabUrl,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'})):null,h.bccdc?el('div',{class:'tc-hand',text:'Refrigerate'}):null, // turn 34
       (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
@@ -341,10 +355,14 @@ function render(host,items,opts){
       const ol=el('ol',{class:'tl-lines'});
       cs.forEach((c,i)=>{const t=g.ts[i];const kids=[...c.children].filter(x=>!x.classList.contains('tc-thumb')&&!x.classList.contains('tc-head'));const tests=kids.find(x=>x.classList.contains('tc-tests'));
         const mt=kids.find(x=>x.classList.contains('tc-meta'));if(mt&&tests){kids.splice(kids.indexOf(mt),1);const cp=kids.find(x=>x.classList.contains('tc-comp'));kids.splice((cp?kids.indexOf(cp):kids.indexOf(tests))+1,0,mt);}
-        if(tests)tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));
+        if(tests){tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));} /* turn 234: pairing cue moved into .tc-comp; no badge-side tube N of 2 */
         const kind=t.pairNo?(t.pairNo===1?'First catch':'Midstream'):null;
         ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:String(i+1)}),el('div',{class:'tl-body'},kind?el('div',{class:'tl-kind',text:kind}):null,...kids)));});
       dst.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0],nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,hd,ol));}};
+  /* turn 232/234 (K. Williams): LifeLabs spun = tube 1 of 2, BCCDC unspun = tube 2 of 2 when acute/chronic profile split is present; cue rendered in .tc-comp. */
+  {const ll=blood.filter(t=>!isBCCDC(t)&&t.members.some(m=>isHepProfileUnit(m.unit)));
+   const bc=blood.filter(t=>isBCCDC(t)&&t.members.some(m=>isHepProfileUnit(m.unit)));
+   if(ll.length&&bc.length){for(const x of ll)x.hepPair={n:1,of:2};for(const x of bc)x.hepPair={n:2,of:2};}}
   groupCards(blood,t=>(t.css||'')+'|'+(COLOUR[t.css]||t.label)+'|'+sizeText(t),false,tb);
   const tbDet=[part('banner'),part('head'),part('order'),part('nospin'),part('conflicts'),part('proc'),part('fullnote'),part('collect')].filter(Boolean).concat(bysLeft);
   const confl=part('conflicts');

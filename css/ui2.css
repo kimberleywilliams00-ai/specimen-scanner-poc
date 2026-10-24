@@ -137,6 +137,7 @@ a.tn:active{color:var(--b)}
 .tname a.srclink{color:inherit}
 /* ui2 2026-10-11: Other samples details */
 .tc-kit{font-size:15px;margin:4px 0 0 36px}
+.hep-pair{display:inline-block;font-size:12px;font-weight:600;color:#5b6068;margin-left:6px;vertical-align:2px;white-space:nowrap} /* turn 232: “tube N of 2” beside acute/chronic panel title */
 .tc-steps{font-size:15px;margin:4px 0 0 36px;padding-left:20px}.tc-steps li{margin:2px 0}
 .tc-time{font-size:15px;margin:4px 0 0 36px;color:var(--red);font-weight:700}
 .tc-warn.amb{color:var(--amb);font-weight:600}

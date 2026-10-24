@@ -1,4 +1,4 @@
-# Labbie (v3.8.15)
+# Labbie (v3.8.16)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.16 (2026-10-24, K. Williams approved): Hep A immune shares the BCCDC SST with HCV/HIV/syphilis (Hep A IgM stays LifeLabs spun). Acute/chronic hepatitis dual-tube clarity: panel titles on both halves; grey line e.g. "Chronic hepatitis panel, tube 1 of 2 includes: anti-HBc · HBsAg · anti-HBs" / "Chronic hepatitis panel, tube 2 of 2 includes: anti-HCV"; HIV/syphilis/Hep A immune stay in the BCCDC title only.
 
 v3.8.15 (2026-10-22, K. Williams approved): total, direct and indirect bilirubin share one 5 mL SST (direct/indirect placed in the chart's "Bilirubin" tube by local rule
 `bilirubin_fractions_one_sst`; indirect bilirubin shown as calculated by the lab, LifeLabs page Methodology "Calculation", no extra tube). Card prep lines given only by the
