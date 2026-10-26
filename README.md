@@ -1,4 +1,4 @@
-# Labbie (v3.8.20)
+# Labbie (v3.8.21)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.21 (2026-10-25, K. Williams approved): HIV Serology AKA for EMR `HIV 1+2 Ab/Ag EIA (4th Gen)` (and close `+`/`&` variants) so Confirm tests scores ok instead of yellow check on a correct match.
 
 v3.8.20 (2026-10-25, K. Williams approved): Confirm tests dual-name — when form wording (alias/OCR) differs from dictionary common name, show primary testName plus quieter secondary 'Scanned alias: …'; same-name rows stay single-line.
 
