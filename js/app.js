@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.19'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.20'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-25';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -93,14 +93,22 @@ function itemEl(it,r){
   if(it.selected===undefined)it.selected=!!it.manual;cb.checked=it.selected;
   cb.addEventListener('change',()=>{it.selected=cb.checked;updConfirm();});
   const nameTxt=el('span',{class:'nm',text:it.warn?'Possible missed line':it.id?(it.testName):(it.name||it.raw||'(unreadable line)')});
-  const title=el('span',{class:'name'},nameTxt);
+  // When form wording (alias/OCR) differs from dictionary common name, show both: primary = testName, quieter secondary = Scanned alias.
+  let formLabel='';
+  if(it.name&&String(it.name).trim())formLabel=String(it.name).trim();
+  else if(it.raw){const s=String(it.raw).replace(/\s+/g,' ').trim();if(s)formLabel=s.length>60?s.slice(0,57)+'…':s;}
+  const showFormAlias=!!(it.id&&it.testName&&formLabel&&D.norm(formLabel)!==D.norm(it.testName));
+  const nameBlock=el('span',{class:'nm-wrap'},nameTxt);
+  if(showFormAlias)nameBlock.appendChild(el('span',{class:'nm-aka',text:'Scanned alias: '+formLabel}));
+  const title=el('span',{class:'name'},nameBlock);
   if(it.status==='verify')title.appendChild(el('span',{class:'badge',text:it.boxDetected===false?'check box?':'check'}));
   if(it.status==='unrecognized')title.appendChild(el('span',{class:'badge bad',text:'not recognised'}));
   if(it.checked===false)title.appendChild(el('span',{class:'badge grey',text:'unticked'}));
   const lab=el('label',{class:'rowlab'},cb,title);
   // what the scan read + section + notes: behind a small tap for normal rows, shown for flagged rows
+  // Skip redundant "Read on form" when the visible secondary line already shows the form wording.
   const more=el('div',{class:'more'});
-  const readTxt=it.raw&&(!it.id||it.status!=='ok'||D.norm(it.name)!==D.norm(it.testName))?'Read on form: “'+(it.name||it.raw)+'”'+(it.section?' · under '+it.section:''):it.section?'Under '+it.section:'';
+  const readTxt=showFormAlias?(it.section?'Under '+it.section:''):(it.raw&&(!it.id||it.status!=='ok'||D.norm(it.name)!==D.norm(it.testName))?'Read on form: “'+(it.name||it.raw)+'”'+(it.section?' · under '+it.section:''):it.section?'Under '+it.section:'');
   if(readTxt)more.appendChild(el('div',{class:'raw',text:readTxt}));
   const soAll=r&&r.standingOrder&&r.standingOrder.all;let nNotes=0;
   for(const n of it.notes||[]){if(n.common&&soAll)continue;nNotes++;if(n.common){more.appendChild(el('div',{class:'note so',text:'Standing order: as above'}));continue;}more.appendChild(el('div',{class:'note'+(n.type==='standing order'?' so':''),text:(n.type==='standing order'?'Standing order: ':n.type==='frequency'?'Repeats: ':n.type.replace(/^./,c=>c.toUpperCase())+': ')+n.text}));}

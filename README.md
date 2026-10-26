@@ -1,4 +1,4 @@
-# Labbie (v3.8.19)
+# Labbie (v3.8.20)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.20 (2026-10-25, K. Williams approved): Confirm tests dual-name — when form wording (alias/OCR) differs from dictionary common name, show primary testName plus quieter secondary 'Scanned alias: …'; same-name rows stay single-line.
 
 v3.8.19 (2026-10-25, K. Williams approved): Pregnancy Serum / serum pregnancy EMR wording → blood Beta-hCG (bhcg, SST); NEED_TOKEN pregnancy.not='serum' so urine Pregnancy Test never wins when the line has serum; matcher applies not to every synonym. Urine paths unchanged (Pregnancy Test, urine HCG, beta HCG urine).
 
