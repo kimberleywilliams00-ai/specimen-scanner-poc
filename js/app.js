@@ -5,8 +5,8 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.16'; // must match version.json and VERSION in sw.js
-const APP_DATE='2026-10-24';
+const APP_VERSION='v3.8.17'; // must match version.json and VERSION in sw.js
+const APP_DATE='2026-10-25';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
   const check=()=>{const c=window.cv;if(!c){setTimeout(check,100);return;}
@@ -145,24 +145,31 @@ $('cam2').addEventListener('change',e=>handleFile(e.target.files[0]));
 /* turn 52 (K. Williams, Option A): manual entry - straight to Confirm tests with an empty list; 'Add a test' is at the top (no focus/scroll code) */
 $('manual').addEventListener('click',()=>{if(typeof liveStop==='function')liveStop();current={items:[],layout:'manual',manual:true,info:{},ms:0};render(current);show('result');});
 /* ---- turn 51 prototype: in-app live camera (getUserMedia, rear camera) in a 1.3:1 frame (width 30% longer than height) ----
-   Tap the viewfinder -> live preview (object-fit:cover). Shutter -> grabs ONLY the framed region of the current video frame at the
-   stream's native resolution (no downscale beyond the pipeline's own 2500 px cap) and feeds handleFile(). Nothing leaves the device.
+   Tap the viewfinder -> live preview. Published 2026-10-25 (K. Williams): object-fit:contain (was cover) so more of the camera FOV
+   is visible inside the gold 1.3:1 frame (dark letterbox if the stream AR differs) — closer to NurseTube's wide native-camera feel
+   while keeping the in-app live preview. Softer getUserMedia ideals (1920×1440 / 4:3 preferred over 3840×2160) to avoid iOS picking
+   a tighter FOV; zoom set to minimum when the track exposes it. Shutter -> liveGrab() matches the contain mapping (full visible
+   video frame at stream resolution; no downscale beyond the pipeline's 2500 px cap) and feeds handleFile(). Nothing leaves the device.
    Fallbacks: no getUserMedia / not secure / permission denied / no camera -> the viewfinder and shutter keep using the native
    camera file input (#cam / #cam2); Library (#pick) is unchanged. Stream is stopped on capture, discard, finish and when hidden. */
 const LIVE={stream:null,failed:false,on:()=>!!LIVE.stream};
 const liveOk=()=>!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.isSecureContext)&&!LIVE.failed;
 function liveMsg(t){const m=$('liveMsg');m.textContent=t||'';m.classList.toggle('hidden',!t);}
 function liveStop(){if(LIVE.stream){for(const tr of LIVE.stream.getTracks())tr.stop();LIVE.stream=null;}const v=$('live');v.srcObject=null;v.classList.add('hidden');$('vf').classList.remove('is-live');}
+function liveWiden(tr){ /* best-effort: prefer widest FOV the track allows (ignore if unsupported) */
+  try{const caps=tr.getCapabilities&&tr.getCapabilities();if(!caps)return;
+    const c={};if(caps.zoom){const z=caps.zoom;c.zoom=typeof z==='object'&&z.min!=null?z.min:1;}
+    if(Object.keys(c).length)tr.applyConstraints({advanced:[c]}).catch(()=>{});}catch(e){/* ignore */}}
 async function liveStart(){
-  try{const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:3840},height:{ideal:2160}}});
+  try{const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440},aspectRatio:{ideal:4/3}}});
     LIVE.stream=s;const v=$('live');v.srcObject=s;v.classList.remove('hidden');$('vf').classList.add('is-live');liveMsg('');await v.play().catch(()=>{});
-    const tr=s.getVideoTracks()[0];const st=tr&&tr.getSettings?tr.getSettings():{};LIVE.info=(st.width||'?')+'×'+(st.height||'?');
+    const tr=s.getVideoTracks()[0];if(tr)liveWiden(tr);
+    const st=tr&&tr.getSettings?tr.getSettings():{};LIVE.info=(st.width||'?')+'×'+(st.height||'?')+(st.zoom!=null?' z'+st.zoom:'');
     $('vf').setAttribute('data-res',LIVE.info);}
   catch(e){LIVE.failed=true;liveStop();liveMsg(e&&e.name==='NotAllowedError'?'Camera not allowed - tap again to use the camera app':'Live camera unavailable - tap again to use the camera app');}}
-function liveGrab(){const v=$('live'),vf=$('vf');const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh)return null;
-  // object-fit:cover mapping: the visible frame (vf box) is the centred crop of the video with the frame's aspect ratio
-  const r=vf.getBoundingClientRect();const fa=r.width/r.height;let cw=vw,ch=vh;if(vw/vh>fa)cw=Math.round(vh*fa);else ch=Math.round(vw/fa);
-  const c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(v,(vw-cw)/2,(vh-ch)/2,cw,ch,0,0,cw,ch);
+function liveGrab(){const v=$('live');const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh)return null;
+  // object-fit:contain — entire video is visible in the viewfinder (letterboxed if needed); capture the full visible frame
+  const c=document.createElement('canvas');c.width=vw;c.height=vh;c.getContext('2d').drawImage(v,0,0);
   return new Promise(res=>c.toBlob(b=>{c.width=c.height=0;res(b);},'image/jpeg',0.95));}
 $('vf').addEventListener('click',e=>{if(!liveOk())return; /* native input fallback */ e.preventDefault();if(!LIVE.on())liveStart();});
 /* turn 53 (K. Williams iPhone bug, v3.8.9): the shutter was a <label> wrapping the camera file input, so a tap before the live camera ran
