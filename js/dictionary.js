@@ -83,8 +83,9 @@ const T=[
 ['afp','Alpha Fetoprotein (AFP)','Chemistry','Alpha Fetoprotein','AFP','Alpha-fetoprotein'],
 ['total_protein','Total Protein','Chemistry','T. Protein','Total Protein'],
 ['psa','PSA','Chemistry','PSA','PSA - Known or suspected prostate cancer','PSA screening (self-pay)'],
-['bhcg','Beta-hCG quantitative','Chemistry','B-HCG - quantitative','Beta HCG','hCG quantitative'],
+['bhcg','Beta-hCG quantitative','Chemistry','B-HCG - quantitative','Beta HCG','hCG quantitative','Pregnancy Serum','Serum Pregnancy','PREGNANCY SERUM','SERUM PREGNANCY TEST','Pregnancy test serum'],
 // t199 (K. Williams 2026-10-20): beta HCG urine = urine pregnancy test; plain 'Beta HCG' stays serum bhcg (the beta-HCG aliases need the word 'urine': NEED_TOKEN)
+// 2026-10-25: EMR/OCR 'Pregnancy Serum' etc. → bhcg (SST); pregnancy rejects lines with 'serum' (NEED_TOKEN not)
 ['pregnancy','Pregnancy Test','Chemistry','Pregnancy Test','beta HCG urine','urine beta HCG','urine HCG'],
 ['acr','Urine Albumin/Creatinine Ratio (ACR)','Urine','Urine ACR','Urine ACR (Albumin Creatinine Ratio)','Albumin/creatinine ratio (ACR) - Urine','Urine Albumin Creatinine Ratio','ACR'],
 ['urine_macro_micro','Urinalysis: Macroscopic +/- Microscopic','Urine','Urine - Macro +/- Micro (if Macroscopic positive)','Urine Macro Micro','Macroscopic microscopic if dipstick positive'],
@@ -124,8 +125,9 @@ for(const [id,syn] of AKA){const n=norm(syn);if(!ENTRIES.some(e=>e.id===id&&e.sy
 const PLUS_EXT=new Set(ENTRIES.filter(e=>ENTRIES.some(o=>o.id!==e.id&&o.syn.startsWith(e.syn+' +'))).map(e=>e.syn));
 // t199: synonyms that differ from another test's wording by one word or letter (LDL vs HDL Cholesterol; urine vs serum beta HCG) only match a
 // line containing their key word. syn: only these synonyms (normalised); none = every synonym of the test
-// not: never match a line containing this word (t205: Anti DNA Antibody vs Anti DNase B)
-const NEED_TOKEN={ldl:{tok:'ldl'},pregnancy:{tok:'urine',syn:['beta hcg urine','urine beta hcg']},anti_dnase_b:{tok:'dnase'},anti_dsdna:{not:'dnase'},
+// not: never match a line containing this word (t205: Anti DNA Antibody vs Anti DNase B). Applies to every synonym of the test
+// (independent of syn); tok still respects syn. 2026-10-25: pregnancy.not=serum so EMR 'Pregnancy Serum' cannot win as urine pregnancy.
+const NEED_TOKEN={ldl:{tok:'ldl'},pregnancy:{tok:'urine',syn:['beta hcg urine','urine beta hcg'],not:'serum'},anti_dnase_b:{tok:'dnase'},anti_dsdna:{not:'dnase'},
   // t228: tok / not may list several words (any one). GTT / glucose tolerance is never GGT; HFE sibling/parent is never HFE confirm;
   // vaginitis initial vs chronic/recurrent kept apart
   ggt:{not:['gtt','tolerance']},gtt_screen:{tok:['gtt','tolerance']},gtt_confirm:{tok:['gtt','tolerance']},gtt_nongest:{tok:['gtt','tolerance']},
@@ -149,7 +151,7 @@ function suggest(q,limit){const qn=norm(q);if(!qn)return [];const qc=qn.replace(
 function match(text,restrictIds){
   const t=norm(text);if(!t)return null;const tt=t.split(' ');
   let best=null,second=null;
-  for(const e of ENTRIES){if(restrictIds&&!restrictIds.has(e.id))continue;{const g=NEED_TOKEN[e.id];if(g&&(!g.syn||g.syn.includes(e.syn))&&((g.tok&&!hasTok(tt,g.tok))||(g.not&&hasTok(tt,g.not))))continue;} // t199/t205
+  for(const e of ENTRIES){if(restrictIds&&!restrictIds.has(e.id))continue;{const g=NEED_TOKEN[e.id];if(g){const synHit=!g.syn||g.syn.includes(e.syn);if((synHit&&g.tok&&!hasTok(tt,g.tok))||(g.not&&hasTok(tt,g.not)))continue;}} // t199/t205; 2026-10-25: not always applies (serum≠urine pregnancy)
     let s=sim(t,e.syn);
     // prefix match: OCR line may carry trailing qualifiers not captured as notes
     const k=e.syn.split(' ').length;
