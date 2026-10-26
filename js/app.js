@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.17'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.18'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-25';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{
@@ -49,7 +49,7 @@ async function handleFile(file){
     stage('Loading text engine…');const ocr=await getOcr();
     stage('Straightening page and finding checkboxes…');await new Promise(r=>setTimeout(r,30));
     const wrapped=async(m,o)=>{stage('Reading printed text…');return ocr(m,o);};
-    const res=await ReqPipeline.scan(cv,src,wrapped,{keepImage:$('dbg').checked,crops:true});
+    const res=await ReqPipeline.scan(cv,src,wrapped,{keepImage:false,crops:true}); // dbg checkbox removed with Options & version (2026-10-25)
     src.delete();src=null;res.ms=Math.round(performance.now()-t0);res.lowRes=lowRes;current=res;render(res);show('result');
   }catch(e){console.error(e);if(src)src.delete();alert('Could not process this photo: '+e.message);reset();}
   finally{$('cam').value='';$('cam2').value='';$('pick').value='';}}
@@ -145,13 +145,15 @@ $('cam2').addEventListener('change',e=>handleFile(e.target.files[0]));
 /* turn 52 (K. Williams, Option A): manual entry - straight to Confirm tests with an empty list; 'Add a test' is at the top (no focus/scroll code) */
 $('manual').addEventListener('click',()=>{if(typeof liveStop==='function')liveStop();current={items:[],layout:'manual',manual:true,info:{},ms:0};render(current);show('result');});
 /* ---- turn 51 prototype: in-app live camera (getUserMedia, rear camera) in a 1.3:1 frame (width 30% longer than height) ----
-   Tap the viewfinder -> live preview. Published 2026-10-25 (K. Williams): object-fit:contain (was cover) so more of the camera FOV
-   is visible inside the gold 1.3:1 frame (dark letterbox if the stream AR differs) — closer to NurseTube's wide native-camera feel
-   while keeping the in-app live preview. Softer getUserMedia ideals (1920×1440 / 4:3 preferred over 3840×2160) to avoid iOS picking
-   a tighter FOV; zoom set to minimum when the track exposes it. Shutter -> liveGrab() matches the contain mapping (full visible
-   video frame at stream resolution; no downscale beyond the pipeline's 2500 px cap) and feeds handleFile(). Nothing leaves the device.
-   Fallbacks: no getUserMedia / not secure / permission denied / no camera -> the viewfinder and shutter keep using the native
-   camera file input (#cam / #cam2); Library (#pick) is unchanged. Stream is stopped on capture, discard, finish and when hidden. */
+   Tap the viewfinder -> live preview (object-fit:cover). Cover fills the entire 1.3:1 gold frame so nurses can line up the test list
+   without client identifiers (de-identified framing). Contain (v3.8.17) was reverted after iPhone rear portrait pillarboxed into a
+   narrow usable strip that made de-ID framing hard (K. Williams 2026-10-25). Softer getUserMedia ideals (1920×1440 / 4:3) and
+   liveWiden() zoom-min kept — they may help FOV slightly under cover without changing the fill. Shutter -> liveGrab() WYSIWYG:
+   cover centre-crop of the #vf content box (exact visible region at stream resolution; no extra margin; no downscale beyond the
+   pipeline's 2500 px cap) and feeds handleFile(). Yellow corner brackets sit on that same frame edge (css 4px inset).
+   Nothing leaves the device. Fallbacks: no getUserMedia / not secure / permission denied / no camera -> the viewfinder and shutter
+   keep using the native camera file input (#cam / #cam2); Library (#pick) is unchanged. Stream is stopped on capture, discard,
+   finish and when hidden. */
 const LIVE={stream:null,failed:false,on:()=>!!LIVE.stream};
 const liveOk=()=>!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.isSecureContext)&&!LIVE.failed;
 function liveMsg(t){const m=$('liveMsg');m.textContent=t||'';m.classList.toggle('hidden',!t);}
@@ -167,9 +169,11 @@ async function liveStart(){
     const st=tr&&tr.getSettings?tr.getSettings():{};LIVE.info=(st.width||'?')+'×'+(st.height||'?')+(st.zoom!=null?' z'+st.zoom:'');
     $('vf').setAttribute('data-res',LIVE.info);}
   catch(e){LIVE.failed=true;liveStop();liveMsg(e&&e.name==='NotAllowedError'?'Camera not allowed - tap again to use the camera app':'Live camera unavailable - tap again to use the camera app');}}
-function liveGrab(){const v=$('live');const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh)return null;
-  // object-fit:contain — entire video is visible in the viewfinder (letterboxed if needed); capture the full visible frame
-  const c=document.createElement('canvas');c.width=vw;c.height=vh;c.getContext('2d').drawImage(v,0,0);
+function liveGrab(){const v=$('live'),vf=$('vf');const vw=v.videoWidth,vh=v.videoHeight;if(!vw||!vh)return null;
+  // WYSIWYG object-fit:cover: centred crop of the stream to the #vf content-box AR (clientWidth/Height = video's inset:0 box).
+  // Matches what the user sees inside the gold frame (no extra margin). Contain reverted after iPhone pillarboxing (K. Williams 2026-10-25).
+  const fa=(vf.clientWidth||1)/(vf.clientHeight||1);let cw=vw,ch=vh;if(vw/vh>fa)cw=Math.round(vh*fa);else ch=Math.round(vw/fa);
+  const c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(v,(vw-cw)/2,(vh-ch)/2,cw,ch,0,0,cw,ch);
   return new Promise(res=>c.toBlob(b=>{c.width=c.height=0;res(b);},'image/jpeg',0.95));}
 $('vf').addEventListener('click',e=>{if(!liveOk())return; /* native input fallback */ e.preventDefault();if(!LIVE.on())liveStart();});
 /* turn 53 (K. Williams iPhone bug, v3.8.9): the shutter was a <label> wrapping the camera file input, so a tap before the live camera ran
@@ -220,7 +224,7 @@ $('back').addEventListener('click',()=>{if(history.state&&history.state.ui2==='p
 window.addEventListener('popstate',()=>backToTests());
 $('print').addEventListener('click',()=>window.print());
 // warm up engines in the background (still fully local)
-window.addEventListener('load',()=>{waitCv().then(()=>{$('engine').textContent='Engine: image engine ready (on-device).';});
+window.addEventListener('load',()=>{waitCv().then(()=>{const eng=$('engine');if(eng)eng.textContent='Engine: image engine ready (on-device).';});
   $('ver').textContent='App '+APP_VERSION+' ('+APP_DATE+')';
   setupUpdates();});
 

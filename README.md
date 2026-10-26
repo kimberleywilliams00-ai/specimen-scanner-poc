@@ -1,4 +1,4 @@
-# Labbie (v3.8.17)
+# Labbie (v3.8.18)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -8,7 +8,9 @@ the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
 
-v3.8.17 (2026-10-25, K. Williams approved): wider in-app camera FOV — video object-fit:contain (was cover), getUserMedia ideals 1920×1440 / 4:3 (was 3840×2160), liveWiden() zoom-min when supported, liveGrab() captures the full visible frame (matches contain mapping). Gold 1.3:1 viewfinder unchanged.
+v3.8.18 (2026-10-25, K. Williams approved): restore cover-filled camera frame (revert v3.8.17 contain pillarbox); WYSIWYG yellow corners at 4px inset + liveGrab content-box cover crop; remove photo-screen Options & version details (footer #ver kept); keepImage false; engine update null-safe. Soft ideals 1920×1440 / 4:3 and liveWiden() kept under cover.
+
+v3.8.17 (2026-10-25, K. Williams approved): wider in-app camera FOV — video object-fit:contain (was cover), getUserMedia ideals 1920×1440 / 4:3 (was 3840×2160), liveWiden() zoom-min when supported, liveGrab() captures the full visible frame (matches contain mapping). Gold 1.3:1 viewfinder unchanged. Reverted in v3.8.18 after iPhone pillarboxing.
 
 v3.8.16 (2026-10-24, K. Williams approved): Hep A immune shares the BCCDC SST with HCV/HIV/syphilis (Hep A IgM stays LifeLabs spun). Acute/chronic hepatitis dual-tube clarity: panel titles on both halves; grey line e.g. "Chronic hepatitis panel, tube 1 of 2 includes: anti-HBc · HBsAg · anti-HBs" / "Chronic hepatitis panel, tube 2 of 2 includes: anti-HCV"; HIV/syphilis/Hep A immune stay in the BCCDC title only.
 

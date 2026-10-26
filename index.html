@@ -19,8 +19,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Labbie">
 <meta name="format-detection" content="telephone=no">
-<link rel="stylesheet" href="css/app.css?v=3.8.17">
-<link rel="stylesheet" href="css/ui2.css?v=3.8.17">
+<link rel="stylesheet" href="css/app.css?v=3.8.18">
+<link rel="stylesheet" href="css/ui2.css?v=3.8.18">
 </head>
 <body>
 <header>
@@ -36,11 +36,7 @@
     <div class="shrow"><label class="lnk lib">Photo library<input id="pick" type="file" accept="image/*" hidden></label>
       <button type="button" class="shut" id="shut" aria-label="Take photo"><b></b></button><input id="cam2" type="file" accept="image/*" capture="environment" hidden><!-- turn 53: shutter is a button (not a label wrapping the file input) --><button id="manual" type="button" class="lnk man">Enter tests manually</button></div><!-- turn 52: manual entry (Option A) -->
     <div class="tip">🔒 De-identified only · avoid glare</div>
-    <details class="dx tiny minor"><summary>Options &amp; version</summary><div class="dx-body">
-      <label class="opt"><input type="checkbox" id="dbg"> Show debug overlay</label>
-      <p class="small ver-start">Version <b>v3.8.17</b> (2026-10-25)</p>
-      <p id="engine" class="small">Engine: not loaded yet (loads from this site only, works offline after first visit).</p>
-    </div></details>
+    <!-- Options & version removed 2026-10-25 (K. Williams): debug/engine/version lived here; version stays in footer #ver -->
   </section>
 
   <section id="busy" class="card hidden"><div class="spinner"></div><p id="stage">Working…</p></section>
@@ -75,18 +71,18 @@
 <footer class="small">Not for clinical use. Always check the paper requisition. Done – clear wipes the photo and results. <span id="ver"></span></footer>
 <script src="vendor/opencv.js" async id="cvjs"></script>
 <script src="vendor/tesseract/tesseract.min.js"></script>
-<script src="js/dictionary.js?v=3.8.17"></script>
-<script src="js/template_d2350.js?v=3.8.17"></script>
-<script src="js/preprocess.js?v=3.8.17"></script>
-<script src="js/pipeline.js?v=3.8.17"></script>
-<script src="js/collection_data.js?v=3.8.17"></script>
-<script src="js/tube_rules.js?v=3.8.17"></script>
-<script src="js/local_rules.js?v=3.8.17"></script>
-<script src="js/requisition_forms.js?v=3.8.17"></script>
-<script src="js/elab_data.js?v=3.8.17"></script>
-<script src="js/guide_data.js?v=3.8.17"></script>
-<script src="js/summary.js?v=3.8.17"></script>
-<script src="js/plan_view.js?v=3.8.17"></script>
-<script src="js/app.js?v=3.8.17"></script>
+<script src="js/dictionary.js?v=3.8.18"></script>
+<script src="js/template_d2350.js?v=3.8.18"></script>
+<script src="js/preprocess.js?v=3.8.18"></script>
+<script src="js/pipeline.js?v=3.8.18"></script>
+<script src="js/collection_data.js?v=3.8.18"></script>
+<script src="js/tube_rules.js?v=3.8.18"></script>
+<script src="js/local_rules.js?v=3.8.18"></script>
+<script src="js/requisition_forms.js?v=3.8.18"></script>
+<script src="js/elab_data.js?v=3.8.18"></script>
+<script src="js/guide_data.js?v=3.8.18"></script>
+<script src="js/summary.js?v=3.8.18"></script>
+<script src="js/plan_view.js?v=3.8.18"></script>
+<script src="js/app.js?v=3.8.18"></script>
 </body>
 </html>

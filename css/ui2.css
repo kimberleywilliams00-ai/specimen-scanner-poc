@@ -202,8 +202,8 @@ header{background:#0b2a4a}
 .photo .scr-h{margin:0;font-size:22px}
 .photo .vf{position:relative;height:380px;margin:4px 0 14px;border-radius:16px;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mute);cursor:pointer}
 .photo .vf i{position:absolute;width:34px;height:34px;border:4px solid #d4a017}
-.photo .vf .a{top:16px;left:16px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}.photo .vf .b{top:16px;right:16px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
-.photo .vf .c{bottom:16px;left:16px;border-right:0;border-top:0;border-radius:0 0 0 8px}.photo .vf .d{bottom:16px;right:16px;border-left:0;border-top:0;border-radius:0 0 8px 0}
+.photo .vf .a{top:4px;left:4px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}.photo .vf .b{top:4px;right:4px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
+.photo .vf .c{bottom:4px;left:4px;border-right:0;border-top:0;border-radius:0 0 0 8px}.photo .vf .d{bottom:4px;right:4px;border-left:0;border-top:0;border-radius:0 0 8px 0}
 .photo .paper{width:150px;height:200px;border-radius:6px;background:#f6f7f9;border:1px solid var(--line);padding:14px 12px;display:block}
 .photo .paper b{display:block;height:7px;border-radius:4px;background:#dfe2e7;margin:8px 0}.photo .paper b.hl{background:#0b2a4a33}
 .photo .vf-t{margin-top:12px;font-size:14px}
@@ -233,9 +233,10 @@ details.minor{margin-top:14px;text-align:center}details.minor summary{font-size:
 .photo .stephead{text-align:left;margin-bottom:8px}.photo .stepsub{text-align:left;margin-left:0} /* turn 51: subtitle was indented 40px (step-number indent), looked centred */
 
 /* ---- turn 54: 1.3:1 viewfinder (width 30% longer than height) + live camera ---- */
-/* published 2026-10-25 (K. Williams): video object-fit contain (was cover) so preview shows more of the paper / less cropped; shutter mapping synced in app.js */
+/* draft 2026-10-25: restore object-fit cover (was contain in v3.8.17). Cover fills the 1.3:1 frame for de-identified framing; contain reverted after iPhone pillarboxing made the capture strip too narrow (K. Williams 2026-10-25). */
+/* draft 2026-10-25 WYSIWYG: yellow corner brackets sit on the capture frame edge (4px, was 16px) so inside-the-yellow ≈ shutter output (K. Williams: whats visible is whats captured). */
 .photo .vf{height:auto;aspect-ratio:1.3/1;overflow:hidden}
-.photo .vf video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:0;background:#000} /* published 2026-10-25: contain = full camera FOV (less zoomed); dark letterbox inside 1.3:1 frame */
+.photo .vf video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#000} /* cover = video fills entire 1.3:1 gold frame (no side letterboxes) */
 .photo .vf i{z-index:2}
 .photo .vf.is-live .paper,.photo .vf.is-live .vf-t{display:none}
 .photo .vf.is-live i{border-color:#f2c94c}
