@@ -1,4 +1,4 @@
-# Labbie (v3.8.21)
+# Labbie (v3.8.22)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.22 (2026-10-25, K. Williams approved): Collection plan groups same-type off-chart tubes (colour+size, including `own`) under one card with ×N and numbered lines — still separate physical tubes (`summary.js` unchanged). Quiet “Not on the LifeLabs Quick Reference Chart” note (linked) under those tests only — not amber Confirm-with-lab.
 
 v3.8.21 (2026-10-25, K. Williams approved): HIV Serology AKA for EMR `HIV 1+2 Ab/Ag EIA (4th Gen)` (and close `+`/`&` variants) so Confirm tests scores ok instead of yellow check on a correct match.
 

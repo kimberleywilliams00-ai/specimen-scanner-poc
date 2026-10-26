@@ -209,9 +209,9 @@ function moveCaveats(node,seen){const out=[];if(!node)return out;for(const c of 
     const k=normC(c.textContent);if(seen){if([...seen].some(x=>x.includes(k)||k.includes(x))){c.classList.add('dup');continue;}seen.add(k);} // duplicate: stays in the test details
     out.push(c);c.remove();}return out;}
 /* turn 43 (K. Williams): 'not on the chart' note, short, with the chart linked */
-function cavEl(t){const m=t.match(/Not on the LifeLabs Quick Reference Chart: drawn as its own tube(?: \(same tube type and handling as the tube for (.+?) - the lab may allow combining\))?/);
-  if(!m)return el('div',{class:'tc-warn amb tc-cav',text:shortCav(t)});const TR=root.TubeRules||{};const w=m[1]?m[1].replace(/, ([^,]+)$/,' and $1'):null;
-  return el('div',{class:'tc-warn amb tc-cav'},'Confirm with lab - not on the ',TR.chartUrl?el('a',{href:TR.chartUrl,target:'_blank',rel:'noopener',text:'LifeLabs Quick Reference Chart'}):'LifeLabs Quick Reference Chart',w?'; may share the tube with '+w+'.':'; drawn as its own tube.');}
+/* 2026-10-25 (K. Williams): off-chart is a quiet .tc-offchart under the test name, not an amber Confirm-with-lab banner (t211). */
+function cavEl(t){if(/Not on the LifeLabs Quick Reference Chart/.test(t))return null; /* quiet note on the card instead */
+  return el('div',{class:'tc-warn amb tc-cav',text:shortCav(t)});}
 function shortCav(t){if(/ELECTROLYTES EXTENDED PANEL page/.test(t))return 'Confirm with lab - Electrolytes: Na and K only; Chloride/CO2 only if requested separately.'; /* turn 42: full text in Details */ t=t.replace(GLYPH,'').replace(/^(Chart vs per-test PDF|To check):\s*/,'').trim();const m=t.match(/^(.{20,160}?[.;])\s/);return m?m[1]:t.length>180?t.slice(0,177)+'…':t;} // turn 34
 function checkList(nodes){if(!nodes.length)return null;const box=el('div',{class:'tocheck'},el('div',{class:'tocheck-h',text:'To check'}));for(const n of nodes){n.classList.add('tocheck-i');box.appendChild(n);}return box;}
 function seg(st,rerender,opts){const r=st.rule;const g=el('div',{class:'seg2',role:'group','aria-label':r.question});
@@ -316,7 +316,11 @@ function render(host,items,opts){
       return el('div',{class:'tc-comp',text:pref+markers.join(' · ')});}
     const names=markers.concat(t.members.filter(m=>!ps.includes(m)).map(m=>shortName(m.unit)));
     return el('div',{class:'tc-comp',text:uniq(names).join(' · ')});};
-  const card=(t,n,nb)=>{const box=tubeBox.get(t);const seen=new Set();const cav=moveCaveats(box,seen);
+  /* 2026-10-25 (K. Williams): quiet note under tests not on the Quick Reference Chart (own PDF tubes / no chart group). Not the amber Confirm-with-lab alert (t211). */
+  const isOffChartTube=t=>!!(t.own||(!t.group&&!t.local&&(t.members||[]).some(m=>m.unit&&!m.unit.chart)));
+  const offChartNote=t=>{if(!isOffChartTube(t))return null;const TR=root.TubeRules||{};
+    return el('div',{class:'tc-offchart'},'Not on the ',TR.chartUrl?el('a',{href:TR.chartUrl,target:'_blank',rel:'noopener',text:'LifeLabs Quick Reference Chart'}):'LifeLabs Quick Reference Chart');};
+    const card=(t,n,nb)=>{const box=tubeBox.get(t);const seen=new Set();const cav=moveCaveats(box,seen);
     const tests=t.members.map(m=>m.unit);const lines=tests.map(u=>testLine.get(u)).filter(Boolean);for(const d of lines)cav.push(...moveCaveats(d,seen));
     const warn=box?[...box.querySelectorAll('.fact.warn')].map(x=>x.textContent).filter(x=>!/NOT centrifuge/.test(x)):[];
     const h=handling(t);const bc=isBCCDC(t);
@@ -327,6 +331,7 @@ function render(host,items,opts){
     const th=thumb(t,nb);if(th){const cp=head.querySelector('.tchip');if(cp)cp.remove();}
     const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
       el('div',{class:'tc-tests'},...(bits=>bits.flatMap((b,i)=>i?[' · ',b]:[b]))(titleBits(t))),
+      offChartNote(t),
       compLine(t),
       h.bccdc?el('div',{class:'tc-hand'},'Do not centrifuge - clotted blood preferred as per ',el('a',{href:t.handling.elabUrl,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'})):null,h.bccdc?el('div',{class:'tc-hand',text:'Refrigerate'}):null, // turn 34
       (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
@@ -347,14 +352,17 @@ function render(host,items,opts){
      its own handling lines. Single-tube cards unchanged. */
   /* turn 36 layout B; turn 42 (K. Williams): count as a navy '×N' pill next to the title (not on the picture), lines numbered 1/2/3.
      groupCards also groups urine cups (and other repeated sample types with the same name); cup type stays on each line. */
-  const groupCards=(list,keyOf,nb,dst)=>{const groups=[];for(const t of list){const k=t.own?{}:keyOf(t); /* t205 (K. Williams): a test not on the chart = own tube card, never grouped */const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
+  /* 2026-10-25 (K. Williams): visual group by colour+size for own/off-chart tubes too (one drawing + ×N + numbered lines).
+     t205 “never shares” still holds in summary.js tube assignment (own:true = separate physical tubes, no serum share);
+     this stack is layout only (turn 36/42). */
+  const groupCards=(list,keyOf,nb,dst)=>{const groups=[];for(const t of list){const k=keyOf(t);const g=groups.find(g=>g.k===k);if(g)g.ts.push(t);else groups.push({k,ts:[t]});}
     for(const g of groups){if(g.ts.length===1){dst.appendChild(card(g.ts[0],nb?null:numOf.get(g.ts[0]),nb));continue;}
       const cs=g.ts.map(t=>card(t,nb?null:numOf.get(t),nb));const c0=cs[0];const th=c0.querySelector('.tc-thumb'),hd=c0.querySelector('.tc-head');const ds=hd.querySelector('.dest');if(ds)ds.remove();
       if(nb&&g.ts.some(t=>t.pairNo)){const nm=hd.querySelector('.tc-name');if(nm)nm.textContent='Urine cup';}
       hd.appendChild(el('span',{class:'xpill',text:'×'+g.ts.length}));
       const ol=el('ol',{class:'tl-lines'});
       cs.forEach((c,i)=>{const t=g.ts[i];const kids=[...c.children].filter(x=>!x.classList.contains('tc-thumb')&&!x.classList.contains('tc-head'));const tests=kids.find(x=>x.classList.contains('tc-tests'));
-        const mt=kids.find(x=>x.classList.contains('tc-meta'));if(mt&&tests){kids.splice(kids.indexOf(mt),1);const cp=kids.find(x=>x.classList.contains('tc-comp'));kids.splice((cp?kids.indexOf(cp):kids.indexOf(tests))+1,0,mt);}
+        const mt=kids.find(x=>x.classList.contains('tc-meta'));if(mt&&tests){kids.splice(kids.indexOf(mt),1);const off=kids.find(x=>x.classList.contains('tc-offchart'));const cp=kids.find(x=>x.classList.contains('tc-comp'));const after=cp||off||tests;kids.splice(kids.indexOf(after)+1,0,mt);}
         if(tests){tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));} /* turn 234: pairing cue moved into .tc-comp; no badge-side tube N of 2 */
         const kind=t.pairNo?(t.pairNo===1?'First catch':'Midstream'):null;
         ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:String(i+1)}),el('div',{class:'tl-body'},kind?el('div',{class:'tl-kind',text:kind}):null,...kids)));});

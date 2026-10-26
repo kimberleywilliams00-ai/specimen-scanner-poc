@@ -85,6 +85,10 @@ b.red{color:var(--red)}
 .dest{margin-left:auto;font-size:12px;font-weight:800;letter-spacing:.03em;border:1.5px solid var(--ink);border-radius:6px;padding:1px 6px}
 .tc-meta{color:var(--mute);font-size:15px;margin:4px 0 0 36px}
 .tc-comp{color:#6b7280;font-size:13px;line-height:1.3;margin:1px 0 0 36px} /* turn 47: panel components (Option A) */
+.tc-offchart{display:block;font-size:13px;font-weight:500;color:var(--mute);line-height:1.25;margin:2px 0 0 36px} /* 2026-10-25: quiet off-chart note (not amber Confirm-with-lab) */
+.tc-offchart a{color:inherit;font-weight:500;text-decoration:underline;text-underline-offset:2px}
+.tc-tests+.tc-offchart{margin-top:2px}
+.tl-body .tc-offchart{margin-top:2px;margin-left:0!important}
 .tc-tests{font-size:17px;font-weight:600;margin:6px 0 0 36px;line-height:1.35}
 .tc-hand{font-size:16px;margin:4px 0 0 36px}.tc-hand.stop{color:var(--red);font-weight:800}.tc-hand.check{color:var(--amb);font-weight:600}
 .tc-warn{color:var(--red);font-weight:700;font-size:15px;margin:4px 0 0 36px}
@@ -183,7 +187,7 @@ header{background:#0b2a4a}
 .tl-line .lt{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--c);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-top:2px}
 .tl-body{flex:1;min-width:0}.tl-body>*{margin-left:0!important}.tl-body .tc-tests{margin-top:0}
 .lab{display:inline-block;font-size:11px;font-weight:800;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:2px}.lab.BCCDC{background:#e6f4ea;color:#1e6b34}.lab.LifeLabs{background:#eceefe;color:#3943a8}
-.tcard>.tc-tests,.tcard>.tc-hand,.tcard>.tc-prep,.tcard>.tc-meta,.tcard>.tc-kit,.tcard>.tc-warn,.tcard>.tc-time,.tcard>.tc-steps{margin-left:0}
+.tcard>.tc-tests,.tcard>.tc-hand,.tcard>.tc-prep,.tcard>.tc-meta,.tcard>.tc-kit,.tcard>.tc-warn,.tcard>.tc-time,.tcard>.tc-steps,.tcard>.tc-offchart,.tcard>.tc-comp{margin-left:0}
 
 /* turn 39: header app icon (mockup group-B2-final) */
 .hrow{display:flex;align-items:center;gap:9px}.happicon{width:30px;height:30px;border-radius:6.7px;display:block;flex:none}
