@@ -4,7 +4,7 @@
      server bypassing the HTTP cache (cache:'reload'), cache used only as an offline / slow-network fallback. A new deploy is picked up on next open.
    - Large immutable vendor files (opencv, tesseract js/wasm, traineddata): CACHE-FIRST in a separate cache keyed by
      VENDOR_CACHE. Bump VENDOR_CACHE whenever any file under vendor/ changes. App version bumps do NOT re-download them. */
-const VERSION='v3.8.23';
+const VERSION='v3.8.24';
 const APP_CACHE='req-scanner-app-'+VERSION;
 const VENDOR_CACHE='req-scanner-vendor-1';
 const Q='?v=3.8.23'; // must match the ?v= query strings in index.html

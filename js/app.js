@@ -5,7 +5,7 @@
 const $=id=>document.getElementById(id);
 let cvReady=null,ocrWorker=null,current=null;
 const D=window.ReqDict;
-const APP_VERSION='v3.8.23'; // must match version.json and VERSION in sw.js
+const APP_VERSION='v3.8.24'; // must match version.json and VERSION in sw.js
 const APP_DATE='2026-10-27';
 
 function waitCv(){if(cvReady)return cvReady;cvReady=new Promise(res=>{

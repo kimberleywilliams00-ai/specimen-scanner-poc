@@ -1,4 +1,4 @@
-# Labbie (v3.8.23)
+# Labbie (v3.8.24)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.24 (2026-10-27, K. Williams approved): six LifeLabs Lower Mainland urine catalogue cards — osmolality, sodium, potassium, protein, uric acid, medical drug panel (urine); dictionary NEED_TOKEN urine vs serum; plan_view ENTRY_SHORT / urineLines for supervised & acid notes; collection_data rebuild (149 entries). Open questions left as drafted (no Redirect for unsupervised drug panel; noShare cups; orderNotes for serum osmolality; drug panel 50 mL only).
 
 v3.8.23 (2026-10-27, K. Williams approved): HPV / Cervix Self-Screening — FLOQ illustration, room-temp storage reword, kit PDF + BC Cancer HP links on card, no Details/Sources, patient sheet cleanup; BCCDC STI Quick Reference PDF in plan References; QRG “Not on the LifeLabs Quick Reference Chart” note for blood tubes only; swab illustrations larger (88×140); bacterial C&S (nose, wound, throat) use existing blue-top COPAN Amies drawing.
 
