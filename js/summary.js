@@ -369,6 +369,9 @@ function plan(units){
     // t228: page names no container (C&S throat, HPV self-collected) -> the LifeLabs containers sheet kit / the named kit; card summary lines from guides
     if(!o.label){const kd=gs.find(g=>g.kitDisplay);o.label=(o.kits&&o.kits[0].name)||(kd&&kd.kitDisplay)||((u.entry&&u.entry.specimenType)||'');o.labelFrom=o.kits?'kit':kd?'kitDisplay':'specimenType';}
     o.cardShort=gs.flatMap(g=>(g.cardShort||[]).map(x=>Object.assign({g},x)));
+    // t296/t297 (K. Williams 2026-10-27): HPV card = FLOQ + room temp + kit/HP links only; t297: no Details & sources on the card (plan_view skips for hpv_self).
+    { const cg=gs.find(g=>g.id==='bccancer_cervix_selfscreen');
+      if(cg){o.cardLinks=cg.links||[];o.cardShort=[];o.steps=null;} }
     o.timeLimits=gs.flatMap(g=>(g.timeLimits||[]).filter(x=>ids.some(i=>x.ids.includes(i))).map(x=>({text:x.text,g})));
     const via=viaIds(u);if(via.length)o.shared={ids:via,ev:via.map(i=>u.entry.dictIdsVia[i])};
     // ui2 (2026-10-11): BCCDC-bound test with a site row in the eLab Handbook - eLab is the source of specimen requirements (K. Williams
@@ -684,13 +687,18 @@ function render(host,items,opts){ // ui2: legacy full renderer, used as the sour
   const docs=known.filter(u=>(u.entry.patientInstructionDocs||[]).length).map(u=>u.name);
   if(docs.length)pc.appendChild(el('div',{class:'small',text:'Printable patient instruction sheets (several languages) are listed in LifeLabs Lab Test Information for: '+docs.join(', ')+'.'}));
   host.appendChild(pc);
-  // ui2 (2026-10-11): patient instruction sheets supplied by K. Williams (js/guide_data.js; key steps verbatim; PDFs not published)
-  const pdocs=[];for(const u of live){for(const g of guidesFor(u).filter(g=>g.kind==='patient')){let d=pdocs.find(x=>x.g===g);if(!d)pdocs.push(d={g,units:[]});if(!d.units.includes(u))d.units.push(u);}}
+  // ui2 (2026-10-11): patient instruction sheets (js/guide_data.js; PDFs not published)
+  // t292: clean Source (issuer · title · version). t296: HPV card = FLOQ + room temp + links.
+  // t297 (K. Williams 2026-10-27): skip bccancer_cervix_selfscreen in pinstr entirely — no Details/Source for HPV (links already on the card). Other patient sheets unchanged.
+  const pdocs=[];for(const u of live){for(const g of guidesFor(u).filter(g=>g.kind==='patient'&&g.id!=='bccancer_cervix_selfscreen')){let d=pdocs.find(x=>x.g===g);if(!d)pdocs.push(d={g,units:[]});if(!d.units.includes(u))d.units.push(u);}}
   if(pdocs.length){const pi=el('div',{class:'sum-card','data-part':'pinstr'},el('h3',{text:'Patient instruction sheets'}));
     for(const d of pdocs){const g=d.g;pi.appendChild(el('div',{class:'tname',text:g.heading+' - for '+d.units.map(u=>u.name).join(', ')}));
-      const ul=el('ul',{class:'verbatim'});for(const x of (g.doNot||[]).map(x=>'DO NOT TAKE THE TEST: '+x).concat(g.meds||[],g.steps,g.storage||[]))ul.appendChild(el('li',{text:x}));pi.appendChild(ul); // t228: do-not / medication lists first
-      if(g.kit)pi.appendChild(el('div',{class:'small',text:'Kit: '+g.kit}));
-      pi.appendChild(el('div',{class:'src',text:'Source: '+guideRef(g)+(g.issuerBasis?' ('+g.issuerBasis+')':'')+' · supplied by K. Williams, checked '+GD.lastChecked+' · no web address printed on the sheet'}));}
+      {const ul=el('ul',{class:'verbatim'});for(const x of (g.doNot||[]).map(x=>'DO NOT TAKE THE TEST: '+x).concat(g.meds||[],g.steps,g.storage||[]))ul.appendChild(el('li',{text:x}));pi.appendChild(ul); // t228: do-not / medication lists first
+        if(g.kit)pi.appendChild(el('div',{class:'small',text:'Kit: '+g.kit}));}
+      // t287: same links[] / url rendering as guideBlock (ll_doc31971 pattern)
+      for(const l of g.links||[])pi.appendChild(el('div',{class:'small'},'Linked in the document: ',el('a',{href:l.url,target:'_blank',rel:'noopener noreferrer',class:'srclink',text:l.text})));
+      // t292: Source = issuer · title · version (+ issuerBasis / url when present). Never claim “no web address” when links[] or url exist.
+      pi.appendChild(el('div',{class:'src',text:'Source: '+guideRef(g)+(g.issuerBasis?' ('+g.issuerBasis+')':'')+(g.url?' · '+g.url:'')}));}
     host.appendChild(pi);}
 
   // 5. processing + storage/transport

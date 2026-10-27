@@ -126,7 +126,10 @@ const G={source:'Collection guides and patient instructions (supplied by K. Will
   noFridge:'Do not refrigerate.', stableRT:'Specimen is stable at room temperature for up to 24 hours.',
   transport:'Transport specimen by porter to room 2G3 during business hours and Department of Pathology Room 2J17 during non-business hours.',
   additionalInfo:'Specimens from suspected sexual abuse/assault patients must be hand delivered to the Microbiology laboratory (Room 2G3)between the hours of 0800-2300 Monday to Friday, 0800-2000 Saturday/Sunday or statutory holidays.'},
- {id:'bccdc_sti_quickref', kind:'guide', issuer:'BCCDC', title:'Quick Reference STI Screening and Testing Guide', docNumber:null, version:null, date:'May 2026', url:null,
+ // t289 (K. Williams 2026-10-27): PDF URL for this guide — same links[] / url pattern as ll_doc31971 / bccancer_cervix_selfscreen (clickable in Details).
+ {id:'bccdc_sti_quickref', kind:'guide', issuer:'BCCDC', title:'Quick Reference STI Screening and Testing Guide', docNumber:null, version:null, date:'May 2026',
+  url:'https://www.bccdc.ca/resource-gallery/Documents/Communicable-Disease-Manual/Chapter%205%20-%20STI/STI%20screening%20and%20testing%20table.pdf',
+  links:[{text:'BCCDC Quick Reference STI Screening and Testing Guide (PDF)', url:'https://www.bccdc.ca/resource-gallery/Documents/Communicable-Disease-Manual/Chapter%205%20-%20STI/STI%20screening%20and%20testing%20table.pdf'}],
   supersededNote:'K. Williams 2026-10-11: the guide\'s text says Unisex swab but its photo shows a Multitest swab - its "Unisex" wording is treated as superseded. For BCCDC-bound CT/GC samples the BCCDC eLab Handbook entry applies.',
   scopeNote:'Used ONLY for specimen collection facts (site, specimen type, kit). Its screening/testing recommendations are not used by this app.',
   dictIds:['ct_ng_urine','ct_ng_vaginal','ct_ng_rectal','ct_ng_throat','urine_trich','hiv_serology','syphilis','gc_culture_cervix','gc_culture_urethra','gc_culture_throat','gc_culture_rectum','gc_culture_other','vaginitis_initial'] /* t228d: + vaginitis_initial (BV & yeast row) */,
@@ -160,13 +163,21 @@ const G={source:'Collection guides and patient instructions (supplied by K. Will
    'Wash hands with soap and water. Write Name, Date of Birth or Health Card Number, and Date and Time of collection on each container. Place container(s) into plastic bag(s) and seal.'],
   storage:['Bring the container back to the laboratory within 12hours of collection. Delays will require specimen recollection. Until specimens can be brought to the laboratory, refrigerate.']},
  // t228 (K. Williams 2026-10-21): HPV self-collection is always this BC Cancer kit; the LifeLabs HPV SELF COLLECTED SWAB page names no container.
+ // t287/t288 (K. Williams 2026-10-27): BC Cancer Cervix Screening health-professionals page URL — same links[] pattern as ll_doc31971 (clickable in Details).
+ // t293 (K. Williams 2026-10-27): Cervix Self-Screening Kit Instructions PDF — keep both in links[] so Details shows two “Linked in the document” lines (prefer links[] over g.url).
+ // t296 (K. Williams 2026-10-27): Simplified collection card — FLOQ + room temp + links[] on the card; cardShort/sites steps stay for Details only (summary.js clears them from the card via cardLinks).
  {id:'bccancer_cervix_selfscreen', kind:'patient', issuer:'BC Cancer', title:'CERVIX SELF-SCREENING KIT INSTRUCTIONS', heading:'CERVIX SELF-SCREENING KIT INSTRUCTIONS', docNumber:null, version:'Version: November 2024', date:null, url:null,
+  links:[
+    {text:'Cervix Self-Screening Kit Instructions (PDF)', url:'https://www.bccancer.bc.ca/screening/Documents/cervix-self-screening-kit-instructions.pdf'},
+    {text:'BC Cancer Cervix Screening – Health Professionals', url:'https://www.bccancer.bc.ca/screening/health-professionals/cervix'}
+  ],
   dictIds:['hpv_self'], kitDisplay:'CERVIX SELF-SCREENING KIT',
   sites:{hpv_self:{site:'CERVIX SELF-SCREENING KIT', device:[], steps:['Hold the swab at the red line.','Locate your vagina, then gently insert the swab like how you would insert a tampon into your vaginal opening.','Rotate the swab as you slowly count to 20, then remove the swab.','Slide the swab into the plastic tube and close firmly.','CLEARLY write your collection date on the tube label AND the lab requisition.'], comments:[]}},
   doNot:['When you are on your period. Wait until your period is over.','If you are pregnant or use a pessary. Talk to a health care provider','If you’ve had your cervix removed (e.g., total hysterectomy). Talk to a health care provider to see if cervix screening is still required.'],
   cardShort:[{lead:'Do not take the test: ', items:[['on your period'],['pregnant'],['use a pessary'],['total hysterectomy']], tail:'Talk to a health care provider'}],
   steps:['Hold the swab at the red line.','Locate your vagina, then gently insert the swab like how you would insert a tampon into your vaginal opening.','Rotate the swab as you slowly count to 20, then remove the swab.','Slide the swab into the plastic tube and close firmly.','CLEARLY write your collection date on the tube label AND the lab requisition.'],
-  storage:['No, it’s fine to store your sample at room temperature.']},
+  // t294 (K. Williams 2026-10-27): nurse-facing storage — drop FAQ “No,”; keep room-temp meaning.
+  storage:['Store at room temperature.']},
  // t228c (K. Williams 2026-10-21, explicit exception to "hospital sources in Details only" for THIS test): community nurses do not use glass
  // slides - the D2350 Vaginitis Initial (BV & yeast) card is built from this C&W eLab page (cardEntry). LifeLabs forwarding to C&W is
  // K. Williams' belief only - not printed on any page, so the card names no lab.

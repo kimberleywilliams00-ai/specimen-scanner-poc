@@ -45,12 +45,24 @@ function thumbOf(t,nb){
   if(/Multitest/.test(kit)||(!t.eb&&/Aptima Multitest/i.test(c)))return ['aptima_multitest_swab','Aptima Multitest swab kit'];
   if(/Unisex/.test(kit))return ['aptima_unisex_swab','Aptima Unisex swab kit'];
   if(/Copan Fecal/i.test(c))return ['copan_fecalswab_orange_cap','Copan FecalSwab container']; // LifeLabs 'Swab (Copan Fecal)'
+  // draft t285 (K. Williams asked; sources: LifeLabs Doc#31971 "BCCA Copan Flocked Swab for HPV testing."; BC Cancer Cervix Self-Screening Kit Nov 2024 red-cap dry tube). Not published.
+  if(/CERVIX SELF-SCREENING/i.test(c))return ['copan_floqswab_red_cap_dry','BCCA Copan FLOQSwab (red cap, dry)'];
+  /* t305/t306 (K. Williams 2026-10-27): bacterial C&S cards use existing COPAN blue-top Amies drawing (same asset as BV/yeast kitRule).
+     Practice: Copan Gel Amies (blue top) for bacterial cultures (nose, wound, throat / Doc#31971 culturette).
+     LifeLabs nose/wound pages say "Culturette - Copan Liquid Amies Single Plastic" — clarification pending LifeLabs.
+     Mini Culturettes photo left unused. NOT HPV FLOQ, Aptima, or GC eSwab (kitRule). BV/yeast still via kitRule above. */
+  { const BACT_CS=new Set(['cs_nose_wound','wound_superficial','wound_deep','culture_throat']);
+    if((t.members||[]).some(m=>BACT_CS.has(m.unit.entry&&m.unit.entry.id)||(m.unit.ids||[]).some(i=>BACT_CS.has(i))))
+      return ['copan_blue_cap_swab_medium','COPAN blue-top Amies swab']; }
   if(/urine/i.test(c)||(t.eb&&t.eb.local&&/urine/i.test(t.eb.local.container||'')))return ['urine_container_orange_cap','Urine container'];
   return null;}
 /* turn 56 (K. Williams): every blood tube shows the same body width as the 4 mL lavender EDTA (34 of 200 px art -> 14.1 px at 83 px tall).
    Box height per image = 83 * 34 / body px (measured alpha body width), so narrower art is drawn taller, never stretched. Non-tubes stay 83. */
 const TUBE_H={sst_gold_5ml:97,edta_lavender_6ml:97,red_top_serum_6ml:97,acd_a_yellow_8_5ml:101};
-function thumb(t,nb){const m=thumbOf(t,nb);if(!m)return null;const im=el('img',{class:'tc-thumb',src:IMG_DIR+m[0]+'.webp',alt:m[1],width:'52',height:String(TUBE_H[m[0]]||83),loading:'lazy',decoding:'async'});if(TUBE_H[m[0]])im.dataset.th=TUBE_H[m[0]];return im;}
+/* t298 (K. Williams 2026-10-27): swab illustrations ~30% larger (52×83 → 68×108). Blood tubes, urine cup, FIT stay at turn-55/56 size. */
+const SWAB_IMG={aptima_multitest_swab:1,aptima_unisex_swab:1,copan_fecalswab_orange_cap:1,copan_floqswab_red_cap_dry:1,eswab_green_cap:1,copan_blue_cap_swab_medium:1};
+const SWAB_W=88,SWAB_H=140; // t308: 68*1.3 ≈ 88, 108*1.3 ≈ 140
+function thumb(t,nb){const m=thumbOf(t,nb);if(!m)return null;const swab=!!SWAB_IMG[m[0]];const h=swab?SWAB_H:(TUBE_H[m[0]]||83);const w=swab?SWAB_W:52;const im=el('img',{class:'tc-thumb'+(swab?' swab':''),src:IMG_DIR+m[0]+'.webp',alt:m[1],width:String(w),height:String(h),loading:'lazy',decoding:'async'});if(TUBE_H[m[0]]||swab)im.dataset.th=String(h);return im;}
 const EDGE={gold:'#d4a017',lav:'#8e6bbf',lblue:'#5aa9e6',red:'#c62828',green:'#2e7d32',grey:'#8a8f98',yellow:'#e0b400'}; // turn 36: card left edge
 function edgeColour(t,nb){if(!nb&&EDGE[t.css])return EDGE[t.css];const l=(t.label||'')+' '+((t.c&&t.c.container)||'');return /urine/i.test(l)?'#e8a33a':/fecal|stool/i.test(l)?'#e8742a':/swab/i.test(l)?'#d0453a':'#9aa0a8';}
 function chip(css){return el('span',{class:'tchip '+(css||'none'),'aria-hidden':'true'});}
@@ -89,6 +101,9 @@ function otherBits(t){const out=[];
   if((t.sharedWith||[]).some(x=>x.rule))out.push(el('div',{class:'tc-kit'},t.sharedWith.find(x=>x.rule).rule.short+' ',(r=>r.sourceUrl?el('a',{class:'tc-local',href:r.sourceUrl,target:'_blank',rel:'noopener',text:r.source}):el('span',{class:'tc-local',text:'Local practice'}))(t.sharedWith.find(x=>x.rule).rule)));
   else if((t.sharedWith||[]).length)out.push(el('div',{class:'tc-kit',text:'One cup for '+(t.members.length>2?'all '+t.members.length+' tests – put all the labels on it.':'both tests – put both labels on it.')})); // LifeLabs C&S page; quote in Details
   const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);const swab=/swab/i.test(t.label||'');
+  /* t296/t297 (K. Williams 2026-10-27): cardLinks = simplified card (HPV) — links on the card; skip numbered steps / cardShort. t297: HPV card has no Details & sources at all. */
+  if(t.cardLinks&&t.cardLinks.length){for(const l of t.cardLinks)out.push(el('div',{class:'tc-kit'},el('a',{href:l.url,target:'_blank',rel:'noopener noreferrer',text:l.text})));}
+  else{
   if(t.keySteps)out.push(el('ol',{class:'tc-steps'},...t.keySteps.map(fr=>el('li',{text:cap(fr.reduce((a,x)=>a?a+(/\.$/.test(a)?' ':'; ')+x:x,'').replace(/\.?$/,'.'))})),swab?el('li',{text:'Label with the site.'}):null)); // ui2: essential eLab steps; full text in Details
   else if(t.steps){const st=t.steps.site;out.push(el('ol',{class:'tc-steps'},...st.steps.map(x=>el('li',{text:x}))));}
   { // t228: verbatim card lines from the LifeLabs page (collect.cardLinesBy = steps per scanner id, collect.cardLines = short lines; [bold prefix, verbatim])
@@ -98,7 +113,7 @@ function otherBits(t){const out=[];
     const plain=cl.filter(x=>!Array.isArray(x)),pre=cl.filter(x=>Array.isArray(x));
     if(plain.length>1&&!t.steps&&!t.keySteps&&!by.length)out.push(el('ol',{class:'tc-steps'},...plain.map(x=>el('li',{text:x}))));else for(const x of plain)out.push(el('div',{class:'tc-kit',text:x}));
     for(const x of pre)out.push(el('div',{class:'tc-kit'},el('b',{text:x[0]}),x[1].replace(/^\d+\.\s*/,''))); // page step number dropped on the card
-    for(const x of t.cardShort||[])out.push(el('div',{class:'tc-kit'},el('b',{text:x.lead}),x.items.map(i=>i.join(' ')).join(' · ')+(x.tail?' - '+cap(x.tail)+'.':'')));}
+    for(const x of t.cardShort||[])out.push(el('div',{class:'tc-kit'},el('b',{text:x.lead}),x.items.map(i=>i.join(' ')).join(' · ')+(x.tail?' - '+cap(x.tail)+'.':'')));}}
   for(const m of t.members)if(m.unit.entry&&m.unit.entry.standIn)out.push(el('div',{class:'tc-kit'},el('b',{text:'Specimen: '}),m.unit.entry.specimenType));
   if(t.kitAlso)out.push(el('div',{class:'tc-kit',text:cap(t.kitAlso.text.replace(/^\*\s*/,'')).replace(/\.?$/,'.')})); // t228d: BCCDC QR footnote (swab named in the card title; verbatim kit in Details)
   for(const m of t.members)for(const fr of (m.c&&m.c.cardLinesG)||[])out.push(el('div',{class:'tc-kit',text:cap(fr.join(' ').replace(/\.?$/,'.'))})); // t228c: verbatim fragments from the source page
@@ -317,6 +332,7 @@ function render(host,items,opts){
     const names=markers.concat(t.members.filter(m=>!ps.includes(m)).map(m=>shortName(m.unit)));
     return el('div',{class:'tc-comp',text:uniq(names).join(' · ')});};
   /* 2026-10-25 (K. Williams): quiet note under tests not on the Quick Reference Chart (own PDF tubes / no chart group). Not the amber Confirm-with-lab alert (t211). */
+  /* t296 (K. Williams 2026-10-27): QRG note is blood-tubes only (SST/EDTA/etc.). Never on swab/urine/stool/other non-blood cards. */
   const isOffChartTube=t=>!!(t.own||(!t.group&&!t.local&&(t.members||[]).some(m=>m.unit&&!m.unit.chart)));
   const offChartNote=t=>{if(!isOffChartTube(t))return null;const TR=root.TubeRules||{};
     return el('div',{class:'tc-offchart'},'Not on the ',TR.chartUrl?el('a',{href:TR.chartUrl,target:'_blank',rel:'noopener',text:'LifeLabs Quick Reference Chart'}):'LifeLabs Quick Reference Chart');};
@@ -329,9 +345,10 @@ function render(host,items,opts){
       bc?el('span',{class:'dest',text:'BCCDC'}):null);
     const meta=[];/* turn 34: 'Full tube' removed (implied) */if(t.mix)meta.push('Mix '+t.mix.replace('-','–')+'×');
     const th=thumb(t,nb);if(th){const cp=head.querySelector('.tchip');if(cp)cp.remove();}
-    const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':''),style:'--c:'+edgeColour(t,nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
+    const swabTh=!!(th&&th.classList.contains('swab'));
+    const c=el('div',{class:'tcard'+(h.cls==='stop'?' nospin':'')+(th?' has-thumb':'')+(swabTh?' has-thumb-swab':''),style:'--c:'+edgeColour(t,nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,head,meta.length?el('div',{class:'tc-meta',text:meta.join(' · ')}):null,
       el('div',{class:'tc-tests'},...(bits=>bits.flatMap((b,i)=>i?[' · ',b]:[b]))(titleBits(t))),
-      offChartNote(t),
+      nb?null:offChartNote(t), /* t296: blood tubes only */
       compLine(t),
       h.bccdc?el('div',{class:'tc-hand'},'Do not centrifuge - clotted blood preferred as per ',el('a',{href:t.handling.elabUrl,target:'_blank',rel:'noopener',text:'BCCDC eLab handbook'})):null,h.bccdc?el('div',{class:'tc-hand',text:'Refrigerate'}):null, // turn 34
       (()=>{const ns=t.members.flatMap(m=>(m.slots||[m.c]).flatMap(x=>(x&&x.notes)||[]));return ns.some(n=>/minimum fill line/i.test(n))?el('div',{class:'tc-hand',text:'Fill to the minimum fill line - underfilled tubes are rejected'}):ns.some(n=>/completely full tube/i.test(n))?el('div',{class:'tc-hand',text:'Draw a completely full tube'}):null;})(), // turn 34: source-based fill (PT/PTT citrate pages) kept after 'Full tube' removal
@@ -345,7 +362,10 @@ function render(host,items,opts){
       ...(nb?[]:uniq(t.members.flatMap(m=>((m.c&&m.c.cardLines)||[]).filter(Array.isArray).map(x=>JSON.stringify(x)))).map(j=>JSON.parse(j)).map(x=>el('div',{class:'tc-kit'},el('b',{text:x[0]}),x[1]))), // t228: requisition box (HFE sibling/parent)
       ...warn.map(w=>el('div',{class:'tc-warn'+(/^(Kit|Volume) differs|not covered by|^Open question|^Check: |^Requires STI certified|^Confirm whether|^Site not stated|^BCCDC eLab accepts|^Not for asymptomatic|^CBC not on the requisition/.test(w)?' amb':''),text:w.replace(/^PTT is NOT in this tube - see the question above\.?$/,'PTT is not in this tube (see the heparin question above)')})),
       ...(REVIEW?[]:cav.filter(n=>!/ELECTROLYTES EXTENDED PANEL page/.test(n.textContent)).map(n=>cavEl(n.textContent))), /* turn 55 (K. Williams): Na/K-only electrolytes note is result scope, not collection - Details only */ // turn 34: amber notes on the card in normal mode
-      details('Details & sources',[nb&&isCup(t)?el('div',{class:'dx-sub',text:'Container'}):null,...(nb&&isCup(t)?otherBits(t):[]),checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0}));
+      /* t297 (K. Williams 2026-10-27): HPV / Cervix Self-Screening (hpv_self) — no Details & sources on the card (FLOQ + room temp + BC Cancer links already shown). Other tests unchanged. Discard legacy box/lines so they do not fall into plan-level Other details. */
+      (()=>{const hpv=(t.members||[]).some(m=>m.unit&&(m.unit.ids||[]).includes('hpv_self'));
+        if(hpv){if(box)box.remove();for(const d of lines)d.remove();return null;}
+        return details('Details & sources',[nb&&isCup(t)?el('div',{class:'dx-sub',text:'Container'}):null,...(nb&&isCup(t)?otherBits(t):[]),checkList(cav),box?el('div',{class:'dx-sub',text:'Lab wording & sources'}):null,box,lines.length?el('div',{class:'dx-sub',text:'Test details'}):null,...lines],{dot:cav.length>0});})());
     return c;};
   /* turn 36 (K. Williams, layout B / group-B2-final mockup): one card per tube TYPE+size, in order of draw. N>1 -> '×N' badge on the
      picture and lettered lines A/B/C, one per physical tube (tubes stay separate per existing rules), each with its tests, lab tag and
@@ -366,7 +386,7 @@ function render(host,items,opts){
         if(tests){tests.appendChild(el('span',{class:'lab '+(isBCCDC(t)?'BCCDC':'LifeLabs'),text:isBCCDC(t)?'BCCDC':'LifeLabs'}));} /* turn 234: pairing cue moved into .tc-comp; no badge-side tube N of 2 */
         const kind=t.pairNo?(t.pairNo===1?'First catch':'Midstream'):null;
         ol.appendChild(el('li',{class:'tl-line'},el('span',{class:'lt',text:String(i+1)}),el('div',{class:'tl-body'},kind?el('div',{class:'tl-kind',text:kind}):null,...kids)));});
-      dst.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':''),style:'--c:'+edgeColour(g.ts[0],nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,hd,ol));}};
+      dst.appendChild(el('div',{class:'tcard tgrp'+(th?' has-thumb':'')+(th&&th.classList.contains('swab')?' has-thumb-swab':''),style:'--c:'+edgeColour(g.ts[0],nb)+(th&&th.dataset.th?';--th:'+th.dataset.th+'px':'')},th,hd,ol));}};
   /* turn 232/234 (K. Williams): LifeLabs spun = tube 1 of 2, BCCDC unspun = tube 2 of 2 when acute/chronic profile split is present; cue rendered in .tc-comp. */
   {const ll=blood.filter(t=>!isBCCDC(t)&&t.members.some(m=>isHepProfileUnit(m.unit)));
    const bc=blood.filter(t=>isBCCDC(t)&&t.members.some(m=>isHepProfileUnit(m.unit)));
@@ -429,7 +449,9 @@ function render(host,items,opts){
   const ban=part('banner');if(SHOW_PAPERWORK&&ban&&ban.isConnected&&ban.parentNode===L)planDet.push(ban);
   const pdk=planDet.filter(Boolean);if(pdk.length)host.appendChild(el('section',{class:'blk'},details((showPw?'Labelling':'Labelling, paperwork')+' & sources',pdk,{dot:!showPw&&pwCav.length>0})));
   { const TR=root.TubeRules||{};const lk=(u,t)=>u?el('li',{},el('a',{href:u,target:'_blank',rel:'noopener',text:t})):null; // turn 43: References (always shown)
-    host.appendChild(el('section',{class:'blk refs'},el('div',{class:'refs-h',text:'References'}),el('ul',{class:'refs-l'},lk(TR.chartUrl,'LifeLabs Quick Reference Collection Chart (tube sharing)'),lk(TR.orderOfDrawUrl,'LifeLabs Order of Draw and Fill Level')))); }
+    // t289 (K. Williams 2026-10-27): BCCDC STI Quick Reference in always-shown References (resources at bottom of collection guide)
+    const bccdcSti='https://www.bccdc.ca/resource-gallery/Documents/Communicable-Disease-Manual/Chapter%205%20-%20STI/STI%20screening%20and%20testing%20table.pdf';
+    host.appendChild(el('section',{class:'blk refs'},el('div',{class:'refs-h',text:'References'}),el('ul',{class:'refs-l'},lk(TR.chartUrl,'LifeLabs Quick Reference Collection Chart (tube sharing)'),lk(TR.orderOfDrawUrl,'LifeLabs Order of Draw and Fill Level'),lk(bccdcSti,'BCCDC Quick Reference STI Screening and Testing Guide')))); }
   host.appendChild(el('div',{class:'foot',text:'Prototype - verify against LifeLabs/BCCDC. Sources: tap a test name'+(REVIEW?' or Details.':'.')}));
   // anything the legacy renderer produced that has not been placed yet goes in a final expander (should be empty)
   const tcard=part('tests');if(tcard&&!tcard.querySelector('.test-line'))tcard.remove();

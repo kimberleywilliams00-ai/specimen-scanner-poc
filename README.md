@@ -1,4 +1,4 @@
-# Labbie (v3.8.22)
+# Labbie (v3.8.23)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.23 (2026-10-27, K. Williams approved): HPV / Cervix Self-Screening — FLOQ illustration, room-temp storage reword, kit PDF + BC Cancer HP links on card, no Details/Sources, patient sheet cleanup; BCCDC STI Quick Reference PDF in plan References; QRG “Not on the LifeLabs Quick Reference Chart” note for blood tubes only; swab illustrations larger (88×140); bacterial C&S (nose, wound, throat) use existing blue-top COPAN Amies drawing.
 
 v3.8.22 (2026-10-25, K. Williams approved): Collection plan groups same-type off-chart tubes (colour+size, including `own`) under one card with ×N and numbered lines — still separate physical tubes (`summary.js` unchanged). Quiet “Not on the LifeLabs Quick Reference Chart” note (linked) under those tests only — not amber Confirm-with-lab.
 
