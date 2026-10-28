@@ -1,4 +1,4 @@
-# Labbie (v3.8.24)
+# Labbie (v3.8.25)
 
 ## Illustration credits
 The container illustrations in `img/containers/` (tubes, urine container, swabs, stool and FIT containers) are **original artwork by
@@ -7,6 +7,8 @@ the source data clearly matches the drawing. Small label text in some drawings (
 the stool container / eSwab labels) is part of the artwork and is used as-is.
 
 When v3.8 is published, add this credit to the deploy repo README as well.
+
+v3.8.25 (2026-10-27, K. Williams approved): restore HIV Serology EMR AKAs (`HIV 1+2 Ab/Ag EIA (4th Gen)` + `+`/`&` variants) lost in the v3.8.24 urine AKA rebuild; durable via `collection-src/emr_aka.json` so future rebuilds keep them.
 
 v3.8.24 (2026-10-27, K. Williams approved): six LifeLabs Lower Mainland urine catalogue cards — osmolality, sodium, potassium, protein, uric acid, medical drug panel (urine); dictionary NEED_TOKEN urine vs serum; plan_view ENTRY_SHORT / urineLines for supervised & acid notes; collection_data rebuild (149 entries). Open questions left as drafted (no Redirect for unsupervised drug panel; noShare cups; orderNotes for serum osmolality; drug panel 50 mL only).
 
